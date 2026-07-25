@@ -6,11 +6,11 @@
 <meta name="theme-color" content="#12161C">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Celle Frigo">
+<meta name="apple-mobile-web-app-title" content="Krio">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" href="icon-192.png">
-<title>Celle Frigo · Controllo Ordini</title>
+<title>Krio · Controllo Lavori</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -266,6 +266,25 @@ input,select,textarea{font-family:inherit;font-size:15px}
 /* cella audio */
 .media-cell.aud svg{color:var(--frost)}
 
+/* logo a fiocco di neve */
+.logo .snow{width:62%;height:62%}
+
+/* badge sola lettura */
+.ro-badge{display:none;align-items:center;gap:5px;margin-top:3px;font-family:'Archivo';font-weight:700;font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:var(--amber);border:1px solid var(--amber);border-radius:5px;padding:1px 6px;width:max-content}
+
+/* modalità sola lettura: nascondi i comandi di modifica */
+body.viewonly .fab,
+body.viewonly #btnSave,
+body.viewonly #btnDelete,
+body.viewonly #btnDupe,
+body.viewonly #btnVoice,
+body.viewonly .media-add,
+body.viewonly .rm,
+body.viewonly .opt-add,
+body.viewonly .opt-suggest,
+body.viewonly .opt-item .del{display:none !important}
+body.viewonly .sheet-foot{justify-content:flex-end}
+
 /* stampa scheda commessa */
 #printArea{display:none}
 @media print{
@@ -441,10 +460,10 @@ input,select,textarea{font-family:inherit;font-size:15px}
   <div class="keypad-panel">
     <div class="keypad-head">
       <div class="brand">
-        <div class="logo">CF</div>
+        <div class="logo"><svg class="snow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M3.34 7l17.32 10M20.66 7L3.34 17"/><path d="M12 6.2l2.4-1.4M12 6.2L9.6 4.8M12 17.8l2.4 1.4M12 17.8l-2.4 1.4"/><path d="M5.7 8.6l.2-2.8M5.7 8.6l-2.7-.7M18.3 15.4l-.2 2.8M18.3 15.4l2.7.7M18.3 8.6l.2-2.8M18.3 8.6l2.7-.7M5.7 15.4l-.2 2.8M5.7 15.4l-2.7.7"/></svg></div>
         <div>
-          <h1>CONTROLLO ORDINI</h1>
-          <p>Celle frigo · reparto costruzione</p>
+          <h1>KRIO</h1>
+          <p>Controllo lavori · celle frigo</p>
         </div>
       </div>
     </div>
@@ -457,10 +476,14 @@ input,select,textarea{font-family:inherit;font-size:15px}
 <!-- ================= APP ================= -->
 <section id="app" class="screen">
   <div class="topbar">
-    <div class="logo">CF</div>
+    <div class="logo"><svg class="snow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M3.34 7l17.32 10M20.66 7L3.34 17"/><path d="M12 6.2l2.4-1.4M12 6.2L9.6 4.8M12 17.8l2.4 1.4M12 17.8l-2.4 1.4"/><path d="M5.7 8.6l.2-2.8M5.7 8.6l-2.7-.7M18.3 15.4l-.2 2.8M18.3 15.4l2.7.7M18.3 8.6l.2-2.8M18.3 8.6l2.7-.7M5.7 15.4l-.2 2.8M5.7 15.4l-2.7.7"/></svg></div>
     <div class="titles">
-      <h1>CELLE<span>FRIGO</span></h1>
-      <small>Controllo ordini</small>
+      <h1>KR<span>IO</span></h1>
+      <small>Controllo lavori</small>
+      <span class="ro-badge" id="roleBadge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" style="width:10px;height:10px"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="2.5"/></svg>
+        sola lettura
+      </span>
     </div>
     <div class="sync-led"><span class="led" id="led"></span><span id="ledTxt">—</span></div>
     <button class="icon-btn" id="btnRefresh" title="Aggiorna">
@@ -478,7 +501,7 @@ input,select,textarea{font-family:inherit;font-size:15px}
     <div class="cmdbar">
       <div class="search">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
-        <input id="searchInput" type="text" inputmode="text" placeholder="Cerca codice, cliente, targa…" autocomplete="off">
+        <input id="searchInput" type="text" inputmode="text" placeholder="Cerca codice lavoro, cliente, targa…" autocomplete="off">
       </div>
       <button class="btn-scan" id="btnScan">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><path d="M7 8v8M10 8v8M13 8v8M16 8v8"/></svg>
@@ -497,6 +520,7 @@ input,select,textarea{font-family:inherit;font-size:15px}
       </button>
     </div>
 
+    <div class="filters" id="lavFilters"></div>
     <div class="filters" id="filters"></div>
     <div id="ordersHost">
       <div class="center-load"><div class="spin"></div></div>
@@ -506,7 +530,7 @@ input,select,textarea{font-family:inherit;font-size:15px}
 
   <button class="fab" id="btnNew">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
-    Nuovo ordine
+    Nuovo lavoro
   </button>
 </section>
 
@@ -564,7 +588,7 @@ input,select,textarea{font-family:inherit;font-size:15px}
         <label>URL script (Google Apps Script)</label>
         <input id="setUrl" type="url" inputmode="url" placeholder="https://script.google.com/macros/s/…/exec" style="font-family:'JetBrains Mono';font-size:12px">
       </div>
-      <p class="hint" style="margin-top:16px">Il PIN si cambia nello script (proprietà <code>PIN</code>). Qui puoi solo uscire dalla sessione.</p>
+      <p class="hint" style="margin-top:16px">Nello script imposti due codici: <code>PIN</code> per chi può modificare e <code>PIN_VIEW</code> per la sola lettura. Qui puoi solo uscire dalla sessione.</p>
       <button class="btn btn-primary" id="btnInstall" style="width:100%;margin-top:6px;display:none">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px"><path d="M12 3v12M8 11l4 4 4-4M4 21h16"/></svg>
         Installa app sul dispositivo
@@ -597,6 +621,8 @@ input,select,textarea{font-family:inherit;font-size:15px}
    =================================================================== */
 const DEFAULT_SCRIPT_URL = ""; // <-- opzionale: incolla qui l'URL /exec
 
+const LAVORAZIONI = ["Motrice","Semirimorchio","KIT"];
+
 const OPT_SUGGEST = ["Gruppo frigo","Doppia temperatura","Bivalente","Sponda idraulica","Pedana","Pareti inox","Pavimento antiscivolo","Porta laterale","Tendina termica","Luci LED interne","Spoiler tetto","Bandella paracolpi","Registratore temperatura","Certificazione ATP"];
 
 const STATI = [
@@ -613,7 +639,10 @@ const S = {
   orders: JSON.parse(localStorage.getItem("cf_cache")||"[]"),
   current: null,
   filter: "all",
+  lav: "all",
   query: "",
+  role: sessionStorage.getItem("cf_role") || "edit",
+  canEdit: (sessionStorage.getItem("cf_role")||"edit")==="edit",
   view: "ordini",
   archOpenClients: new Set(),
   archOpenOrders: new Set(),
@@ -657,6 +686,7 @@ async function api(action, payload={}){
   catch(e){ setLed("err","errore"); throw new Error("Risposta non valida dal server"); }
   if(!data.ok){
     if(data.code==="AUTH"){ setLed("err","non autorizzato"); logout(true); }
+    else if(data.code==="READONLY"){ setLed("ok","sola lettura"); }
     else setLed("err","errore");
     throw new Error(data.error||"Errore server");
   }
@@ -695,8 +725,10 @@ async function submitPin(){
   const msg=$("#pinMsg"); msg.className="pin-msg"; msg.textContent="Verifica…";
   S.pin=pinBuf;
   try{
-    await api("auth");
+    const d=await api("auth");
+    S.role=d.role||"edit"; S.canEdit=(S.role==="edit");
     sessionStorage.setItem("cf_pin",S.pin);
+    sessionStorage.setItem("cf_role",S.role);
     enterApp();
   }catch(e){
     msg.className="pin-msg err"; msg.textContent = e.message==="PIN errato" ? "PIN errato" : e.message;
@@ -710,18 +742,26 @@ function keyListener(e){
   else if(e.key==="Enter") submitPin();
 }
 
+function applyRole(){
+  S.canEdit = S.role==="edit";
+  document.body.classList.toggle("viewonly", !S.canEdit);
+  const b=$("#roleBadge"); if(b) b.style.display = S.canEdit ? "none" : "inline-flex";
+}
 function enterApp(){
   $("#login").classList.remove("active");
   $("#app").classList.add("active");
   window.scrollTo(0,0);
   document.removeEventListener("keydown",keyListener);
+  applyRole();
   updateBell();
   if(!S._notifTimer) S._notifTimer=setInterval(checkDeadlines, 30*60*1000);
   render(); // show cache instantly
   loadOrders();
 }
 function logout(silent){
-  S.pin=""; pinBuf=""; sessionStorage.removeItem("cf_pin");
+  S.pin=""; pinBuf=""; S.role="edit"; S.canEdit=true;
+  sessionStorage.removeItem("cf_pin"); sessionStorage.removeItem("cf_role");
+  document.body.classList.remove("viewonly");
   $("#app").classList.remove("active");
   $("#login").classList.add("active");
   closeSheet(); closeSettings();
@@ -761,6 +801,7 @@ function buildFilters(){
 function filtered(){
   let list=[...S.orders];
   if(S.filter!=="all") list=list.filter(o=>o.stato===S.filter);
+  if(S.lav!=="all") list=list.filter(o=>o.tipoCella===S.lav);
   if(S.query){
     const q=S.query.toLowerCase();
     list=list.filter(o=>[o.codice,o.cliente,o.targa,o.tipoCella].some(v=>(v||"").toLowerCase().includes(q)));
@@ -788,10 +829,11 @@ function render(){
   const list=filtered();
   const host=$("#ordersHost");
   if(!list.length){
+    const filtering = S.query||S.filter!=="all"||S.lav!=="all";
     host.innerHTML=`<div class="empty">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 4v5M8 13h5"/></svg>
-      <h3>${S.query||S.filter!=="all"?"Nessun ordine trovato":"Ancora nessun ordine"}</h3>
-      <p>${S.query||S.filter!=="all"?"Prova a cambiare ricerca o filtro.":"Tocca «Nuovo ordine» o scansiona un codice per iniziare."}</p>
+      <h3>${filtering?"Nessun lavoro trovato":"Ancora nessun lavoro"}</h3>
+      <p>${filtering?"Prova a cambiare ricerca o filtri.":"Tocca «Nuovo lavoro» o scansiona un codice per iniziare."}</p>
     </div>`;
     return;
   }
@@ -811,7 +853,7 @@ function cardHTML(o){
     <div class="ticket-body">
       <div class="ticket-meta">
         <div class="m"><span class="k">Mezzo</span><span class="v">${esc(o.targa||"—")}</span></div>
-        <div class="m"><span class="k">Cella</span><span class="v">${esc(o.tipoCella||"—")}</span></div>
+        <div class="m"><span class="k">Lavoraz.</span><span class="v">${esc(o.tipoCella||"—")}</span></div>
       </div>
       <div class="ticket-foot">
         <span class="deadline ${di.cls}">
@@ -838,7 +880,19 @@ const IC={
   ext:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14 21 3"/></svg>'
 };
 
-function renderCurrent(){ if(S.view==="archivio") renderArchive(); else render(); }
+function renderCurrent(){ buildLavFilters(); if(S.view==="archivio") renderArchive(); else render(); }
+function buildLavFilters(){
+  const host=$("#lavFilters"); if(!host) return;
+  const counts={all:S.orders.length};
+  LAVORAZIONI.forEach(l=>counts[l]=S.orders.filter(o=>o.tipoCella===l).length);
+  const chips=[{id:"all",label:"Tutte"},...LAVORAZIONI.map(l=>({id:l,label:l}))];
+  host.innerHTML=chips.map(c=>`
+    <button class="chip ${S.lav===c.id?'active':''}" data-l="${esc(c.id)}">
+      ${c.id!=="all"?'<span class="dot" style="background:var(--frost)"></span>':''}
+      ${c.label}<span class="count">${counts[c.id]||0}</span>
+    </button>`).join("");
+  $$("#lavFilters .chip").forEach(c=>c.onclick=()=>{ S.lav=c.dataset.l; renderCurrent(); });
+}
 
 function setView(v){
   S.view=v;
@@ -849,7 +903,7 @@ function setView(v){
   $("#archiveHost").style.display = ord ? "none" : "";
   $("#btnNew").style.display  = ord ? "flex" : "none";
   $("#btnScan").style.display = ord ? "flex" : "none";
-  $("#searchInput").placeholder = ord ? "Cerca codice, cliente, targa…" : "Cerca cliente o ordine…";
+  $("#searchInput").placeholder = ord ? "Cerca codice lavoro, cliente, targa…" : "Cerca cliente o codice lavoro…";
   renderCurrent();
 }
 
@@ -857,7 +911,7 @@ function renderArchive(){
   const host=$("#archiveHost");
   const q=S.query.toLowerCase();
   const groups={};
-  S.orders.forEach(o=>{
+  S.orders.filter(o=> S.lav==="all" || o.tipoCella===S.lav).forEach(o=>{
     const c=(o.cliente&&o.cliente.trim())||"Senza cliente";
     (groups[c]=groups[c]||[]).push(o);
   });
@@ -949,6 +1003,7 @@ function blankOrder(codice){
   return {id:uid(),codice:codice||"",cliente:"",targa:"",tipoCella:"",dataOrdine:today,scadenza:"",stato:"bozza",optional:[],note:"",mediaCount:0,_new:true};
 }
 function openOrder(id){
+  if(!id && !S.canEdit){ toast("Sola lettura: non puoi creare lavori","err"); return; }
   S.current = id ? structuredClone(S.orders.find(o=>o.id===id)) : blankOrder();
   if(!S.current) return;
   renderSheet();
@@ -959,8 +1014,9 @@ function openOrder(id){
 }
 function openWithCode(code){
   const found=S.orders.find(o=>(o.codice||"").toLowerCase()===code.toLowerCase());
-  if(found) openOrder(found.id);
-  else{ const b=blankOrder(code); S.current=b; renderSheet(); $("#sheetScrim").classList.add("open"); $("#sheet").classList.add("open"); toast("Nuovo ordine per "+code); setTimeout(()=>{$("#f_cliente")&&$("#f_cliente").focus();},300); }
+  if(found){ openOrder(found.id); return; }
+  if(!S.canEdit){ toast("Codice non trovato (sola lettura)","err"); return; }
+  const b=blankOrder(code); S.current=b; renderSheet(); loadMedia(); $("#sheetScrim").classList.add("open"); $("#sheet").classList.add("open"); toast("Nuovo lavoro per "+code); setTimeout(()=>{$("#f_cliente")&&$("#f_cliente").focus();},300);
 }
 function closeSheet(){ $("#sheetScrim").classList.remove("open"); $("#sheet").classList.remove("open"); S.current=null; }
 
@@ -971,15 +1027,15 @@ function renderSheet(){
   const statoOptions=STATI.map(s=>`<option value="${s.id}" ${o.stato===s.id?"selected":""}>${s.label}</option>`).join("");
   $("#sheetBody").innerHTML=`
     <div class="detail-head">
-      <span class="eyebrow">${o._new?"Nuovo ordine":"Scheda commessa"}</span>
+      <span class="eyebrow">${o._new?"Nuovo lavoro":"Scheda lavoro"}</span>
       <div class="code-row" style="margin-top:6px">
         <h2 id="codeHead">${esc(o.codice||"—")}</h2>
       </div>
     </div>
 
     <div class="field mono">
-      <label>Codice / Barcode ordine</label>
-      <input id="f_codice" type="text" value="${esc(o.codice)}" placeholder="es. CF-2026-0142" style="font-family:'JetBrains Mono'">
+      <label>Codice lavoro</label>
+      <input id="f_codice" type="text" value="${esc(o.codice)}" placeholder="es. L-2026-0142" style="font-family:'JetBrains Mono'">
     </div>
     <div class="field">
       <label>Cliente</label>
@@ -987,7 +1043,12 @@ function renderSheet(){
     </div>
     <div class="grid-2">
       <div class="field"><label>Targa / Mezzo</label><input id="f_targa" type="text" value="${esc(o.targa)}" placeholder="es. AB123CD"></div>
-      <div class="field"><label>Tipo cella</label><input id="f_tipo" type="text" value="${esc(o.tipoCella)}" placeholder="Isotermica / Frigo / ATP"></div>
+      <div class="field"><label>Lavorazione</label>
+        <select id="f_tipo">
+          <option value="" ${!o.tipoCella?"selected":""} disabled>Seleziona…</option>
+          ${LAVORAZIONI.map(l=>`<option ${o.tipoCella===l?"selected":""}>${l}</option>`).join("")}
+        </select>
+      </div>
     </div>
     <div class="grid-2">
       <div class="field"><label>Data ordine</label><input id="f_data" type="date" value="${esc(o.dataOrdine)}"></div>
@@ -1035,6 +1096,9 @@ function renderSheet(){
   $("#fileInput").onchange=onFilesPicked;
   $("#btnVoice").onclick=toggleVoice;
   updateVoiceUI(false);
+  if(!S.canEdit){
+    $$("#sheetBody input, #sheetBody select, #sheetBody textarea").forEach(el=>el.disabled=true);
+  }
 }
 
 /* optionals */
@@ -1055,6 +1119,7 @@ function renderOptList(){
       <button class="del"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
     </div>`).join("");
   $$("#optList .opt-item").forEach(el=>{
+    if(!S.canEdit) return;
     const i=+el.dataset.i;
     el.querySelector(".cb").onclick=()=>{ S.current.optional[i].fatto=!S.current.optional[i].fatto; renderOptList(); };
     el.querySelector(".txt").onclick=()=>{ S.current.optional[i].fatto=!S.current.optional[i].fatto; renderOptList(); };
@@ -1085,8 +1150,10 @@ function collectForm(){
 
 /* save */
 async function saveOrder(){
+  if(!S.canEdit){ toast("Sola lettura","err"); return; }
   const o=collectForm();
-  if(!o.codice){ toast("Inserisci un codice ordine","err"); $("#f_codice").focus(); return; }
+  if(!o.codice){ toast("Inserisci il codice lavoro","err"); $("#f_codice").focus(); return; }
+  if(!o.tipoCella || !LAVORAZIONI.includes(o.tipoCella)){ toast("Seleziona la lavorazione","err"); $("#f_tipo").focus(); return; }
   const btn=$("#btnSave"); const old=btn.innerHTML; btn.innerHTML='<div class="spin"></div> Salvataggio…'; btn.disabled=true;
   try{
     const payload={id:o.id,codice:o.codice,cliente:o.cliente,targa:o.targa,tipoCella:o.tipoCella,
@@ -1108,6 +1175,7 @@ async function saveOrder(){
 
 /* delete */
 async function deleteOrder(){
+  if(!S.canEdit){ toast("Sola lettura","err"); return; }
   const o=S.current; if(!o||o._new) return;
   if(!confirm(`Eliminare l'ordine ${o.codice}?\nVerranno rimossi anche i dati (i file restano su Drive).`)) return;
   try{
@@ -1120,6 +1188,7 @@ async function deleteOrder(){
 
 /* duplicate */
 function dupeOrder(){
+  if(!S.canEdit){ toast("Sola lettura","err"); return; }
   const o=collectForm();
   const copy=structuredClone(o);
   copy.id=uid(); copy.codice=(o.codice||"")+"-COPIA"; copy._new=true; copy.mediaCount=0;
@@ -1192,6 +1261,7 @@ function fileToBase64(file){
   return new Promise((res,rej)=>{ const r=new FileReader(); r.onload=()=>res(r.result.split(",")[1]); r.onerror=rej; r.readAsDataURL(file); });
 }
 async function onFilesPicked(e){
+  if(!S.canEdit){ toast("Sola lettura","err"); return; }
   const files=[...e.target.files]; e.target.value="";
   if(!files.length) return;
   const o=S.current;
@@ -1218,6 +1288,7 @@ async function onFilesPicked(e){
   const idx=S.orders.findIndex(x=>x.id===o.id); if(idx>=0){ S.orders[idx].mediaCount=o.mediaCount; localStorage.setItem("cf_cache",JSON.stringify(S.orders)); render(); }
 }
 async function deleteFile(fid){
+  if(!S.canEdit){ toast("Sola lettura","err"); return; }
   if(!confirm("Rimuovere questo file da Drive?")) return;
   try{ await api("deleteFile",{fileId:fid}); toast("File rimosso","ok"); if(S.current) delete S.filesCache[S.current.id]; await loadMedia(); }
   catch(e){ toast(e.message,"err"); }
@@ -1255,7 +1326,7 @@ function closeScan(){
   if(scanStream){scanStream.getTracks().forEach(t=>t.stop());scanStream=null;}
 }
 function manualEntry(){
-  const val=prompt("Inserisci il codice ordine:");
+  const val=prompt("Inserisci il codice lavoro:");
   closeScan();
   if(val&&val.trim()) openWithCode(val.trim());
 }
@@ -1326,6 +1397,7 @@ async function compressImage(file, maxDim=1600, quality=0.82){
    =================================================================== */
 let mediaRecorder=null, audioChunks=[], recTimer=null, recStart=0;
 async function toggleVoice(){
+  if(!S.canEdit){ toast("Sola lettura","err"); return; }
   const o=S.current;
   if(mediaRecorder && mediaRecorder.state==="recording"){ stopVoice(); return; }
   if(!o || o._new || !o.codice){ toast("Salva prima l'ordine (serve il codice)","err"); return; }
@@ -1393,7 +1465,7 @@ function loadScript(src){
 }
 async function exportOrder(){
   const o=collectForm();
-  if(!o.codice){ toast("Inserisci un codice ordine","err"); return; }
+  if(!o.codice){ toast("Inserisci il codice lavoro","err"); return; }
   const st=statoObj(o.stato);
   const opts=(o.optional||[]);
   const optRows = opts.length
@@ -1401,7 +1473,7 @@ async function exportOrder(){
     : `<tr><td></td><td style="color:#888">Nessun optional</td></tr>`;
   $("#printArea").innerHTML=`
     <div class="p-head">
-      <div class="p-logo">CF</div>
+      <div class="p-logo"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:26px;height:26px"><path d="M12 2v20M3.34 7l17.32 10M20.66 7L3.34 17"/><path d="M12 6.2l2.4-1.4M12 6.2L9.6 4.8M12 17.8l2.4 1.4M12 17.8l-2.4 1.4"/></svg></div>
       <div><div class="p-t">SCHEDA COMMESSA</div><div class="p-s">Celle frigo · reparto costruzione</div></div>
       <div class="p-date">${new Date().toLocaleDateString("it-IT")}</div>
     </div>
@@ -1411,14 +1483,14 @@ async function exportOrder(){
     </div>
     <table class="p-info">
       <tr><th>Cliente</th><td>${esc(o.cliente||"—")}</td><th>Stato</th><td>${st.label}</td></tr>
-      <tr><th>Mezzo / Targa</th><td>${esc(o.targa||"—")}</td><th>Tipo cella</th><td>${esc(o.tipoCella||"—")}</td></tr>
+      <tr><th>Mezzo / Targa</th><td>${esc(o.targa||"—")}</td><th>Lavorazione</th><td>${esc(o.tipoCella||"—")}</td></tr>
       <tr><th>Data ordine</th><td>${fmtDate(o.dataOrdine)}</td><th>Scadenza</th><td>${fmtDate(o.scadenza)}</td></tr>
     </table>
     <div class="p-sec">Optional del mezzo</div>
     <table class="p-opt">${optRows}</table>
     <div class="p-sec">Note</div>
     <div class="p-note">${esc(o.note||"—")}</div>
-    <div class="p-foot">Celle Frigo · Controllo Ordini — scheda generata il ${new Date().toLocaleString("it-IT")}</div>`;
+    <div class="p-foot">Krio · Controllo Lavori — scheda generata il ${new Date().toLocaleString("it-IT")}</div>`;
   try{
     await loadScript("https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js");
     if(window.JsBarcode && o.codice) JsBarcode("#printBarcode", o.codice, {format:"CODE128", height:48, fontSize:14, margin:0});

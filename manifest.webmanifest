@@ -1,7 +1,7 @@
 {
-  "name": "Celle Frigo · Controllo Ordini",
-  "short_name": "Celle Frigo",
-  "description": "Gestione ordini e archivio foto delle celle frigo per camion.",
+  "name": "Krio · Controllo Lavori",
+  "short_name": "Krio",
+  "description": "Gestione lavori e archivio foto delle celle frigo per camion.",
   "lang": "it",
   "start_url": ".",
   "scope": ".",
