@@ -285,6 +285,62 @@ body.viewonly .opt-suggest,
 body.viewonly .opt-item .del{display:none !important}
 body.viewonly .sheet-foot{justify-content:flex-end}
 
+/* card compatte (ordini) */
+.orders{grid-template-columns:repeat(auto-fill,minmax(158px,1fr));gap:10px}
+.ticket{padding:12px 12px 10px}
+.ticket .barcode{display:none}
+.ticket .stamp{top:10px;right:10px;font-size:9px;padding:3px 7px}
+.ticket-code{font-size:16px;margin-top:2px}
+.ticket-client{font-size:11px;margin-top:1px}
+.ticket-foot{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-top:10px}
+.ticket .deadline{font-size:11px}
+.ticket .media-tag{font-size:10px}
+
+/* ore per mansione (budget + consuntivo) */
+.hours-grid{display:flex;flex-direction:column;gap:8px;margin-bottom:6px}
+.hours-row{display:flex;align-items:center;gap:10px}
+.hours-label{flex:1;font-size:13px}
+.hours-in{width:82px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:9px 10px;color:var(--text);outline:none;font-family:'JetBrains Mono';text-align:right}
+.hours-in:focus{border-color:var(--frost-dim);box-shadow:0 0 0 3px var(--frost-glow)}
+.hours-diff{width:50px;text-align:right;font-family:'JetBrains Mono';font-size:12px;color:var(--muted-2)}
+.hours-diff.pos{color:var(--green)} .hours-diff.neg{color:var(--red)}
+.hours-total{display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--line);padding-top:9px;margin-top:3px;font-size:13px;color:var(--muted)}
+.hours-total b{font-family:'JetBrains Mono';color:var(--text);font-size:14px}
+.hours-total.big b{font-size:15px}
+.hours-total .pos{color:var(--green)} .hours-total .neg{color:var(--red)}
+
+/* andamento / statistiche */
+.stats-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:6px}
+.stat-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:14px 10px;text-align:center}
+.stat-card .lbl{font-family:'Archivo';font-weight:700;text-transform:uppercase;letter-spacing:.06em;font-size:9px;color:var(--muted-2)}
+.stat-card .val{font-family:'JetBrains Mono';font-weight:700;font-size:19px;margin-top:6px}
+.stat-card .val.pos{color:var(--green)} .stat-card .val.neg{color:var(--red)}
+.stats-sec{font-family:'Archivo';font-weight:800;font-size:13px;text-transform:uppercase;letter-spacing:.06em;margin:22px 0 10px}
+.legend{display:flex;gap:16px;margin-bottom:12px;font-size:11px;color:var(--muted)}
+.legend span{display:flex;align-items:center;gap:6px}
+.legend i{width:11px;height:11px;border-radius:3px;display:inline-block}
+.legend i.b{background:var(--frost-dim)} .legend i.a{background:var(--frost)} .legend i.o{background:var(--red)}
+.timechart{display:flex;gap:12px;overflow-x:auto;padding-bottom:8px;align-items:flex-end}
+.timechart::-webkit-scrollbar{height:6px}
+.tc-col{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:7px}
+.tc-bars{height:120px;display:flex;align-items:flex-end;gap:4px}
+.tc-bar{width:15px;border-radius:4px 4px 0 0;min-height:2px}
+.tc-bar.b{background:var(--frost-dim)}
+.tc-bar.a{background:var(--frost)}
+.tc-bar.a.over{background:var(--red)}
+.tc-lbl{font-family:'JetBrains Mono';font-size:10px;color:var(--muted);white-space:nowrap}
+.mansione-row{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px;margin-bottom:8px}
+.mansione-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:9px;gap:8px}
+.mansione-name{font-family:'Archivo';font-weight:700;font-size:13px}
+.mansione-delta{font-family:'JetBrains Mono';font-size:12px;color:var(--muted-2);flex:0 0 auto}
+.mansione-delta.pos{color:var(--green)} .mansione-delta.neg{color:var(--red)}
+.mbar{height:8px;border-radius:5px;background:var(--surface-2);overflow:hidden;margin-bottom:5px}
+.mbar i{display:block;height:100%;border-radius:5px}
+.mbar i.b{background:var(--frost-dim)}
+.mbar i.a{background:var(--frost)}
+.mbar i.a.over{background:var(--red)}
+.mansione-nums{display:flex;gap:16px;font-family:'JetBrains Mono';font-size:11px;color:var(--muted)}
+
 /* stampa scheda commessa */
 #printArea{display:none}
 @media print{
@@ -516,7 +572,11 @@ body.viewonly .sheet-foot{justify-content:flex-end}
       </button>
       <button data-v="archivio">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-8l-2-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2z"/></svg>
-        Archivio foto
+        Archivio
+      </button>
+      <button data-v="stats">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15l3-4 3 3 4-6"/></svg>
+        Ore
       </button>
     </div>
 
@@ -526,6 +586,7 @@ body.viewonly .sheet-foot{justify-content:flex-end}
       <div class="center-load"><div class="spin"></div></div>
     </div>
     <div id="archiveHost" style="display:none"></div>
+    <div id="statsHost" style="display:none"></div>
   </div>
 
   <button class="fab" id="btnNew">
@@ -623,6 +684,14 @@ const DEFAULT_SCRIPT_URL = ""; // <-- opzionale: incolla qui l'URL /exec
 
 const LAVORAZIONI = ["Motrice","Semirimorchio","KIT"];
 
+const MANSIONI = [
+  {id:"portalista",  label:"Portalista"},
+  {id:"montatore",   label:"Montatore meccanico"},
+  {id:"interni",     label:"Interni"},
+  {id:"finizione",   label:"Finizione"},
+  {id:"elettrauto",  label:"Elettrauto"}
+];
+
 const OPT_SUGGEST = ["Gruppo frigo","Doppia temperatura","Bivalente","Sponda idraulica","Pedana","Pareti inox","Pavimento antiscivolo","Porta laterale","Tendina termica","Luci LED interne","Spoiler tetto","Bandella paracolpi","Registratore temperatura","Certificazione ATP"];
 
 const STATI = [
@@ -640,6 +709,7 @@ const S = {
   current: null,
   filter: "all",
   lav: "all",
+  statGran: "mese",
   query: "",
   role: sessionStorage.getItem("cf_role") || "edit",
   canEdit: (sessionStorage.getItem("cf_role")||"edit")==="edit",
@@ -844,27 +914,18 @@ function cardHTML(o){
   const st=statoObj(o.stato), di=deadlineInfo(o);
   const nMedia=o.mediaCount||0;
   return `<div class="ticket b-${st.cls}" data-id="${o.id}">
-    <div class="ticket-top">
-      <span class="stamp st-${st.cls}">${st.label}</span>
-      <div class="barcode"></div>
-      <div class="ticket-code">${esc(o.codice||"—")}</div>
-      <div class="ticket-client">${esc(o.cliente||"Cliente non indicato")}</div>
-    </div>
-    <div class="ticket-body">
-      <div class="ticket-meta">
-        <div class="m"><span class="k">Mezzo</span><span class="v">${esc(o.targa||"—")}</span></div>
-        <div class="m"><span class="k">Lavoraz.</span><span class="v">${esc(o.tipoCella||"—")}</span></div>
-      </div>
-      <div class="ticket-foot">
-        <span class="deadline ${di.cls}">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
-          ${di.txt}
-        </span>
-        <span class="media-tag">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
-          ${nMedia}
-        </span>
-      </div>
+    <span class="stamp st-${st.cls}">${st.label}</span>
+    <div class="ticket-code">${esc(o.codice||"—")}</div>
+    <div class="ticket-client">${esc(o.cliente||"—")}</div>
+    <div class="ticket-foot">
+      <span class="deadline ${di.cls}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+        ${di.txt}
+      </span>
+      <span class="media-tag">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+        ${nMedia}
+      </span>
     </div>
   </div>`;
 }
@@ -880,7 +941,7 @@ const IC={
   ext:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14 21 3"/></svg>'
 };
 
-function renderCurrent(){ buildLavFilters(); if(S.view==="archivio") renderArchive(); else render(); }
+function renderCurrent(){ buildLavFilters(); if(S.view==="stats") renderStats(); else if(S.view==="archivio") renderArchive(); else render(); }
 function buildLavFilters(){
   const host=$("#lavFilters"); if(!host) return;
   const counts={all:S.orders.length};
@@ -897,12 +958,15 @@ function buildLavFilters(){
 function setView(v){
   S.view=v;
   $$("#viewswitch button").forEach(b=>b.classList.toggle("active", b.dataset.v===v));
-  const ord = v==="ordini";
-  $("#filters").style.display   = ord ? "" : "none";
-  $("#ordersHost").style.display= ord ? "" : "none";
-  $("#archiveHost").style.display = ord ? "none" : "";
-  $("#btnNew").style.display  = ord ? "flex" : "none";
+  const ord=v==="ordini", arch=v==="archivio", stats=v==="stats";
+  $("#lavFilters").style.display  = stats ? "none" : "";
+  $("#filters").style.display     = ord ? "" : "none";
+  $("#ordersHost").style.display  = ord ? "" : "none";
+  $("#archiveHost").style.display = arch ? "" : "none";
+  $("#statsHost").style.display   = stats ? "" : "none";
+  $("#btnNew").style.display  = (ord && S.canEdit) ? "flex" : "none";
   $("#btnScan").style.display = ord ? "flex" : "none";
+  const sb=document.querySelector(".search"); if(sb) sb.style.display = stats ? "none" : "flex";
   $("#searchInput").placeholder = ord ? "Cerca codice lavoro, cliente, targa…" : "Cerca cliente o codice lavoro…";
   renderCurrent();
 }
@@ -996,11 +1060,104 @@ function wireArchive(){
 }
 
 /* ===================================================================
+   ANDAMENTO ORE — riepilogo, grafico temporale, per mansione
+   =================================================================== */
+const GRAN = [
+  {id:"settimana", label:"Settimana"},
+  {id:"mese",      label:"Mese"},
+  {id:"semestre",  label:"Semestre"},
+  {id:"anno",      label:"Anno"}
+];
+function sumBudget(o){ return MANSIONI.reduce((s,m)=>s+(parseFloat((o.budget||{})[m.id])||0),0); }
+function sumActual(o){ return MANSIONI.reduce((s,m)=>s+(parseFloat((o.actual||{})[m.id])||0),0); }
+function statDate(o){ return o.readyAt || o.dataOrdine || (o.updatedAt? String(o.updatedAt).slice(0,10):""); }
+function startOfWeek(d){ const x=new Date(d); const day=(x.getDay()+6)%7; x.setDate(x.getDate()-day); x.setHours(0,0,0,0); return x; }
+const MESI=["gen","feb","mar","apr","mag","giu","lug","ago","set","ott","nov","dic"];
+function bucketOf(dateStr, gran){
+  const d=new Date(dateStr); if(isNaN(d)) return null;
+  const y=d.getFullYear();
+  if(gran==="anno")     return {key:""+y, label:""+y, sort:y*100};
+  if(gran==="semestre"){ const s=d.getMonth()<6?1:2; return {key:y+"-S"+s, label:"S"+s+" '"+String(y).slice(2), sort:y*100+s}; }
+  if(gran==="settimana"){ const sw=startOfWeek(d); return {key:sw.toISOString().slice(0,10), label:String(sw.getDate()).padStart(2,"0")+"/"+String(sw.getMonth()+1).padStart(2,"0"), sort:sw.getTime()}; }
+  const m=d.getMonth()+1; return {key:y+"-"+String(m).padStart(2,"0"), label:MESI[m-1]+" '"+String(y).slice(2), sort:y*100+m};
+}
+
+function renderStats(){
+  const host=$("#statsHost");
+  const granChips=`<div class="filters" style="margin-bottom:16px">${GRAN.map(g=>`<button class="chip ${S.statGran===g.id?'active':''}" data-g="${g.id}">${g.label}</button>`).join("")}</div>`;
+  const done=S.orders.filter(o=> sumActual(o)>0);
+
+  if(!done.length){
+    host.innerHTML=granChips+`<div class="empty">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 3v18h18"/><path d="M7 15l3-4 3 3 4-6"/></svg>
+      <h3>Ancora nessun consuntivo</h3>
+      <p>Quando porti un lavoro in stato «Pronto» e inserisci le ore effettive, qui compare l'andamento.</p>
+    </div>`;
+    wireGran(); return;
+  }
+
+  let tB=0,tA=0; done.forEach(o=>{ tB+=sumBudget(o); tA+=sumActual(o); });
+  const dTot=tB-tA;
+  const summary=`<div class="stats-summary">
+    <div class="stat-card"><div class="lbl">Ore budget</div><div class="val">${fmtH(tB)}</div></div>
+    <div class="stat-card"><div class="lbl">Ore effettive</div><div class="val">${fmtH(tA)}</div></div>
+    <div class="stat-card"><div class="lbl">${dTot>=0?"Avanzo":"Sforo"}</div><div class="val ${dTot>=0?'pos':'neg'}">${(dTot>=0?"+":"")+fmtH(dTot)}</div></div>
+  </div>`;
+
+  // grafico temporale
+  const buckets={};
+  done.forEach(o=>{ const bk=bucketOf(statDate(o), S.statGran); if(!bk) return;
+    const b=buckets[bk.key]=buckets[bk.key]||{label:bk.label,sort:bk.sort,bud:0,act:0};
+    b.bud+=sumBudget(o); b.act+=sumActual(o); });
+  let arr=Object.values(buckets).sort((a,b)=>a.sort-b.sort).slice(-12);
+  const maxV=Math.max(1,...arr.map(b=>Math.max(b.bud,b.act)));
+  const cols=arr.map(b=>{
+    const hB=Math.max(2,Math.round(b.bud/maxV*118));
+    const hA=Math.max(2,Math.round(b.act/maxV*118));
+    const over=b.act>b.bud;
+    return `<div class="tc-col">
+      <div class="tc-bars">
+        <div class="tc-bar b" style="height:${hB}px" title="Budget ${fmtH(b.bud)} h"></div>
+        <div class="tc-bar a ${over?'over':''}" style="height:${hA}px" title="Effettive ${fmtH(b.act)} h"></div>
+      </div>
+      <div class="tc-lbl">${b.label}</div>
+    </div>`;
+  }).join("");
+  const chart=`
+    <div class="stats-sec">Andamento ore</div>
+    <div class="legend"><span><i class="b"></i>Budget</span><span><i class="a"></i>Effettive</span><span><i class="o"></i>Sforo</span></div>
+    <div class="timechart">${cols}</div>`;
+
+  // per mansione (cumulativo)
+  const perM=MANSIONI.map(m=>{ let b=0,a=0; done.forEach(o=>{ b+=parseFloat((o.budget||{})[m.id])||0; a+=parseFloat((o.actual||{})[m.id])||0; }); return {label:m.label,b:b,a:a,d:b-a}; });
+  const maxM=Math.max(1,...perM.map(x=>Math.max(x.b,x.a)));
+  const rows=perM.map(x=>{
+    const wB=Math.round(x.b/maxM*100), wA=Math.round(x.a/maxM*100), over=x.a>x.b;
+    return `<div class="mansione-row">
+      <div class="mansione-head">
+        <span class="mansione-name">${x.label}</span>
+        <span class="mansione-delta ${x.d>=0?'pos':'neg'}">${x.d>=0?"avanzo ":"sforo "}${fmtH(Math.abs(x.d))} h</span>
+      </div>
+      <div class="mbar"><i class="b" style="width:${wB}%"></i></div>
+      <div class="mbar"><i class="a ${over?'over':''}" style="width:${wA}%"></i></div>
+      <div class="mansione-nums"><span>Budget ${fmtH(x.b)} h</span><span>Effettive ${fmtH(x.a)} h</span></div>
+    </div>`;
+  }).join("");
+  const perMansione=`<div class="stats-sec">Per mansione</div>${rows}`;
+
+  host.innerHTML=granChips+summary+chart+perMansione;
+  wireGran();
+}
+function wireGran(){
+  $$("#statsHost .chip[data-g]").forEach(c=>c.onclick=()=>{ S.statGran=c.dataset.g; renderStats(); });
+}
+
+/* ===================================================================
    DETAIL SHEET
    =================================================================== */
 function blankOrder(codice){
   const today=new Date().toISOString().slice(0,10);
-  return {id:uid(),codice:codice||"",cliente:"",targa:"",tipoCella:"",dataOrdine:today,scadenza:"",stato:"bozza",optional:[],note:"",mediaCount:0,_new:true};
+  return {id:uid(),codice:codice||"",cliente:"",targa:"",tipoCella:"",dataOrdine:today,scadenza:"",stato:"bozza",optional:[],note:"",budget:{},actual:{},readyAt:"",mediaCount:0,_new:true};
 }
 function openOrder(id){
   if(!id && !S.canEdit){ toast("Sola lettura: non puoi creare lavori","err"); return; }
@@ -1067,6 +1224,28 @@ function renderSheet(){
     <div class="opt-suggest" id="optSuggest"></div>
     <div class="opt-list" id="optList"></div>
 
+    <div class="section-title"><span class="n">ORE</span> Budget ore per mansione</div>
+    <div class="hours-grid">
+      ${MANSIONI.map(m=>`
+        <div class="hours-row">
+          <span class="hours-label">${m.label}</span>
+          <input class="hours-in" type="number" min="0" step="0.5" inputmode="decimal" id="bud_${m.id}" value="${(o.budget&&o.budget[m.id]!=null&&o.budget[m.id]!=="")?o.budget[m.id]:""}" placeholder="0">
+        </div>`).join("")}
+      <div class="hours-total"><span>Totale budget</span><b id="budTotal">0</b></div>
+    </div>
+
+    <div class="section-title" id="actSection" style="${(o.stato==="pronto"||o.stato==="cons")?"":"display:none"}"><span class="n">ORE</span> Ore effettive (consuntivo)</div>
+    <div class="hours-grid" id="actGrid" style="${(o.stato==="pronto"||o.stato==="cons")?"":"display:none"}">
+      ${MANSIONI.map(m=>`
+        <div class="hours-row">
+          <span class="hours-label">${m.label}</span>
+          <input class="hours-in" type="number" min="0" step="0.5" inputmode="decimal" id="act_${m.id}" value="${(o.actual&&o.actual[m.id]!=null&&o.actual[m.id]!=="")?o.actual[m.id]:""}" placeholder="0">
+          <span class="hours-diff" id="diff_${m.id}"></span>
+        </div>`).join("")}
+      <div class="hours-total"><span>Totale effettive</span><b id="actTotal">0</b></div>
+      <div class="hours-total big"><span>Scostamento sul budget</span><b id="scostoTotal">—</b></div>
+    </div>
+
     <div class="section-title"><span class="n">MEDIA</span> Foto · documenti · video · note vocali</div>
     <button type="button" class="voice-btn" id="btnVoice">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v1a7 7 0 0 1-14 0v-1M12 18v4M8 22h8"/></svg>
@@ -1096,8 +1275,47 @@ function renderSheet(){
   $("#fileInput").onchange=onFilesPicked;
   $("#btnVoice").onclick=toggleVoice;
   updateVoiceUI(false);
+  $("#f_stato").onchange=onStatoChange;
+  $$("#sheetBody .hours-in").forEach(el=>el.oninput=computeHours);
+  S._actPrompted = (S.current.stato==="pronto"||S.current.stato==="cons");
+  computeHours();
   if(!S.canEdit){
     $$("#sheetBody input, #sheetBody select, #sheetBody textarea").forEach(el=>el.disabled=true);
+  }
+}
+function onStatoChange(){
+  const v=$("#f_stato").value, show=(v==="pronto"||v==="cons");
+  const sec=$("#actSection"), grid=$("#actGrid");
+  if(sec) sec.style.display=show?"":"none";
+  if(grid) grid.style.display=show?"":"none";
+  if(show && !S._actPrompted){
+    S._actPrompted=true;
+    toast("Inserisci le ore effettive per mansione","");
+    const first=$("#act_"+MANSIONI[0].id); if(first) setTimeout(()=>first.focus(),120);
+  }
+  computeHours();
+}
+function fmtH(n){ return (Math.round(n*10)/10).toString().replace(".",","); }
+function computeHours(){
+  let b=0,a=0,anyAct=false;
+  MANSIONI.forEach(m=>{
+    const bi=$("#bud_"+m.id), ai=$("#act_"+m.id);
+    const bv=bi?parseFloat(bi.value)||0:0;
+    const av=ai?parseFloat(ai.value)||0:0;
+    b+=bv; a+=av;
+    const de=$("#diff_"+m.id);
+    if(de){
+      if(!ai || ai.value===""){ de.textContent=""; de.className="hours-diff"; }
+      else { const d=bv-av; de.textContent=(d>=0?"+":"")+fmtH(d)+" h"; de.className="hours-diff "+(d>=0?"pos":"neg"); }
+    }
+    if(ai && ai.value!=="") anyAct=true;
+  });
+  const bt=$("#budTotal"); if(bt) bt.textContent=fmtH(b)+" h";
+  const at=$("#actTotal"); if(at) at.textContent=fmtH(a)+" h";
+  const sc=$("#scostoTotal");
+  if(sc){
+    if(!anyAct){ sc.textContent="—"; sc.className=""; }
+    else { const d=b-a; sc.textContent=(d>=0?"avanzo ":"sforo ")+fmtH(Math.abs(d))+" h"; sc.className=d>=0?"pos":"neg"; }
   }
 }
 
@@ -1145,6 +1363,12 @@ function collectForm(){
   o.scadenza=$("#f_scad").value;
   o.stato=$("#f_stato").value;
   o.note=$("#f_note").value.trim();
+  o.budget={}; o.actual={};
+  MANSIONI.forEach(m=>{
+    const bi=$("#bud_"+m.id); if(bi && bi.value!=="") o.budget[m.id]=parseFloat(bi.value)||0;
+    const ai=$("#act_"+m.id); if(ai && ai.value!=="") o.actual[m.id]=parseFloat(ai.value)||0;
+  });
+  if((o.stato==="pronto"||o.stato==="cons") && !o.readyAt) o.readyAt=new Date().toISOString().slice(0,10);
   return o;
 }
 
@@ -1157,7 +1381,8 @@ async function saveOrder(){
   const btn=$("#btnSave"); const old=btn.innerHTML; btn.innerHTML='<div class="spin"></div> Salvataggio…'; btn.disabled=true;
   try{
     const payload={id:o.id,codice:o.codice,cliente:o.cliente,targa:o.targa,tipoCella:o.tipoCella,
-      dataOrdine:o.dataOrdine,scadenza:o.scadenza,stato:o.stato,optional:o.optional||[],note:o.note};
+      dataOrdine:o.dataOrdine,scadenza:o.scadenza,stato:o.stato,optional:o.optional||[],note:o.note,
+      budget:o.budget||{},actual:o.actual||{},readyAt:o.readyAt||""};
     const d=await api("save",{order:payload});
     o._new=false; if(d.order&&d.order.mediaCount!=null) o.mediaCount=d.order.mediaCount;
     // update local list
@@ -1192,7 +1417,8 @@ function dupeOrder(){
   const o=collectForm();
   const copy=structuredClone(o);
   copy.id=uid(); copy.codice=(o.codice||"")+"-COPIA"; copy._new=true; copy.mediaCount=0;
-  S.current=copy; renderSheet(); loadMedia(); toast("Ordine duplicato — modifica e salva");
+  copy.actual={}; copy.readyAt=""; copy.stato="bozza";
+  S.current=copy; renderSheet(); loadMedia(); toast("Lavoro duplicato — modifica e salva");
 }
 
 /* ===================================================================
