@@ -284,6 +284,8 @@ body.viewonly .opt-add,
 body.viewonly .opt-suggest,
 body.viewonly .opt-item .del{display:none !important}
 body.viewonly .sheet-foot{justify-content:flex-end}
+body.viewonly #viewswitch [data-v="stats"],
+body.viewonly #viewswitch [data-v="cap"]{display:none !important}
 
 /* card compatte (ordini) */
 .orders{grid-template-columns:repeat(auto-fill,minmax(158px,1fr));gap:10px}
@@ -410,6 +412,17 @@ body.viewonly .sheet-foot{justify-content:flex-end}
 .cap-jobs .chips .jc{font-family:'JetBrains Mono';font-size:11px;background:var(--surface);border:1px solid var(--line);border-radius:100px;padding:5px 11px;color:var(--muted)}
 .cap-note{font-size:12px;color:var(--amber);margin-top:10px;display:flex;align-items:center;gap:7px}
 .cap-note svg{width:14px;height:14px;flex:0 0 auto}
+
+/* pulsante export Excel */
+.xls-btn{display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 16px;border-radius:var(--r);border:1px solid var(--green);background:rgba(63,184,79,.08);color:var(--green);font-family:'Archivo';font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.05em}
+.xls-btn svg{width:16px;height:16px}
+.xls-btn:active{background:rgba(63,184,79,.18)}
+
+/* indicatore note nella riga ordine */
+.orow-note{color:var(--frost);display:grid;place-items:center;flex:0 0 auto}
+.orow-note svg{width:15px;height:15px}
+.chip.note-chip.active{border-color:var(--frost);color:var(--frost);background:var(--surface-2)}
+.chip.note-chip svg{width:12px;height:12px;margin-right:-2px}
 
 /* stampa scheda commessa */
 #printArea{display:none}
@@ -627,7 +640,7 @@ body.viewonly .sheet-foot{justify-content:flex-end}
     <div class="cmdbar">
       <div class="search">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
-        <input id="searchInput" type="text" inputmode="text" placeholder="Cerca codice lavoro, cliente, targa…" autocomplete="off">
+        <input id="searchInput" type="text" inputmode="text" placeholder="Cerca codice lavoro, cliente, telaio…" autocomplete="off">
       </div>
       <button class="btn-scan" id="btnScan">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><path d="M7 8v8M10 8v8M13 8v8M16 8v8"/></svg>
@@ -719,7 +732,7 @@ body.viewonly .sheet-foot{justify-content:flex-end}
       <h3>Impostazioni</h3>
     </div>
     <div class="modal-body">
-      <p class="hint">Incolla l'URL del tuo Web App di Google Apps Script (finisce con <code>/exec</code>). I dati e i file restano sempre su Drive, accessibili da qualsiasi dispositivo.</p>
+      <p class="hint">L'app è già collegata al gestionale online, uguale su tutti i dispositivi: dati, foto e organico sono condivisi. Modifica questo campo <b>solo</b> se cambia l'indirizzo dello script (<code>/exec</code>).</p>
       <div class="field">
         <label>URL script (Google Apps Script)</label>
         <input id="setUrl" type="url" inputmode="url" placeholder="https://script.google.com/macros/s/…/exec" style="font-family:'JetBrains Mono';font-size:12px">
@@ -755,7 +768,7 @@ body.viewonly .sheet-foot{justify-content:flex-end}
    CELLE FRIGO · CONTROLLO ORDINI
    Config: incolla qui l'URL del Web App (o usalo dalle impostazioni).
    =================================================================== */
-const DEFAULT_SCRIPT_URL = ""; // <-- opzionale: incolla qui l'URL /exec
+const DEFAULT_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzvHnqvM1jMVbit4o9pl98wq4XaJvP54fglchGNP6YrSiu9ENW74Jh0mlJn0anpnyS3/exec"; // URL /exec incorporato (condiviso su tutti i dispositivi)
 
 const LAVORAZIONI = ["Motrice","Semirimorchio","KIT"];
 
@@ -776,6 +789,12 @@ const STATI = [
   {id:"cons",   label:"Consegnato",     cls:"cons",   color:"var(--green)"}
 ];
 
+/* Se l'URL incorporato cambia, ogni dispositivo adotta il nuovo (sovrascrive il salvato) */
+if(localStorage.getItem("cf_url_default") !== DEFAULT_SCRIPT_URL){
+  localStorage.setItem("cf_url_default", DEFAULT_SCRIPT_URL);
+  localStorage.setItem("cf_url", DEFAULT_SCRIPT_URL);
+}
+
 /* ---------- state ---------- */
 const S = {
   url: localStorage.getItem("cf_url") || DEFAULT_SCRIPT_URL || "",
@@ -783,10 +802,12 @@ const S = {
   orders: JSON.parse(localStorage.getItem("cf_cache")||"[]"),
   current: null,
   filter: "all",
+  noteFilter: "all",
   lav: "all",
   statGran: "mese",
   statCode: "all",
   capMonth: new Date().toISOString().slice(0,7),
+  settings: JSON.parse(localStorage.getItem("cf_settings")||"{}"),
   query: "",
   role: sessionStorage.getItem("cf_role") || "edit",
   canEdit: (sessionStorage.getItem("cf_role")||"edit")==="edit",
@@ -893,6 +914,7 @@ function applyRole(){
   S.canEdit = S.role==="edit";
   document.body.classList.toggle("viewonly", !S.canEdit);
   const b=$("#roleBadge"); if(b) b.style.display = S.canEdit ? "none" : "inline-flex";
+  if(!S.canEdit && (S.view==="stats"||S.view==="cap")) setView("ordini");
 }
 function enterApp(){
   $("#login").classList.remove("active");
@@ -924,6 +946,7 @@ async function loadOrders(){
   try{
     const d=await api("list");
     S.orders=d.orders||[];
+    if(d.settings){ S.settings=d.settings; localStorage.setItem("cf_settings",JSON.stringify(S.settings)); }
     localStorage.setItem("cf_cache",JSON.stringify(S.orders));
     renderCurrent();
     checkDeadlines();
@@ -938,17 +961,26 @@ function buildFilters(){
   const counts={all:S.orders.length};
   STATI.forEach(s=>counts[s.id]=S.orders.filter(o=>o.stato===s.id).length);
   const chips=[{id:"all",label:"Tutti",color:"var(--frost)"},...STATI];
+  const withNotes=S.orders.filter(o=>o.note&&o.note.trim()).length;
+  const noteLbl = S.noteFilter==="si"?"Con note" : S.noteFilter==="no"?"Senza note" : "Note";
+  const noteChip=`<button class="chip note-chip ${S.noteFilter!=='all'?'active':''}" id="noteChip">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/></svg>
+      ${noteLbl}<span class="count">${withNotes}</span>
+    </button>`;
   host.innerHTML=chips.map(c=>`
     <button class="chip ${S.filter===c.id?'active':''}" data-f="${c.id}">
       ${c.id!=="all"?`<span class="dot" style="background:${c.color}"></span>`:''}
       ${c.label}<span class="count">${counts[c.id]||0}</span>
-    </button>`).join("");
-  $$("#filters .chip").forEach(c=>c.onclick=()=>{S.filter=c.dataset.f;render();});
+    </button>`).join("")+noteChip;
+  $$("#filters .chip[data-f]").forEach(c=>c.onclick=()=>{S.filter=c.dataset.f;render();});
+  $("#noteChip").onclick=()=>{ S.noteFilter = S.noteFilter==="all"?"si":(S.noteFilter==="si"?"no":"all"); render(); };
 }
 function filtered(){
   let list=[...S.orders];
   if(S.filter!=="all") list=list.filter(o=>o.stato===S.filter);
   if(S.lav!=="all") list=list.filter(o=>o.tipoCella===S.lav);
+  if(S.noteFilter==="si") list=list.filter(o=>o.note&&o.note.trim());
+  else if(S.noteFilter==="no") list=list.filter(o=>!(o.note&&o.note.trim()));
   if(S.query){
     const q=S.query.toLowerCase();
     list=list.filter(o=>[o.codice,o.cliente,o.targa,o.tipoCella].some(v=>(v||"").toLowerCase().includes(q)));
@@ -976,7 +1008,7 @@ function render(){
   const list=filtered();
   const host=$("#ordersHost");
   if(!list.length){
-    const filtering = S.query||S.filter!=="all"||S.lav!=="all";
+    const filtering = S.query||S.filter!=="all"||S.lav!=="all"||S.noteFilter!=="all";
     host.innerHTML=`<div class="empty">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 4v5M8 13h5"/></svg>
       <h3>${filtering?"Nessun lavoro trovato":"Ancora nessun lavoro"}</h3>
@@ -996,6 +1028,7 @@ function rowHTML(o){
       <div class="orow-sub">${esc(o.cliente||"—")}</div>
     </div>
     <div class="orow-right">
+      ${(o.note&&o.note.trim())?`<span class="orow-note" title="Note presenti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/></svg></span>`:""}
       <span class="orow-dl ${di.cls}">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
         <span class="dltxt">${di.txt}</span>
@@ -1063,7 +1096,7 @@ function setView(v){
   $("#btnNew").style.display  = (ord && S.canEdit) ? "flex" : "none";
   $("#btnScan").style.display = ord ? "flex" : "none";
   const sb=document.querySelector(".search"); if(sb) sb.style.display = (stats||cap) ? "none" : "flex";
-  $("#searchInput").placeholder = ord ? "Cerca codice lavoro, cliente, targa…" : "Cerca cliente o codice lavoro…";
+  $("#searchInput").placeholder = ord ? "Cerca codice lavoro, cliente, telaio…" : "Cerca cliente o codice lavoro…";
   renderCurrent();
 }
 
@@ -1248,12 +1281,14 @@ function renderStats(){
   }).join("");
   const perMansione=`<div class="stats-sec">Per mansione</div>${rows}`;
 
-  host.innerHTML=codeSel+granChips+summary+chart+perMansione;
+  const expBtn=`<button class="xls-btn" id="btnExpOre" style="margin-top:18px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 13l6 6M15 13l-6 6"/></svg>Esporta Excel</button>`;
+  host.innerHTML=codeSel+granChips+summary+chart+perMansione+expBtn;
   wireGran();
 }
 function wireGran(){
   $$("#statsHost .chip[data-g]").forEach(c=>c.onclick=()=>{ S.statGran=c.dataset.g; renderStats(); });
   const sel=$("#statCodeSel"); if(sel) sel.onchange=()=>{ S.statCode=sel.value; renderStats(); };
+  const exp=$("#btnExpOre"); if(exp) exp.onclick=exportOre;
 }
 
 /* ===================================================================
@@ -1261,10 +1296,12 @@ function wireGran(){
    =================================================================== */
 const MESI_FULL=["Gennaio","Febbraio","Marzo","Aprile","Maggio","Giugno","Luglio","Agosto","Settembre","Ottobre","Novembre","Dicembre"];
 const HPP_DEFAULT=172;
-function getPeople(){ try{ return JSON.parse(localStorage.getItem("cf_people")||"{}"); }catch(_){ return {}; } }
-function setPeople(p){ localStorage.setItem("cf_people", JSON.stringify(p)); }
-function getHpp(){ const v=parseFloat(localStorage.getItem("cf_hpp")); return (v&&v>0)?v:HPP_DEFAULT; }
-function setHpp(v){ localStorage.setItem("cf_hpp", String(v)); }
+function getPeople(){ return (S.settings && S.settings.people) || {}; }
+function getHpp(){ const v=parseFloat(S.settings && S.settings.hpp); return (v&&v>0)?v:HPP_DEFAULT; }
+function persistSettings(){
+  localStorage.setItem("cf_settings", JSON.stringify(S.settings));
+  api("setSettings",{settings:S.settings}).catch(e=>toast(e.message,"err"));
+}
 function shiftMonth(key,delta){ const p=key.split("-").map(Number); const d=new Date(p[0], p[1]-1+delta, 1); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0"); }
 function monthLabelIt(key){ const p=key.split("-"); return MESI_FULL[(+p[1])-1]+" "+p[0]; }
 
@@ -1332,19 +1369,75 @@ function renderCap(){
     ? `<div class="cap-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/></svg>${noDate.length} lavoro/i aperto/i senza scadenza: non conteggiati in nessun mese.</div>`
     : "";
 
-  host.innerHTML=nav+verdict+hppRow+`<div class="stats-sec">Per mansione</div>`+cards+jobsList+note;
+  host.innerHTML=nav+verdict+hppRow+`<div class="stats-sec">Per mansione</div>`+cards+jobsList+note+
+    `<button class="xls-btn" id="btnExpCap" style="margin-top:16px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 13l6 6M15 13l-6 6"/></svg>Esporta Excel</button>`;
   wireCap();
 }
 function wireCap(){
   $$("#capHost .cap-nav button").forEach(b=>b.onclick=()=>{ S.capMonth=shiftMonth(S.capMonth, +b.dataset.nav); renderCap(); });
+  const exp=$("#btnExpCap"); if(exp) exp.onclick=exportCap;
   if(!S.canEdit) return;
-  const hpp=$("#hppInput"); if(hpp) hpp.onchange=()=>{ setHpp(parseFloat(hpp.value)||HPP_DEFAULT); renderCap(); };
+  const hpp=$("#hppInput"); if(hpp) hpp.onchange=()=>{ S.settings.hpp=parseFloat(hpp.value)||HPP_DEFAULT; renderCap(); persistSettings(); };
   $$("#capHost .cap-card").forEach(card=>{
     const id=card.dataset.m, input=card.querySelector(".pers-in");
-    const save=val=>{ const p=getPeople(); p[id]=Math.max(0,parseFloat(val)||0); setPeople(p); renderCap(); };
+    const save=val=>{ const p=Object.assign({}, getPeople()); p[id]=Math.max(0,parseFloat(val)||0); S.settings.people=p; renderCap(); persistSettings(); };
     input.onchange=()=>save(input.value);
     card.querySelectorAll(".stepper button").forEach(btn=>btn.onclick=()=>save((parseFloat(input.value)||0)+(+btn.dataset.step)));
   });
+}
+
+/* ===================================================================
+   EXPORT EXCEL (Ore + Organico) via SheetJS
+   =================================================================== */
+async function exportXlsx(filename, sheets){
+  try{ await loadScript("https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"); }
+  catch(_){ toast("Export non disponibile offline","err"); return; }
+  if(!window.XLSX){ toast("Libreria Excel non caricata","err"); return; }
+  const wb=XLSX.utils.book_new();
+  sheets.forEach(s=>{ const ws=XLSX.utils.aoa_to_sheet(s.rows); XLSX.utils.book_append_sheet(wb, ws, s.name.slice(0,31)); });
+  XLSX.writeFile(wb, filename);
+  toast("File Excel generato","ok");
+}
+function exportOre(){
+  let done=S.orders.filter(o=> sumActual(o)>0);
+  if(S.statCode!=="all") done=done.filter(o=>o.codice===S.statCode);
+  if(!done.length){ toast("Nessun consuntivo da esportare","err"); return; }
+  // per mansione
+  const perM=[["Mansione","Ore budget","Ore effettive","Scostamento"]];
+  MANSIONI.forEach(m=>{ let b=0,a=0; done.forEach(o=>{ b+=parseFloat((o.budget||{})[m.id])||0; a+=parseFloat((o.actual||{})[m.id])||0; }); perM.push([m.label,b,a,b-a]); });
+  const tb=done.reduce((s,o)=>s+sumBudget(o),0), ta=done.reduce((s,o)=>s+sumActual(o),0);
+  perM.push(["TOTALE",tb,ta,tb-ta]);
+  // per periodo
+  const buckets={};
+  done.forEach(o=>{ const bk=bucketOf(statDate(o),S.statGran); if(!bk)return; const b=buckets[bk.key]=buckets[bk.key]||{label:bk.label,sort:bk.sort,bud:0,act:0}; b.bud+=sumBudget(o); b.act+=sumActual(o); });
+  const per=[["Periodo ("+S.statGran+")","Ore budget","Ore effettive","Scostamento"]];
+  Object.values(buckets).sort((a,b)=>a.sort-b.sort).forEach(b=>per.push([b.label,b.bud,b.act,b.bud-b.act]));
+  // dettaglio lavori
+  const head=["Codice","Cliente","Data pronto"];
+  MANSIONI.forEach(m=>head.push(m.label+" budget", m.label+" eff."));
+  head.push("Tot budget","Tot eff.","Scostamento");
+  const det=[head];
+  done.forEach(o=>{ const r=[o.codice||"",o.cliente||"",statDate(o)]; MANSIONI.forEach(m=>r.push(parseFloat((o.budget||{})[m.id])||0, parseFloat((o.actual||{})[m.id])||0)); const b=sumBudget(o),a=sumActual(o); r.push(b,a,b-a); det.push(r); });
+  const suff=(S.statCode==="all"?"tutti":S.statCode).replace(/[^\w-]/g,"_");
+  exportXlsx(`Krio_ore_${suff}.xlsx`, [
+    {name:"Per mansione", rows:perM},
+    {name:"Per periodo", rows:per},
+    {name:"Dettaglio lavori", rows:det}
+  ]);
+}
+function exportCap(){
+  const people=getPeople(), hpp=getHpp();
+  const OPEN={bozza:1, lav:1};
+  const jobs=S.orders.filter(o=> OPEN[o.stato] && (o.scadenza||"").slice(0,7)===S.capMonth);
+  const rows=[["ORGANICO — "+monthLabelIt(S.capMonth)],[],["Ore mensili per persona",hpp],[],
+    ["Mansione","Persone","Capacità (h)","Fabbisogno (h)","Saldo (h)","Persone in più"]];
+  let tc=0,td=0;
+  MANSIONI.forEach(m=>{ const p=parseFloat(people[m.id])||0, cap=p*hpp, dem=jobs.reduce((s,o)=>s+(parseFloat((o.budget||{})[m.id])||0),0), saldo=cap-dem, need=saldo<0?Math.ceil(-saldo/hpp):0; tc+=cap; td+=dem; rows.push([m.label,p,cap,dem,saldo,need]); });
+  rows.push(["TOTALE","",tc,td,tc-td,""]);
+  rows.push([],["Lavori conteggiati in "+monthLabelIt(S.capMonth)]);
+  rows.push(["Codice","Cliente","Telaio","Lavorazione","Scadenza"].concat(MANSIONI.map(m=>m.label+" (h)")));
+  jobs.forEach(o=>rows.push([o.codice||"",o.cliente||"",o.targa||"",o.tipoCella||"",o.scadenza||""].concat(MANSIONI.map(m=>parseFloat((o.budget||{})[m.id])||0))));
+  exportXlsx(`Krio_organico_${S.capMonth}.xlsx`, [{name:monthLabelIt(S.capMonth), rows:rows}]);
 }
 
 /* ===================================================================
@@ -1394,7 +1487,7 @@ function renderSheet(){
       <input id="f_cliente" type="text" value="${esc(o.cliente)}" placeholder="Ragione sociale">
     </div>
     <div class="grid-2">
-      <div class="field"><label>Targa / Mezzo</label><input id="f_targa" type="text" value="${esc(o.targa)}" placeholder="es. AB123CD"></div>
+      <div class="field"><label>Telaio</label><input id="f_targa" type="text" value="${esc(o.targa)}" placeholder="n° telaio del mezzo"></div>
       <div class="field"><label>Lavorazione</label>
         <select id="f_tipo">
           <option value="" ${!o.tipoCella?"selected":""} disabled>Seleziona…</option>
@@ -1904,7 +1997,7 @@ async function exportOrder(){
     </div>
     <table class="p-info">
       <tr><th>Cliente</th><td>${esc(o.cliente||"—")}</td><th>Stato</th><td>${st.label}</td></tr>
-      <tr><th>Mezzo / Targa</th><td>${esc(o.targa||"—")}</td><th>Lavorazione</th><td>${esc(o.tipoCella||"—")}</td></tr>
+      <tr><th>Telaio</th><td>${esc(o.targa||"—")}</td><th>Lavorazione</th><td>${esc(o.tipoCella||"—")}</td></tr>
       <tr><th>Data ordine</th><td>${fmtDate(o.dataOrdine)}</td><th>Scadenza</th><td>${fmtDate(o.scadenza)}</td></tr>
     </table>
     <div class="p-sec">Optional del mezzo</div>
