@@ -285,7 +285,11 @@ body.viewonly .opt-suggest,
 body.viewonly .opt-item .del{display:none !important}
 body.viewonly .sheet-foot{justify-content:flex-end}
 body.viewonly #viewswitch [data-v="stats"],
-body.viewonly #viewswitch [data-v="cap"]{display:none !important}
+body.viewonly #viewswitch [data-v="cap"],
+body.viewonly #viewswitch [data-v="prev"]{display:none !important}
+.viewswitch{overflow-x:auto}
+.viewswitch::-webkit-scrollbar{display:none}
+.viewswitch button{flex:0 0 auto;padding:0 15px;white-space:nowrap}
 
 /* card compatte (ordini) */
 .orders{grid-template-columns:repeat(auto-fill,minmax(158px,1fr));gap:10px}
@@ -428,6 +432,58 @@ body.viewonly #viewswitch [data-v="cap"]{display:none !important}
 .chip.note-chip.active{border-color:var(--frost);color:var(--frost);background:var(--surface-2)}
 .chip.note-chip svg{width:12px;height:12px;margin-right:-2px}
 .note-box{background:var(--bg-deep);border:1px solid var(--line);border-left:3px solid var(--amber);border-radius:var(--r);padding:12px 14px;font-size:14px;line-height:1.55;color:var(--text);white-space:pre-wrap;max-height:42vh;overflow:auto}
+
+/* ---- Preventivi ---- */
+.pv-sub{display:flex;gap:4px;background:var(--surface);border:1px solid var(--line);border-radius:100px;padding:4px;margin-bottom:16px}
+.pv-sub button{flex:1;height:36px;border-radius:100px;font-family:'Archivo';font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.pv-sub button.active{background:var(--surface-2);color:var(--frost)}
+.pv-steps{display:flex;gap:8px;margin-bottom:18px}
+.pv-step{flex:1;text-align:center;padding:9px 4px;border-radius:var(--r);border:1px solid var(--line);background:var(--surface);font-family:'Archivo';font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);display:flex;align-items:center;justify-content:center;gap:6px}
+.pv-step .n{width:17px;height:17px;border-radius:50%;background:var(--surface-2);display:grid;place-items:center;font-size:10px}
+.pv-step.active{border-color:var(--frost);color:var(--text);background:var(--surface-2)}
+.pv-step.active .n{background:var(--frost);color:#04141a}
+.pv-step.done .n{background:var(--green);color:#04140a}
+.pv-opt{display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;margin-bottom:8px;cursor:pointer;transition:.12s}
+.pv-opt.sel{border-color:var(--frost);background:var(--surface-2);box-shadow:0 0 0 3px var(--frost-glow)}
+.pv-opt .mk{width:22px;height:22px;border-radius:50%;border:2px solid var(--line-strong);flex:0 0 auto;display:grid;place-items:center}
+.pv-opt.check .mk{border-radius:6px}
+.pv-opt.sel .mk{border-color:var(--frost);background:var(--frost)}
+.pv-opt .mk svg{width:13px;height:13px;color:#04141a;opacity:0}
+.pv-opt.sel .mk svg{opacity:1}
+.pv-opt .t{flex:1;font-size:14px;min-width:0}
+.pv-tag{flex:0 0 auto;font-family:'JetBrains Mono';font-size:13px;color:var(--muted);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:6px 10px}
+.pv-tag b{color:var(--frost);font-weight:700}
+.pv-seg{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.pv-seg .s{flex:1;min-width:130px;border:1px solid var(--line);background:var(--surface);border-radius:var(--r);padding:12px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.pv-seg .s.sel{border-color:var(--frost);background:var(--surface-2);box-shadow:0 0 0 3px var(--frost-glow)}
+.pv-seg .s .t{font-weight:600;font-size:14px}
+.pv-mbk{margin-bottom:12px}
+.pv-mbk .top{display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px}
+.pv-mbk .top .v{font-family:'JetBrains Mono';color:var(--frost)}
+.pv-mbk .bar{height:9px;background:var(--surface-2);border-radius:5px;overflow:hidden}
+.pv-mbk .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--frost-dim),var(--frost));border-radius:5px}
+.pv-total{display:flex;align-items:center;justify-content:space-between;background:var(--surface);border:1px solid var(--line-strong);border-radius:var(--r-lg);padding:14px 16px;margin:16px 0}
+.pv-total .k{font-family:'Archivo';font-weight:800;text-transform:uppercase;letter-spacing:.05em;font-size:12px;color:var(--muted)}
+.pv-total .v{font-family:'JetBrains Mono';font-weight:700;font-size:22px;color:var(--frost)}
+.pv-nav{display:flex;gap:10px;margin-top:16px}
+.pv-lcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);margin-bottom:8px;overflow:hidden}
+.pv-lhead{display:flex;align-items:center;gap:12px;padding:12px 14px;cursor:pointer}
+.pv-lhead .t{flex:1;font-size:14px;font-weight:500;min-width:0}
+.pv-lhead .tot{font-family:'JetBrains Mono';font-size:13px;color:var(--frost);font-weight:700;flex:0 0 auto}
+.pv-lhead .chev{color:var(--muted-2);transition:transform .2s;flex:0 0 auto;display:grid;place-items:center}
+.pv-lhead .chev svg{width:16px;height:16px}
+.pv-lcard.open .pv-lhead .chev{transform:rotate(90deg)}
+.pv-lhead .del{color:var(--muted-2);width:26px;height:26px;display:grid;place-items:center;border-radius:6px;flex:0 0 auto}
+.pv-lhead .del svg{width:14px;height:14px}
+.pv-lbody{display:none;padding:2px 14px 12px;border-top:1px solid var(--line)}
+.pv-lcard.open .pv-lbody{display:block}
+.pv-mrow{display:flex;align-items:center;gap:10px;padding:7px 0}
+.pv-mrow .ml{flex:1;font-size:13px;color:var(--muted)}
+.pv-mrow .oi{display:flex;align-items:center;gap:5px;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:6px 8px}
+.pv-mrow .oi input{width:54px;background:none;border:none;outline:none;color:var(--text);text-align:right;font-family:'JetBrains Mono';font-size:13px}
+.pv-mrow .oi span{color:var(--muted-2);font-family:'JetBrains Mono';font-size:12px}
+.pv-saved{font-size:11px;color:var(--green);font-family:'JetBrains Mono';text-align:center;margin-top:10px;opacity:0;transition:.2s}
+.pv-saved.on{opacity:1}
 
 /* stampa scheda commessa */
 #printArea{display:none}
@@ -670,6 +726,10 @@ body.viewonly #viewswitch [data-v="cap"]{display:none !important}
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13A4 4 0 0 1 16 11"/></svg>
         Organico
       </button>
+      <button data-v="prev">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        Preventivi
+      </button>
     </div>
 
     <div class="filters" id="lavFilters"></div>
@@ -680,6 +740,7 @@ body.viewonly #viewswitch [data-v="cap"]{display:none !important}
     <div id="archiveHost" style="display:none"></div>
     <div id="statsHost" style="display:none"></div>
     <div id="capHost" style="display:none"></div>
+    <div id="prevHost" style="display:none"></div>
   </div>
 
   <button class="fab" id="btnNew">
@@ -803,6 +864,35 @@ const MANSIONI = [
   {id:"elettrauto",  label:"Elettrauto"}
 ];
 
+/* ---- Configuratore preventivi ---- */
+const PV_VEICOLI = ["MOTRICE ULTIMO MIGLIO 3.5 t","MOTRICE 2 ASSI – 7.5 t – 11.5 t","MOTRICE 3 ASSI - fino a 26 t","SEMIRIMORCHIO","AUTOTRENO","KIT"];
+const PV_ALLEST_DEFAULT = ["Standard","Allestimento carne con guidovie","Allestimento carne con tubovie","Fiori","Doppio piano di carico","Multitemperatura"];
+const PV_ALLEST_BY = {
+  "MOTRICE 2 ASSI – 7.5 t – 11.5 t":["Standard","Allestimento carne con guidovie","Fiori","Multitemperatura"],
+  "SEMIRIMORCHIO":["Standard","Allestimento carne con guidovie","Allestimento carne con tubovie","Fiori","Doppio piano di carico","Multitemperatura"]
+};
+const PV_TIPI = ["Cassa assemblata","Kit"];
+const _M = (p,mo,i,f,e)=>({portalista:p,montatore:mo,interni:i,finizione:f,elettrauto:e});
+const PV_LIST_DEFAULT = {
+  veicoli:{
+    "MOTRICE ULTIMO MIGLIO 3.5 t":_M(8,34,18,16,4),
+    "MOTRICE 2 ASSI – 7.5 t – 11.5 t":_M(12,50,28,24,6),
+    "MOTRICE 3 ASSI - fino a 26 t":_M(16,68,36,32,8),
+    "SEMIRIMORCHIO":_M(20,76,40,36,8),
+    "AUTOTRENO":_M(24,92,50,44,10),
+    "KIT":_M(4,16,10,8,2)
+  },
+  tipo:{"Cassa assemblata":_M(0,0,0,0,0),"Kit":_M(0,0,0,0,0)},
+  allest:{"Standard":_M(0,0,0,0,0),"Allestimento carne con guidovie":_M(2,8,6,8,6),"Allestimento carne con tubovie":_M(2,10,7,9,7),"Fiori":_M(2,6,5,5,2),"Doppio piano di carico":_M(3,18,12,10,2),"Multitemperatura":_M(2,10,6,8,14)},
+  accessori:[
+    {nome:"Sponda idraulica",ore:_M(1,5,1,1,4)},{nome:"Pedana di carico",ore:_M(0,3,1,1,1)},
+    {nome:"Bandelle paracolpi",ore:_M(0,1,1,1,0)},{nome:"Faro di lavoro LED",ore:_M(0,0,0,0,2)},
+    {nome:"Registratore di temperatura",ore:_M(0,0,0,1,3)},{nome:"Porta laterale",ore:_M(1,4,2,2,1)},
+    {nome:"Tendina termica a strisce",ore:_M(0,0,2,1,0)},{nome:"Gancio appendi-carne",ore:_M(0,1,3,1,0)},
+    {nome:"Scala posteriore",ore:_M(0,2,1,1,0)}
+  ]
+};
+
 const OPT_SUGGEST = ["Gruppo frigo","Doppia temperatura","Bivalente","Sponda idraulica","Pedana","Pareti inox","Pavimento antiscivolo","Porta laterale","Tendina termica","Luci LED interne","Spoiler tetto","Bandella paracolpi","Registratore temperatura","Certificazione ATP"];
 
 const STATI = [
@@ -830,6 +920,7 @@ const S = {
   statGran: "mese",
   statCode: "all",
   capMonth: new Date().toISOString().slice(0,7),
+  pv: {sub:"prev", step:1, veicolo:null, tipo:null, allest:null, accSel:new Set(), codice:"", cliente:"", note:""},
   settings: JSON.parse(localStorage.getItem("cf_settings")||"{}"),
   query: "",
   role: sessionStorage.getItem("cf_role") || "edit",
@@ -1093,7 +1184,7 @@ const IC={
   ext:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14 21 3"/></svg>'
 };
 
-function renderCurrent(){ buildLavFilters(); if(S.view==="stats") renderStats(); else if(S.view==="cap") renderCap(); else if(S.view==="archivio") renderArchive(); else render(); }
+function renderCurrent(){ buildLavFilters(); if(S.view==="stats") renderStats(); else if(S.view==="cap") renderCap(); else if(S.view==="prev") renderPrev(); else if(S.view==="archivio") renderArchive(); else render(); }
 function buildLavFilters(){
   const host=$("#lavFilters"); if(!host) return;
   const counts={all:S.orders.length};
@@ -1110,16 +1201,18 @@ function buildLavFilters(){
 function setView(v){
   S.view=v;
   $$("#viewswitch button").forEach(b=>b.classList.toggle("active", b.dataset.v===v));
-  const ord=v==="ordini", arch=v==="archivio", stats=v==="stats", cap=v==="cap";
-  $("#lavFilters").style.display  = (stats||cap) ? "none" : "";
+  const ord=v==="ordini", arch=v==="archivio", stats=v==="stats", cap=v==="cap", prev=v==="prev";
+  const noFilters = stats||cap||prev;
+  $("#lavFilters").style.display  = noFilters ? "none" : "";
   $("#filters").style.display     = ord ? "" : "none";
   $("#ordersHost").style.display  = ord ? "" : "none";
   $("#archiveHost").style.display = arch ? "" : "none";
   $("#statsHost").style.display   = stats ? "" : "none";
   $("#capHost").style.display     = cap ? "" : "none";
+  $("#prevHost").style.display    = prev ? "" : "none";
   $("#btnNew").style.display  = (ord && S.canEdit) ? "flex" : "none";
   $("#btnScan").style.display = ord ? "flex" : "none";
-  const sb=document.querySelector(".search"); if(sb) sb.style.display = (stats||cap) ? "none" : "flex";
+  const sb=document.querySelector(".search"); if(sb) sb.style.display = noFilters ? "none" : "flex";
   $("#searchInput").placeholder = ord ? "Cerca codice lavoro, cliente, telaio…" : "Cerca cliente o codice lavoro…";
   renderCurrent();
 }
@@ -1462,6 +1555,160 @@ function exportCap(){
   rows.push(["Codice","Cliente","Telaio","Lavorazione","Scadenza"].concat(MANSIONI.map(m=>m.label+" (h)")));
   jobs.forEach(o=>rows.push([o.codice||"",o.cliente||"",o.targa||"",o.tipoCella||"",o.scadenza||""].concat(MANSIONI.map(m=>parseFloat((o.budget||{})[m.id])||0))));
   exportXlsx(`Krio_organico_${S.capMonth}.xlsx`, [{name:monthLabelIt(S.capMonth), rows:rows}]);
+}
+
+/* ===================================================================
+   PREVENTIVI — configuratore ore per mansione + listino condiviso
+   =================================================================== */
+function pvM0(){ return {portalista:0,montatore:0,interni:0,finizione:0,elettrauto:0}; }
+function pvNormM(o){ const r={}; MANSIONI.forEach(m=>r[m.id]=(o&&o[m.id]!=null)?(parseFloat(o[m.id])||0):0); return r; }
+function pvSumM(o){ return MANSIONI.reduce((s,m)=>s+(parseFloat(o&&o[m.id])||0),0); }
+function pvTag(o){ return `<span class="pv-tag"><b>${fmtH(pvSumM(o))}</b> h</span>`; }
+function ensureListino(){
+  if(!S.settings) S.settings={};
+  if(!S.settings.listino) S.settings.listino = structuredClone(PV_LIST_DEFAULT);
+  const L=S.settings.listino;
+  if(!L.veicoli) L.veicoli={}; if(!L.tipo) L.tipo={}; if(!L.allest) L.allest={}; if(!Array.isArray(L.accessori)) L.accessori=[];
+  PV_VEICOLI.forEach(v=>{ L.veicoli[v]=pvNormM(L.veicoli[v]||PV_LIST_DEFAULT.veicoli[v]); });
+  PV_TIPI.forEach(t=>{ L.tipo[t]=pvNormM(L.tipo[t]||PV_LIST_DEFAULT.tipo[t]); });
+  PV_ALLEST_DEFAULT.forEach(a=>{ L.allest[a]=pvNormM(L.allest[a]||PV_LIST_DEFAULT.allest[a]); });
+  L.accessori.forEach(a=>a.ore=pvNormM(a.ore));
+  return L;
+}
+function pvObjOf(g,k){ const L=ensureListino(); if(g==="veic")return L.veicoli[k]; if(g==="tipo")return L.tipo[k]; if(g==="all")return L.allest[k]; if(g==="acc")return L.accessori[+k].ore; }
+function pvByM(){
+  const L=ensureListino(); const r=pvM0();
+  const add=o=>{ if(!o)return; MANSIONI.forEach(m=>r[m.id]+=parseFloat(o[m.id])||0); };
+  if(S.pv.veicolo) add(L.veicoli[S.pv.veicolo]);
+  if(S.pv.tipo) add(L.tipo[S.pv.tipo]);
+  if(S.pv.allest) add(L.allest[S.pv.allest]);
+  L.accessori.forEach(a=>{ if(S.pv.accSel.has(a.nome)) add(a.ore); });
+  return r;
+}
+function pvTotal(){ const r=pvByM(); return MANSIONI.reduce((s,m)=>s+r[m.id],0); }
+function pvMapLavorazione(v){ if(!v)return ""; if(v.indexOf("MOTRICE")===0)return "Motrice"; if(v.indexOf("SEMIRIMORCHIO")===0)return "Semirimorchio"; if(v.indexOf("KIT")===0)return "KIT"; return ""; }
+
+function renderPrev(){
+  const host=$("#prevHost");
+  const sub=`<div class="pv-sub">
+    <button data-sub="prev" class="${S.pv.sub==='prev'?'active':''}">Preventivo</button>
+    <button data-sub="listino" class="${S.pv.sub==='listino'?'active':''}">Listino ore</button>
+  </div>`;
+  host.innerHTML = sub + (S.pv.sub==="listino" ? pvListinoHTML() : pvConfigHTML());
+  $$("#prevHost .pv-sub button").forEach(b=>b.onclick=()=>{ S.pv.sub=b.dataset.sub; renderPrev(); });
+  if(S.pv.sub==="listino") wirePvListino(); else wirePvConfig();
+}
+
+function pvSteps(){
+  const L=[["1","Veicolo"],["2","Allestimento"],["3","Preventivo"]];
+  return `<div class="pv-steps">`+L.map((l,i)=>{const n=i+1,cls=S.pv.step===n?"active":(S.pv.step>n?"done":"");return `<div class="pv-step ${cls}"><span class="n">${S.pv.step>n?"✓":l[0]}</span>${l[1]}</div>`;}).join("")+`</div>`;
+}
+function pvConfigHTML(){
+  const L=ensureListino();
+  let h=pvSteps();
+  if(S.pv.step===1){
+    h+=`<div class="section-title"><span class="n">01</span> Veicolo</div>`+
+      PV_VEICOLI.map(v=>`<div class="pv-opt ${S.pv.veicolo===v?'sel':''}" data-veic="${esc(v)}"><div class="mk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg></div><div class="t">${esc(v)}</div>${pvTag(L.veicoli[v])}</div>`).join("");
+  } else if(S.pv.step===2){
+    const allList=PV_ALLEST_BY[S.pv.veicolo]||PV_ALLEST_DEFAULT;
+    h+=`<div class="section-title"><span class="n">02</span> Tipo costruzione</div><div class="pv-seg">`+
+      PV_TIPI.map(t=>`<div class="s ${S.pv.tipo===t?'sel':''}" data-tipo="${esc(t)}"><span class="t">${esc(t)}</span>${pvTag(L.tipo[t])}</div>`).join("")+`</div>
+      <div class="section-title"><span class="n">·</span> Allestimento</div>`+
+      allList.map(a=>`<div class="pv-opt ${S.pv.allest===a?'sel':''}" data-all="${esc(a)}"><div class="mk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg></div><div class="t">${esc(a)}${a==="Standard"?' <span style="color:var(--muted-2);font-size:11px">(incluso)</span>':''}</div>${pvTag(L.allest[a])}</div>`).join("")+
+      `<div class="section-title"><span class="n">·</span> Accessori</div>`+
+      L.accessori.map(a=>`<div class="pv-opt check ${S.pv.accSel.has(a.nome)?'sel':''}" data-acc="${esc(a.nome)}"><div class="mk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg></div><div class="t">${esc(a.nome)}</div>${pvTag(a.ore)}</div>`).join("");
+  } else {
+    const r=pvByM(), max=Math.max(1,...MANSIONI.map(m=>r[m.id]));
+    h+=`<div class="section-title"><span class="n">03</span> Dati preventivo</div>
+      <div class="field"><label>Codice lavoro</label><input id="pv_cod" value="${esc(S.pv.codice)}" placeholder="es. L-2026-0142" style="font-family:'JetBrains Mono'"></div>
+      <div class="field"><label>Cliente</label><input id="pv_cli" value="${esc(S.pv.cliente)}" placeholder="Ragione sociale"></div>
+      <div class="field"><label>Note</label><textarea id="pv_note" placeholder="Richieste particolari…">${esc(S.pv.note)}</textarea></div>
+      <div class="section-title"><span class="n">⏱</span> Ripartizione per mansione</div>`+
+      MANSIONI.map(m=>`<div class="pv-mbk"><div class="top"><span>${m.label}</span><span class="v">${fmtH(r[m.id])} h</span></div><div class="bar"><i style="width:${Math.round(r[m.id]/max*100)}%"></i></div></div>`).join("");
+  }
+  h+=`<div class="pv-total"><span class="k">Totale ore</span><span class="v">${fmtH(pvTotal())} h</span></div>`;
+  h+=`<div class="pv-nav">`;
+  if(S.pv.step>1) h+=`<button class="btn btn-ghost" id="pvBack" style="flex:0 0 auto;padding:0 20px">Indietro</button>`;
+  if(S.pv.step<3){ const dis=(S.pv.step===1&&!S.pv.veicolo)||(S.pv.step===2&&(!S.pv.tipo||!S.pv.allest)); h+=`<button class="btn btn-primary" id="pvNext" style="flex:1" ${dis?"disabled":""}>Avanti</button>`; }
+  else h+=`<button class="btn btn-primary" id="pvGen" style="flex:1">${S.canEdit?'Genera bozza ordine':'Sola lettura'}</button>`;
+  h+=`</div>`;
+  return h;
+}
+function wirePvConfig(){
+  $$('#prevHost [data-veic]').forEach(el=>el.onclick=()=>{ S.pv.veicolo=el.dataset.veic; renderPrev(); });
+  $$('#prevHost [data-tipo]').forEach(el=>el.onclick=()=>{ S.pv.tipo=el.dataset.tipo; renderPrev(); });
+  $$('#prevHost [data-all]').forEach(el=>el.onclick=()=>{ S.pv.allest=el.dataset.all; renderPrev(); });
+  $$('#prevHost [data-acc]').forEach(el=>el.onclick=()=>{ const n=el.dataset.acc; if(S.pv.accSel.has(n))S.pv.accSel.delete(n); else S.pv.accSel.add(n); renderPrev(); });
+  const b=$("#pvBack"); if(b) b.onclick=()=>{ S.pv.step--; renderPrev(); };
+  const nx=$("#pvNext"); if(nx) nx.onclick=()=>{ S.pv.step++; renderPrev(); };
+  const cod=$("#pv_cod"); if(cod) cod.oninput=e=>S.pv.codice=e.target.value;
+  const cli=$("#pv_cli"); if(cli) cli.oninput=e=>S.pv.cliente=e.target.value;
+  const nt=$("#pv_note"); if(nt) nt.oninput=e=>S.pv.note=e.target.value;
+  const gen=$("#pvGen"); if(gen) gen.onclick=pvGenera;
+}
+
+/* editor listino (condiviso) */
+function pvLcard(g,key,name,obj,delIdx){
+  const inputs=MANSIONI.map(m=>`<div class="pv-mrow"><span class="ml">${m.label}</span><div class="oi"><input type="number" min="0" step="0.5" value="${obj[m.id]||""}" data-g="${g}" data-k="${esc(String(key))}" data-m="${m.id}" placeholder="0"><span>h</span></div></div>`).join("");
+  const del=(delIdx!=null)?`<button class="del" data-del="${delIdx}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>`:"";
+  return `<div class="pv-lcard"><div class="pv-lhead"><span class="t">${esc(name)}</span><span class="tot">${fmtH(pvSumM(obj))} h</span>${del}<span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg></span></div><div class="pv-lbody">${inputs}</div></div>`;
+}
+function pvListinoHTML(){
+  const L=ensureListino();
+  const ro=!S.canEdit;
+  return `<div class="note-listino" style="background:var(--surface);border:1px dashed var(--line-strong);border-radius:var(--r);padding:12px 14px;font-size:12px;color:var(--muted);margin-bottom:16px;line-height:1.55">Ore per mansione di ogni voce (tocca per espandere). È <b style="color:var(--frost)">condiviso</b> tra tutti i dispositivi.${ro?" Sola lettura.":""}</div>
+    <div class="section-title"><span class="n">A</span> Veicolo (allestimento standard)</div>${PV_VEICOLI.map(v=>pvLcard("veic",v,v,L.veicoli[v])).join("")}
+    <div class="section-title"><span class="n">B</span> Tipo costruzione</div>${PV_TIPI.map(t=>pvLcard("tipo",t,t,L.tipo[t])).join("")}
+    <div class="section-title"><span class="n">C</span> Allestimento (ore vs standard)</div>${PV_ALLEST_DEFAULT.map(a=>pvLcard("all",a,a+(a==="Standard"?" (incluso)":""),L.allest[a])).join("")}
+    <div class="section-title"><span class="n">D</span> Accessori</div><div id="pvAccList">${L.accessori.map((a,i)=>pvLcard("acc",i,a.nome,a.ore,ro?null:i)).join("")}</div>
+    ${ro?"":`<div class="opt-add" style="margin-top:8px"><input id="pvAccName" type="text" placeholder="Nuovo accessorio…"><button id="pvAccAdd">+</button></div>`}
+    <div class="pv-saved" id="pvSaved">✓ listino salvato</div>`;
+}
+let pvSavedT;
+function pvFlashSaved(){ const m=$("#pvSaved"); if(!m)return; m.classList.add("on"); clearTimeout(pvSavedT); pvSavedT=setTimeout(()=>m.classList.remove("on"),1200); }
+function wirePvListino(){
+  $$('#prevHost .pv-lhead').forEach(h=>h.onclick=e=>{ if(e.target.closest('.oi')||e.target.closest('.del'))return; h.parentElement.classList.toggle('open'); });
+  if(!S.canEdit){ $$('#prevHost .pv-lbody input').forEach(i=>i.disabled=true); return; }
+  $$('#prevHost input[data-g]').forEach(inp=>inp.oninput=()=>{
+    const o=pvObjOf(inp.dataset.g,inp.dataset.k); o[inp.dataset.m]=parseFloat(inp.value)||0;
+    const card=inp.closest('.pv-lcard'); card.querySelector('.tot').textContent=fmtH(pvSumM(o))+" h";
+    persistSettings(); pvFlashSaved();
+  });
+  $$('#prevHost [data-del]').forEach(b=>b.onclick=e=>{ e.stopPropagation(); ensureListino().accessori.splice(+b.dataset.del,1); persistSettings(); renderPrev(); });
+  const add=$("#pvAccAdd"); if(add) add.onclick=()=>{ const n=$("#pvAccName").value.trim(); if(!n)return; ensureListino().accessori.push({nome:n,ore:pvM0()}); persistSettings(); renderPrev(); };
+}
+
+async function pvGenera(){
+  if(!S.canEdit){ toast("Sola lettura","err"); return; }
+  const codice=(S.pv.codice||"").trim();
+  if(!codice){ toast("Inserisci il codice lavoro","err"); const el=$("#pv_cod"); if(el) el.focus(); return; }
+  if(S.orders.some(o=>(o.codice||"").toLowerCase()===codice.toLowerCase())){ if(!confirm("Esiste già un lavoro con questo codice. Crearne comunque uno nuovo in bozza?")) return; }
+  const budget=pvByM();
+  const accSel=[...S.pv.accSel];
+  const optional=[];
+  if(S.pv.tipo) optional.push({nome:"Tipo: "+S.pv.tipo, fatto:false});
+  if(S.pv.allest) optional.push({nome:"Allestimento: "+S.pv.allest, fatto:false});
+  accSel.forEach(n=>optional.push({nome:n, fatto:false}));
+  const lines=["— Da preventivo —","Veicolo: "+(S.pv.veicolo||"—"),"Tipo: "+(S.pv.tipo||"—"),"Allestimento: "+(S.pv.allest||"—")];
+  if(accSel.length) lines.push("Accessori: "+accSel.join(", "));
+  lines.push("Totale preventivo: "+fmtH(pvTotal())+" h");
+  if((S.pv.note||"").trim()) lines.push("", S.pv.note.trim());
+  const order={
+    id:uid(), codice, cliente:(S.pv.cliente||"").trim(), targa:"",
+    tipoCella:pvMapLavorazione(S.pv.veicolo),
+    dataOrdine:new Date().toISOString().slice(0,10), scadenza:"", stato:"bozza",
+    optional, note:lines.join("\n"), budget, actual:{}, readyAt:""
+  };
+  const gen=$("#pvGen"); const old=gen?gen.innerHTML:""; if(gen){ gen.innerHTML='<div class="spin"></div> Creo la bozza…'; gen.disabled=true; }
+  try{
+    await api("save",{order});
+    const saved=structuredClone(order); saved.mediaCount=0;
+    S.orders.unshift(saved); localStorage.setItem("cf_cache",JSON.stringify(S.orders));
+    // reset configuratore (il listino resta)
+    S.pv.step=1; S.pv.veicolo=null; S.pv.tipo=null; S.pv.allest=null; S.pv.accSel=new Set(); S.pv.codice=""; S.pv.cliente=""; S.pv.note="";
+    toast("Bozza creata: completa i dettagli mancanti","ok");
+    setView("ordini");
+  }catch(e){ toast(e.message,"err"); if(gen){ gen.innerHTML=old; gen.disabled=false; } }
 }
 
 /* ===================================================================
