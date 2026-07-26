@@ -418,11 +418,16 @@ body.viewonly #viewswitch [data-v="cap"]{display:none !important}
 .xls-btn svg{width:16px;height:16px}
 .xls-btn:active{background:rgba(63,184,79,.18)}
 
-/* indicatore note nella riga ordine */
-.orow-note{color:var(--frost);display:grid;place-items:center;flex:0 0 auto}
-.orow-note svg{width:15px;height:15px}
+/* indicatore note nella riga ordine — badge ambra pulsante */
+.orow.has-note{border-color:rgba(245,165,36,.55)}
+.orow.has-note::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,transparent 55%,rgba(245,165,36,.09))}
+.note-badge{position:relative;z-index:1;display:inline-flex;align-items:center;gap:5px;background:var(--amber);color:#231703;font-family:'Archivo';font-weight:800;font-size:9px;text-transform:uppercase;letter-spacing:.07em;padding:4px 8px;border-radius:6px;flex:0 0 auto;animation:notePulse 1.8s ease-out infinite}
+.note-badge svg{width:12px;height:12px}
+@keyframes notePulse{0%{box-shadow:0 0 0 0 rgba(245,165,36,.55)}70%{box-shadow:0 0 0 8px rgba(245,165,36,0)}100%{box-shadow:0 0 0 0 rgba(245,165,36,0)}}
+@media(prefers-reduced-motion:reduce){.note-badge{animation:none}}
 .chip.note-chip.active{border-color:var(--frost);color:var(--frost);background:var(--surface-2)}
 .chip.note-chip svg{width:12px;height:12px;margin-right:-2px}
+.note-box{background:var(--bg-deep);border:1px solid var(--line);border-left:3px solid var(--amber);border-radius:var(--r);padding:12px 14px;font-size:14px;line-height:1.55;color:var(--text);white-space:pre-wrap;max-height:42vh;overflow:auto}
 
 /* stampa scheda commessa */
 #printArea{display:none}
@@ -754,6 +759,24 @@ body.viewonly #viewswitch [data-v="cap"]{display:none !important}
 <!-- area di stampa scheda commessa -->
 <div id="printArea"></div>
 
+<!-- promemoria note quando si mette Pronto -->
+<div class="modal-scrim" id="noteScrim">
+  <div class="modal">
+    <div class="modal-head">
+      <svg viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg>
+      <h3>Controlla le note</h3>
+    </div>
+    <div class="modal-body">
+      <p class="hint" style="margin-bottom:12px">Prima di segnare il lavoro come <b>Pronto</b>, assicurati di aver fatto tutto quello indicato nelle note:</p>
+      <div class="note-box" id="noteReminderBody"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" id="noteBack" style="flex:1">Torna indietro</button>
+      <button class="btn btn-primary" id="noteOk" style="flex:1">Ho controllato</button>
+    </div>
+  </div>
+</div>
+
 <!-- lightbox / player -->
 <div class="lightbox" id="lightbox">
   <button class="lb-close" id="lbClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
@@ -1022,13 +1045,14 @@ function render(){
 function rowHTML(o){
   const st=statoObj(o.stato), di=deadlineInfo(o);
   const n=o.mediaCount||0;
-  return `<div class="orow b-${st.cls}" data-id="${o.id}">
+  const hasNote=!!(o.note&&o.note.trim());
+  return `<div class="orow b-${st.cls}${hasNote?' has-note':''}" data-id="${o.id}">
     <div class="orow-main">
       <div class="orow-code">${esc(o.codice||"—")}</div>
       <div class="orow-sub">${esc(o.cliente||"—")}</div>
     </div>
     <div class="orow-right">
-      ${(o.note&&o.note.trim())?`<span class="orow-note" title="Note presenti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/></svg></span>`:""}
+      ${hasNote?`<span class="note-badge" title="Note presenti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h6M8 17h4"/></svg>Nota</span>`:""}
       <span class="orow-dl ${di.cls}">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
         <span class="dltxt">${di.txt}</span>
@@ -1566,23 +1590,38 @@ function renderSheet(){
   $("#f_stato").onchange=onStatoChange;
   $$("#sheetBody .hours-in").forEach(el=>el.oninput=computeHours);
   S._actPrompted = (S.current.stato==="pronto"||S.current.stato==="cons");
+  S._prevStato = S.current.stato;
   computeHours();
   if(!S.canEdit){
     $$("#sheetBody input, #sheetBody select, #sheetBody textarea").forEach(el=>el.disabled=true);
   }
 }
-function onStatoChange(){
-  const v=$("#f_stato").value, show=(v==="pronto"||v==="cons");
+function applyStatoUI(v){
+  const show=(v==="pronto"||v==="cons");
   const sec=$("#actSection"), grid=$("#actGrid");
   if(sec) sec.style.display=show?"":"none";
   if(grid) grid.style.display=show?"":"none";
-  if(show && !S._actPrompted){
+}
+function onStatoChange(){
+  const sel=$("#f_stato"); const v=sel.value; const prev=S._prevStato; S._prevStato=v;
+  applyStatoUI(v);
+  if((v==="pronto"||v==="cons") && !S._actPrompted){
     S._actPrompted=true;
     toast("Inserisci le ore effettive per mansione","");
     const first=$("#act_"+MANSIONI[0].id); if(first) setTimeout(()=>first.focus(),120);
   }
+  if(v==="pronto" && prev!=="pronto"){
+    const note=($("#f_note")?$("#f_note").value:"").trim();
+    if(note) showNoteReminder(note, prev);
+  }
   computeHours();
 }
+function showNoteReminder(note, prev){
+  S._noteRevert = prev || "lav";
+  $("#noteReminderBody").textContent = note;
+  $("#noteScrim").classList.add("open");
+}
+function closeNoteReminder(){ $("#noteScrim").classList.remove("open"); }
 function fmtH(n){ return (Math.round(n*10)/10).toString().replace(".",","); }
 function computeHours(){
   let b=0,a=0,anyAct=false;
@@ -1874,6 +1913,13 @@ $("#btnSaveSettings").onclick=saveSettings;
 $("#btnBell").onclick=toggleNotif;
 $("#btnExport").onclick=exportOrder;
 $("#btnInstall").onclick=doInstall;
+$("#noteOk").onclick=closeNoteReminder;
+$("#noteScrim").onclick=e=>{ if(e.target.id==="noteScrim") closeNoteReminder(); };
+$("#noteBack").onclick=()=>{
+  const sel=$("#f_stato"), prev=S._noteRevert||"lav";
+  if(sel){ sel.value=prev; S._prevStato=prev; applyStatoUI(prev); }
+  closeNoteReminder();
+};
 $("#btnLogout").onclick=()=>logout(false);
 let searchT;
 $("#searchInput").oninput=e=>{ clearTimeout(searchT); searchT=setTimeout(()=>{S.query=e.target.value.trim();renderCurrent();},180); };
