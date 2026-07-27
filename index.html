@@ -59,8 +59,11 @@ input,select,textarea{font-family:inherit;font-size:15px}
 #login{
   background:radial-gradient(120% 90% at 50% -10%,#182430 0%,var(--bg-deep) 60%);
   align-items:center;justify-content:center;padding:24px;
+  z-index:300 !important; position:fixed !important; inset:0;
 }
-#login.active{display:flex}
+#login.active{display:flex !important}
+#login .keypad-grid{min-height:264px}
+#login .key{pointer-events:auto; color:var(--text);}
 .keypad-panel{
   width:100%;max-width:340px;background:var(--surface);
   border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);
@@ -245,7 +248,7 @@ input,select,textarea{font-family:inherit;font-size:15px}
 .media-cell{cursor:pointer}
 .media-cell .play-ov{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none}
 .media-cell .play-ov svg{width:34px;height:34px;color:#fff;filter:drop-shadow(0 2px 7px rgba(0,0,0,.7))}
-.lightbox{position:fixed;inset:0;z-index:90;background:rgba(0,0,0,.92);display:none;align-items:center;justify-content:center;padding:20px}
+.lightbox{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.92);display:none;align-items:center;justify-content:center;padding:20px;pointer-events:auto}
 .lightbox.open{display:flex}
 .lb-body{width:100%;display:flex;align-items:center;justify-content:center}
 .lb-body img{max-width:100%;max-height:82dvh;border-radius:10px}
@@ -803,7 +806,27 @@ body.viewonly .btn-folder{display:none !important}
 .btn-voice-search.on{color:var(--red);border-color:var(--red)}
 .btn-voice-search svg{width:18px;height:18px}
 /* edge swipe guard hint */
-body.krio-lock-nav{overscroll-behavior-x:none;touch-action:pan-y}
+body.krio-lock-nav #app{overscroll-behavior-x:none}
+#login, #login *{touch-action:manipulation}
+.keypad-grid .key{touch-action:manipulation;-webkit-user-select:none;user-select:none;cursor:pointer;position:relative;z-index:2}
+#login{z-index:20;position:relative}
+#login .keypad-panel{position:relative;z-index:21}
+.sel-bar{
+  display:none;align-items:center;gap:8px;background:var(--surface-2);border:1px solid var(--frost-dim);
+  border-radius:var(--r);padding:10px 12px;margin-bottom:12px;flex-wrap:wrap;
+}
+.sel-bar.on{display:flex}
+.sel-bar .info{flex:1;font-family:'JetBrains Mono';font-size:12px;color:var(--frost);min-width:120px}
+.sel-bar button{height:34px;padding:0 12px;border-radius:8px;font-family:'Archivo';font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.04em;border:1px solid var(--line);background:var(--surface);color:var(--text)}
+.sel-bar button.primary{background:var(--frost);color:#04141a;border-color:transparent}
+.orow.selected,.folder-row.selected{border-color:var(--frost)!important;box-shadow:0 0 0 3px var(--frost-glow);background:var(--surface-2)}
+.orow .sel-check,.folder-row .sel-check{
+  width:22px;height:22px;border-radius:6px;border:2px solid var(--line-strong);flex:0 0 auto;
+  display:none;place-items:center;margin-right:4px;
+}
+body.select-mode .orow .sel-check,body.select-mode .folder-row .sel-check{display:grid}
+.orow.selected .sel-check,.folder-row.selected .sel-check{background:var(--frost);border-color:var(--frost);color:#04141a}
+
 
 
 /* ICE root brand */
@@ -1207,7 +1230,10 @@ const S = {
   lastActivity: Date.now(),
   logoTaps: 0,
   operatorName: localStorage.getItem("cf_operator")||"",
-  templates: JSON.parse(localStorage.getItem("cf_templates")||"null") || null
+  templates: JSON.parse(localStorage.getItem("cf_templates")||"null") || null,
+  selectMode: false,
+  selectedOrders: new Set(),
+  selectedFolders: new Set()
 };
 const $ = s=>document.querySelector(s);
 const $$ = s=>[...document.querySelectorAll(s)];
@@ -1367,15 +1393,19 @@ async function api(action, payload={}){
    =================================================================== */
 let pinBuf="";
 function buildKeypad(){
-  const dots=$("#pinDots"); dots.innerHTML="";
+  const dots=$("#pinDots"); if(!dots) return;
+  dots.innerHTML="";
   for(let i=0;i<4;i++){ const d=document.createElement("div"); d.className="pin-dot"; dots.appendChild(d); }
   const keys=["1","2","3","4","5","6","7","8","9","clear","0","ok"];
-  const kp=$("#keypad"); kp.innerHTML="";
+  const kp=$("#keypad"); if(!kp) return;
+  kp.innerHTML="";
   keys.forEach(k=>{
     const b=document.createElement("button");
-    if(k==="clear"){ b.className="key fn"; b.textContent="C"; b.onclick=()=>{pinBuf="";renderPin();}; }
-    else if(k==="ok"){ b.className="key fn ok"; b.innerHTML='<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>'; b.onclick=submitPin; }
-    else{ b.className="key"; b.textContent=k; b.onclick=()=>pushPin(k); }
+    b.type="button";
+    b.style.touchAction="manipulation";
+    if(k==="clear"){ b.className="key fn"; b.textContent="C"; b.addEventListener("click",function(e){e.preventDefault();pinBuf="";renderPin();}); }
+    else if(k==="ok"){ b.className="key fn ok"; b.innerHTML='<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>'; b.addEventListener("click",function(e){e.preventDefault();submitPin();}); }
+    else{ b.className="key"; b.textContent=k; b.addEventListener("click",function(e){e.preventDefault();pushPin(k);}); }
     kp.appendChild(b);
   });
 }
@@ -1419,6 +1449,7 @@ function applyRole(){
 function enterApp(){
   $("#login").classList.remove("active");
   $("#app").classList.add("active");
+  document.body.classList.add("krio-lock-nav");
   window.scrollTo(0,0);
   document.removeEventListener("keydown",keyListener);
   applyRole();
@@ -1433,6 +1464,8 @@ function logout(silent){
   document.body.classList.remove("viewonly");
   $("#app").classList.remove("active");
   $("#login").classList.add("active");
+  document.body.classList.remove("krio-lock-nav");
+  pinBuf=""; try{ buildKeypad(); renderPin(); }catch(_){}
   closeSheet(); closeSettings();
   renderPin();
   $("#pinMsg").className="pin-msg"; $("#pinMsg").textContent = silent? "Sessione scaduta, reinserisci il PIN":"Inserisci il PIN di accesso";
@@ -1546,7 +1579,7 @@ function render(){
   let top=`<div class="folder-bar">
     <div class="breadcrumb" id="breadcrumb">${renderBreadcrumb()}</div>
     ${S.canEdit?`<button class="btn-folder" id="btnNewFolder"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-8l-2-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2z"/><path d="M12 11v6M9 14h6"/></svg>Nuova cartella</button>`:""}
-  </div>${renderPasteBar()}`;
+  </div>${renderSelBar()}${renderPasteBar()}`;
 
   if(!folders.length && !list.length){
     const filtering = S.query||S.filter!=="all"||S.lav!=="all"||S.noteFilter!=="all";
@@ -1567,20 +1600,49 @@ function render(){
   host.innerHTML=top+foldersHtml+ordersHtml;
   wireFolderUI();
   $$(".orow").forEach(t=>{
-    t.onclick=()=>openOrder(t.dataset.id);
-    bindLongPress(t, ()=>showCtxMenu(t, "order", t.dataset.id));
+    t.classList.toggle("selected", S.selectedOrders.has(t.dataset.id));
+    if(!t.querySelector(".sel-check")){
+      const sc=document.createElement("div"); sc.className="sel-check";
+      sc.innerHTML='<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg>';
+      t.insertBefore(sc, t.firstChild);
+    }
+    t.onclick=function(e){
+      if(S.selectMode){ e.preventDefault(); e.stopPropagation(); toggleSelectOrder(t.dataset.id); render(); return; }
+      openOrder(t.dataset.id);
+    };
+    bindLongPress(t, function(){
+      enterSelectMode();
+      if(!S.selectedOrders.has(t.dataset.id)) S.selectedOrders.add(t.dataset.id);
+      haptic(40);
+      render();
+    });
   });
   updateFabVisibility();
 }
 function wireFolderUI(){
-  $$("#breadcrumb [data-goto]").forEach(b=>b.onclick=()=>{ S.folderId=b.dataset.goto||null; rememberFolder(); render(); });
+  $$("#breadcrumb [data-goto]").forEach(b=>b.onclick=()=>{ S.folderId=b.dataset.goto||null; rememberFolder(); clearSelection(); render(); });
   const nf=$("#btnNewFolder"); if(nf) nf.onclick=createFolder;
   $$(".folder-row").forEach(r=>{
-    r.onclick=()=>{ S.folderId=r.dataset.fid; rememberFolder(); render(); };
-    bindLongPress(r, ()=>showCtxMenu(r, "folder", r.dataset.fid));
+    r.classList.toggle("selected", S.selectedFolders.has(r.dataset.fid));
+    if(!r.querySelector(".sel-check")){
+      const sc=document.createElement("div"); sc.className="sel-check";
+      sc.innerHTML='<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg>';
+      r.insertBefore(sc, r.firstChild);
+    }
+    r.onclick=function(e){
+      if(S.selectMode){ e.preventDefault(); e.stopPropagation(); toggleSelectFolder(r.dataset.fid); render(); return; }
+      S.folderId=r.dataset.fid; rememberFolder(); render();
+    };
+    bindLongPress(r, function(){
+      enterSelectMode();
+      if(!S.selectedFolders.has(r.dataset.fid)) S.selectedFolders.add(r.dataset.fid);
+      haptic(40);
+      render();
+    });
   });
-  const pb=$("#btnPasteHere"); if(pb) pb.onclick=()=>pasteHere();
-  const cc=$("#btnClipCancel"); if(cc) cc.onclick=()=>{ S.clipboard=null; render(); };
+  const pb=$("#btnPasteHere"); if(pb) pb.onclick=function(){ if(S.clipboard&&S.clipboard.items) pasteSelection(); else pasteHere(); };
+  const cc=$("#btnClipCancel"); if(cc) cc.onclick=function(){ S.clipboard=null; render(); };
+  wireSelBar();
 }
 function updateFabVisibility(){
   const btn=$("#btnNew");
@@ -1626,7 +1688,6 @@ function rowHTML(o){
     </div>
   </div>`;
 }
-function 
 function cardHTML(o){
   const st=statoObj(o.stato), di=deadlineInfo(o);
   const nMedia=o.mediaCount||0;
@@ -2747,55 +2808,87 @@ function iconFor(mime){
 function mediaCellHTML(f, withRemove){
   const kind=iconFor(f.mimeType);
   const thumb=f.thumb||('https://drive.google.com/thumbnail?id='+f.id+'&sz=w400');
+  const viewUrl=f.url||('https://drive.google.com/uc?export=view&id='+f.id);
+  const previewUrl='https://drive.google.com/file/d/'+f.id+'/preview';
   const rm=withRemove?rmBtn(f.id):"";
+  const attrs=`data-mid="${f.id}" data-kind="${kind}" data-name="${esc(f.name||'')}" data-url="${esc(viewUrl)}" data-preview="${esc(previewUrl)}"`;
   if(kind==="aud"){
-    return `<div class="media-cell doc aud" data-mid="${f.id}" data-kind="aud" data-name="${esc(f.name||'nota vocale')}">
+    return `<div class="media-cell doc aud" ${attrs}>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v1a7 7 0 0 1-14 0v-1M12 18v4"/></svg>
       <span class="fn">${esc(f.name||"nota vocale")}</span>${rm}</div>`;
   }
   if(kind==="doc"){
-    return `<div class="media-cell doc" data-mid="${f.id}" data-kind="doc" data-name="${esc(f.name||'file')}">
+    return `<div class="media-cell doc" ${attrs}>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
       <span class="fn">${esc(f.name||"file")}</span>${rm}</div>`;
   }
   if(kind==="vid"){
-    return `<div class="media-cell" data-mid="${f.id}" data-kind="vid" data-name="${esc(f.name||'')}">
+    return `<div class="media-cell" ${attrs}>
       <img src="${thumb}" loading="lazy" alt="" style="background:#000">
       <span class="play-ov"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
       <span class="badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>video</span>${rm}</div>`;
   }
-  return `<div class="media-cell" data-mid="${f.id}" data-kind="img" data-name="${esc(f.name||'')}">
+  return `<div class="media-cell" ${attrs}>
     <img src="${thumb}" loading="lazy" alt="">${rm}</div>`;
 }
-function openMedia(id, kind, name){
-  if(kind==="doc"){ window.open("https://drive.google.com/file/d/"+id+"/view","_blank"); return; }
-  // gallery: collect sibling media cells
+function openMedia(id, kind, name, url, preview){
+  kind = kind || "img";
+  if(kind==="doc"){
+    window.open(preview || ("https://drive.google.com/file/d/"+id+"/view"), "_blank");
+    return;
+  }
   const cells=[...document.querySelectorAll("#mediaGrid .media-cell[data-mid]")].filter(c=>c.dataset.kind!=="doc");
-  S.mediaList = cells.map(c=>({id:c.dataset.mid, kind:c.dataset.kind, name:c.dataset.name||""}));
-  S.mediaIdx = Math.max(0, S.mediaList.findIndex(x=>x.id===id));
-  if(S.mediaIdx<0){ S.mediaList=[{id,kind,name:name||""}]; S.mediaIdx=0; }
+  S.mediaList = cells.map(c=>({
+    id:c.dataset.mid,
+    kind:c.dataset.kind||"img",
+    name:c.dataset.name||"",
+    url:c.dataset.url||(""),
+    preview:c.dataset.preview||("https://drive.google.com/file/d/"+c.dataset.mid+"/preview")
+  }));
+  let idx = S.mediaList.findIndex(x=>x.id===id);
+  if(idx<0){
+    S.mediaList=[{id, kind, name:name||"", url:url||"", preview:preview||("https://drive.google.com/file/d/"+id+"/preview")}];
+    idx=0;
+  }
+  S.mediaIdx=idx;
   renderLightbox();
-  $("#lightbox").classList.add("open");
+  const lb=$("#lightbox");
+  if(lb){ lb.classList.add("open"); lb.style.display="flex"; }
 }
 function renderLightbox(){
+  if(!S.mediaList || !S.mediaList.length) return;
   const item=S.mediaList[S.mediaIdx]; if(!item) return;
-  const body=$("#lightboxBody");
-  if(item.kind==="vid"||item.kind==="aud") body.innerHTML=`<iframe src="https://drive.google.com/file/d/${item.id}/preview" allow="autoplay; fullscreen" allowfullscreen></iframe>`;
-  else body.innerHTML=`<img src="https://drive.google.com/thumbnail?id=${item.id}&sz=w1600" alt="${esc(item.name||'')}">`;
+  const body=$("#lightboxBody"); if(!body) return;
+  const preview = item.preview || ("https://drive.google.com/file/d/"+item.id+"/preview");
+  const viewUrl = item.url || ("https://drive.google.com/uc?export=view&id="+item.id);
+  // prefer iframe Drive preview (funziona con sharing "anyone with link" del backend)
+  if(item.kind==="vid"||item.kind==="aud"){
+    body.innerHTML=`<iframe src="${preview}" allow="autoplay; fullscreen" allowfullscreen style="width:min(960px,96vw);height:min(70dvh,560px);border:0;border-radius:10px;background:#000"></iframe>`;
+  } else {
+    body.innerHTML=`
+      <img src="${viewUrl}" alt="${esc(item.name||'')}" style="max-width:100%;max-height:82dvh;border-radius:10px"
+        onerror="this.onerror=null;this.style.display='none';const f=this.nextElementSibling;if(f)f.style.display='block';">
+      <iframe src="${preview}" allow="fullscreen" allowfullscreen style="display:none;width:min(960px,96vw);height:min(70dvh,560px);border:0;border-radius:10px;background:#000"></iframe>`;
+  }
   let nav=$("#lbNav");
   if(!nav){
     nav=document.createElement("div"); nav.id="lbNav";
-    $("#lightbox").appendChild(nav);
+    const lb=$("#lightbox"); if(lb) lb.appendChild(nav);
   }
   const multi=S.mediaList.length>1;
   nav.innerHTML = multi ? `
-    <button type="button" class="lb-nav prev" id="lbPrev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M15 18l-6-6 6-6"/></svg></button>
-    <button type="button" class="lb-nav next" id="lbNext"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 18l6-6-6-6"/></svg></button>` : "";
+    <button type="button" class="lb-nav prev" id="lbPrev" aria-label="Precedente"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M15 18l-6-6 6-6"/></svg></button>
+    <button type="button" class="lb-nav next" id="lbNext" aria-label="Successiva"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 18l6-6-6-6"/></svg></button>` : "";
   const p=$("#lbPrev"), n=$("#lbNext");
-  if(p) p.onclick=(e)=>{ e.stopPropagation(); S.mediaIdx=(S.mediaIdx-1+S.mediaList.length)%S.mediaList.length; renderLightbox(); };
-  if(n) n.onclick=(e)=>{ e.stopPropagation(); S.mediaIdx=(S.mediaIdx+1)%S.mediaList.length; renderLightbox(); };
+  if(p) p.onclick=function(e){ e.preventDefault(); e.stopPropagation(); S.mediaIdx=(S.mediaIdx-1+S.mediaList.length)%S.mediaList.length; renderLightbox(); };
+  if(n) n.onclick=function(e){ e.preventDefault(); e.stopPropagation(); S.mediaIdx=(S.mediaIdx+1)%S.mediaList.length; renderLightbox(); };
 }
-function closeLightbox(){ $("#lightbox").classList.remove("open"); $("#lightboxBody").innerHTML=""; const n=$("#lbNav"); if(n) n.innerHTML=""; }
+function closeLightbox(){
+  const lb=$("#lightbox");
+  if(lb){ lb.classList.remove("open"); lb.style.display=""; }
+  const body=$("#lightboxBody"); if(body) body.innerHTML="";
+  const n=$("#lbNav"); if(n) n.innerHTML="";
+}
 
 function renderMedia(files,loading){
   const grid=$("#mediaGrid"); if(!grid) return;
@@ -2805,7 +2898,19 @@ function renderMedia(files,loading){
   if(loading){ grid.innerHTML=add+`<div class="media-cell doc"><div class="spin"></div></div>`; return; }
   const cells=(files||[]).map(f=>mediaCellHTML(f,true)).join("");
   grid.innerHTML=add+cells;
-  $$("#mediaGrid .rm").forEach(b=>b.onclick=(e)=>{e.preventDefault();e.stopPropagation();deleteFile(b.dataset.fid);});
+  $$("#mediaGrid .rm").forEach(function(b){
+    b.onclick=function(e){ e.preventDefault(); e.stopPropagation(); deleteFile(b.dataset.fid); };
+  });
+  // binding diretto: più affidabile del solo delegated listener
+  $$("#mediaGrid .media-cell[data-mid]").forEach(function(cell){
+    cell.style.cursor="pointer";
+    cell.addEventListener("click", function(e){
+      if(e.target.closest(".rm")) return;
+      e.preventDefault();
+      e.stopPropagation();
+      openMedia(cell.dataset.mid, cell.dataset.kind, cell.dataset.name, cell.dataset.url, cell.dataset.preview);
+    });
+  });
 }
 function rmBtn(id){ return `<button class="rm" data-fid="${id}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>`; }
 
@@ -2895,6 +3000,102 @@ function saveSettings(){
   const u=$("#setUrl").value.trim();
   if(u && !/\/exec$/.test(u)){ if(!confirm("L'URL non finisce con /exec. Salvare comunque?")) return; }
   S.url=u; localStorage.setItem("cf_url",u); closeSettings(); toast("URL salvato","ok"); setLed("","—");
+}
+
+
+
+/* ===================================================================
+   SELEZIONE MULTIPLA
+   =================================================================== */
+function clearSelection(){
+  S.selectMode=false; S.selectedOrders=new Set(); S.selectedFolders=new Set();
+  document.body.classList.remove("select-mode");
+}
+function enterSelectMode(){
+  S.selectMode=true;
+  document.body.classList.add("select-mode");
+}
+function toggleSelectOrder(id){
+  enterSelectMode();
+  if(S.selectedOrders.has(id)) S.selectedOrders.delete(id); else S.selectedOrders.add(id);
+  if(!S.selectedOrders.size && !S.selectedFolders.size) clearSelection();
+}
+function toggleSelectFolder(id){
+  enterSelectMode();
+  if(S.selectedFolders.has(id)) S.selectedFolders.delete(id); else S.selectedFolders.add(id);
+  if(!S.selectedOrders.size && !S.selectedFolders.size) clearSelection();
+}
+function selectionCount(){ return S.selectedOrders.size + S.selectedFolders.size; }
+function renderSelBar(){
+  const n=selectionCount();
+  if(!n && !(S.clipboard && S.clipboard.items && S.clipboard.items.length)) return "";
+  if(!n) return "";
+  return `<div class="sel-bar on">
+    <div class="info">${n} selezionat${n===1?"o":"i"}</div>
+    <button type="button" id="selCut">Taglia</button>
+    <button type="button" id="selCopy">Copia</button>
+    <button type="button" class="primary" id="selPaste">Incolla</button>
+    <button type="button" id="selClear">Annulla</button>
+  </div>`;
+}
+function copySelection(mode){
+  if(!selectionCount()){ toast("Nessun elemento selezionato","err"); return; }
+  const items=[];
+  S.selectedOrders.forEach(id=>{
+    const o=S.orders.find(x=>x.id===id); if(o) items.push({type:"order", data:structuredClone(o)});
+  });
+  S.selectedFolders.forEach(id=>{
+    const f=getFolder(id); if(f) items.push({type:"folder", data:structuredClone(f)});
+  });
+  S.clipboard={mode:mode, items:items};
+  toast((mode==="cut"?"Tagliati":"Copiati")+" "+items.length+" elementi");
+  clearSelection();
+  render();
+}
+async function pasteSelection(){
+  if(!S.clipboard){ toast("Appunti vuoti","err"); return; }
+  const items = S.clipboard.items || (S.clipboard.data ? [{type:S.clipboard.type, data:S.clipboard.data}] : []);
+  if(!items.length){ toast("Appunti vuoti","err"); return; }
+  if(!S.canEdit){ toast("Sola lettura","err"); return; }
+  const mode = S.clipboard.mode || "copy";
+  const target = S.folderId || null;
+  for(const it of items){
+    if(it.type==="order"){
+      if(mode==="cut"){
+        const o=S.orders.find(x=>x.id===it.data.id);
+        if(o){ o.appFolderId=target; try{ await api("save",{order:Object.assign({},o)}); }catch(e){ toast(e.message,"err"); } }
+      } else {
+        const src=it.data;
+        const copy=structuredClone(src);
+        copy.id=uid(); copy.codice=(src.codice||"")+"-COPIA"; copy.appFolderId=target;
+        copy.actual={}; copy.readyAt=""; copy.stato="bozza"; copy.mediaCount=0;
+        S.orders.unshift(copy);
+        try{ await api("save",{order:copy}); }catch(e){ toast(e.message,"err"); }
+      }
+    } else if(it.type==="folder"){
+      if(mode==="cut"){
+        if(it.data.id===target || isDescendantFolder(target, it.data.id)){ toast("Cartella non spostabile qui","err"); continue; }
+        const f=getFolder(it.data.id);
+        if(f){ f.parentId=target; }
+      } else {
+        const srcData=it.data;
+        const nf={id:fuid(), name:srcData.name+" (copia)", parentId:target};
+        S.folders.push(nf);
+      }
+    }
+  }
+  if(mode==="cut") S.clipboard=null;
+  persistFolders();
+  localStorage.setItem("cf_cache", JSON.stringify(S.orders));
+  clearSelection();
+  toast("Incollati "+items.length+" elementi","ok");
+  render();
+}
+function wireSelBar(){
+  const c=$("#selCut"); if(c) c.onclick=function(){ copySelection("cut"); };
+  const p=$("#selCopy"); if(p) p.onclick=function(){ copySelection("copy"); };
+  const v=$("#selPaste"); if(v) v.onclick=function(){ pasteSelection(); };
+  const a=$("#selClear"); if(a) a.onclick=function(){ clearSelection(); render(); };
 }
 
 
@@ -3082,7 +3283,7 @@ $("#lightbox").onclick=e=>{ if(e.target.id==="lightbox") closeLightbox(); };
 document.addEventListener("click",e=>{
   if(e.target.closest(".rm")) return;
   const cell=e.target.closest(".media-cell[data-mid]");
-  if(cell) openMedia(cell.dataset.mid, cell.dataset.kind, cell.dataset.name);
+  if(cell) openMedia(cell.dataset.mid, cell.dataset.kind, cell.dataset.name, cell.dataset.url, cell.dataset.preview);
 });
 document.addEventListener("keydown",e=>{ if(e.key==="Escape"){ if($("#lightbox").classList.contains("open"))closeLightbox(); else if($("#scanModal").classList.contains("open"))closeScan(); else if($("#sheet").classList.contains("open"))closeSheet(); else if($("#settingsScrim").classList.contains("open"))closeSettings(); else if($("#sidebar").classList.contains("open"))closeSidebar(); else closeCtxMenu(); } });
 
@@ -3301,6 +3502,7 @@ function goHomeICE(){
   haptic(15);
 }
 function handleAppBack(){
+  if(S.selectMode){ clearSelection(); render(); return true; }
   if($("#healthPanel") && $("#healthPanel").classList.contains("open")){ $("#healthPanel").classList.remove("open"); return true; }
   if($("#lightbox") && $("#lightbox").classList.contains("open")){ closeLightbox(); return true; }
   if($("#ctxMenu") && $("#ctxMenu").classList.contains("open")){ closeCtxMenu(); return true; }
@@ -3316,7 +3518,6 @@ function handleAppBack(){
   return true;
 }
 function setupBackButton(){
-  document.body.classList.add("krio-lock-nav");
   try{
     history.replaceState({krio:1, root:true}, "");
     history.pushState({krio:1}, "");
@@ -3332,6 +3533,7 @@ function setupBackButton(){
   // swipe dal bordo sinistro = indietro in-app (non gesture sistema se possibile)
   let sx=0, sy=0, tracking=false;
   document.addEventListener("touchstart", function(e){
+    if($("#login") && $("#login").classList.contains("active")) return;
     if(!e.touches||!e.touches[0]) return;
     const t=e.touches[0];
     if(t.clientX < 28){ tracking=true; sx=t.clientX; sy=t.clientY; }
@@ -3409,7 +3611,7 @@ registerSW(); updateInstallUI();
 setupBackButton();
 setupVoiceSearch();
 updateQueueLed();
-document.body.classList.add("krio-lock-nav");
+try{ buildKeypad(); renderPin(); }catch(_){}
 // 5 tap sul logo → health
 const logoTap=()=>{ S.logoTaps=(S.logoTaps||0)+1; clearTimeout(S._logoT); S._logoT=setTimeout(()=>S.logoTaps=0,900); if(S.logoTaps>=5){ S.logoTaps=0; openHealth(); } };
 document.querySelectorAll(".topbar .logo, .side-head .logo").forEach(el=>el.addEventListener("click",logoTap));
