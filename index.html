@@ -737,6 +737,75 @@ body.viewonly #sideNav [data-v="cap"],
 body.viewonly #sideNav [data-v="prev"]{display:none !important}
 body.viewonly .btn-folder{display:none !important}
 
+/* micro-motion */
+@media (prefers-reduced-motion:no-preference){
+  .orow,.folder-row,.side-item,.chip,.btn,.fab{transition:transform .12s ease, background .12s ease, border-color .12s ease}
+  .orow:active,.folder-row:active{transform:scale(.985)}
+  .bc-ice{transition:box-shadow .2s ease, background .2s ease}
+}
+/* list hierarchy */
+.orow-code{letter-spacing:.02em}
+.orow-sub{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.orow-tag{font-size:10px;padding:2px 7px;border-radius:4px;border:1px solid var(--line);color:var(--muted);font-family:'JetBrains Mono'}
+.alert-dots{display:flex;gap:4px;margin-top:4px}
+.alert-dot{width:7px;height:7px;border-radius:50%}
+.alert-dot.a-photo{background:var(--amber)}
+.alert-dot.a-hours{background:var(--red)}
+.alert-dot.a-note{background:var(--frost)}
+.alert-dot.a-fase{background:#c084fc}
+.op-chip{font-family:'Archivo';font-weight:700;font-size:9px;letter-spacing:.06em;text-transform:uppercase;
+  width:22px;height:22px;border-radius:50%;background:var(--surface-2);border:1px solid var(--line-strong);
+  display:grid;place-items:center;color:var(--frost);flex:0 0 auto}
+/* fasi */
+.fase-list{display:flex;flex-direction:column;gap:7px;margin-bottom:8px}
+.fase-item{display:flex;align-items:center;gap:11px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:10px 12px}
+.fase-item.done{opacity:.7}
+.fase-item.done .txt{text-decoration:line-through;color:var(--muted)}
+.fase-num{font-family:'JetBrains Mono';font-size:11px;color:var(--frost);width:20px}
+/* kanban */
+.kanban{display:flex;gap:10px;overflow-x:auto;padding-bottom:12px;min-height:50vh;-webkit-overflow-scrolling:touch}
+.kanban-col{flex:0 0 min(260px,78vw);background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);display:flex;flex-direction:column;max-height:70vh}
+.kanban-head{padding:12px 14px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:8px}
+.kanban-head .t{font-family:'Archivo';font-weight:800;font-size:12px;text-transform:uppercase;letter-spacing:.06em}
+.kanban-head .n{font-family:'JetBrains Mono';font-size:11px;color:var(--muted)}
+.kanban-body{flex:1;overflow-y:auto;padding:8px}
+.kcard{background:var(--bg);border:1px solid var(--line);border-radius:var(--r);padding:10px 12px;margin-bottom:8px;cursor:pointer;border-left:3px solid var(--line-strong)}
+.kcard:active{background:var(--surface-2)}
+.kcard .kc{font-family:'JetBrains Mono';font-weight:700;font-size:13px}
+.kcard .ks{font-size:11px;color:var(--muted);margin-top:2px}
+.kcard.b-bozza{border-left-color:var(--muted-2)}
+.kcard.b-lav{border-left-color:var(--frost)}
+.kcard.b-pronto{border-left-color:var(--amber)}
+.kcard.b-cons{border-left-color:var(--green)}
+/* week load */
+.week-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:14px}
+.week-day{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:8px 4px;text-align:center;min-height:72px}
+.week-day .d{font-family:'Archivo';font-weight:700;font-size:10px;color:var(--muted);text-transform:uppercase}
+.week-day .h{font-family:'JetBrains Mono';font-weight:700;font-size:13px;margin-top:6px}
+.week-day.over{border-color:var(--red);background:rgba(240,85,61,.08)}
+.week-day.over .h{color:var(--red)}
+.week-day.ok .h{color:var(--green)}
+/* signature */
+.sig-wrap{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;margin-bottom:10px}
+.sig-wrap canvas{display:block;width:100%;height:140px;touch-action:none;background:#0a0e12}
+.sig-actions{display:flex;gap:8px;padding:8px}
+/* templates */
+.tpl-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.tpl-chip{padding:8px 12px;border-radius:100px;border:1px dashed var(--line-strong);font-size:12px;color:var(--muted);font-family:'Archivo';font-weight:700}
+.tpl-chip:active{border-color:var(--frost);color:var(--frost)}
+/* health */
+.health-panel{display:none;position:fixed;inset:0;z-index:100;background:rgba(6,9,12,.92);padding:24px 16px;overflow:auto}
+.health-panel.open{display:block}
+.health-panel pre{font-family:'JetBrains Mono';font-size:11px;color:var(--muted);white-space:pre-wrap;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px}
+/* voice search */
+.search.listening{border-color:var(--red);box-shadow:0 0 0 3px rgba(240,85,61,.2)}
+.btn-voice-search{width:46px;height:46px;border-radius:var(--r);border:1px solid var(--line);background:var(--surface);color:var(--muted);display:grid;place-items:center;flex:0 0 auto}
+.btn-voice-search.on{color:var(--red);border-color:var(--red)}
+.btn-voice-search svg{width:18px;height:18px}
+/* edge swipe guard hint */
+body.krio-lock-nav{overscroll-behavior-x:none;touch-action:pan-y}
+
+
 /* ICE root brand */
 .bc-ice{
   display:inline-flex;align-items:center;gap:6px;padding:5px 11px 5px 8px;border-radius:100px;
@@ -854,6 +923,14 @@ body.viewonly .btn-folder{display:none !important}
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
         Preventivi
       </button>
+      <button class="side-item" data-v="kanban">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="5" height="18" rx="1"/><rect x="10" y="3" width="5" height="12" rx="1"/><rect x="17" y="3" width="5" height="15" rx="1"/></svg>
+        Kanban
+      </button>
+      <button class="side-item" data-v="settimana">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+        Settimana
+      </button>
     </nav>
     <div class="side-foot">Krio · v1</div>
   </aside>
@@ -864,6 +941,9 @@ body.viewonly .btn-folder{display:none !important}
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
         <input id="searchInput" type="text" inputmode="text" placeholder="Cerca codice lavoro, cliente, telaio…" autocomplete="off">
       </div>
+      <button class="btn-voice-search" id="btnVoiceSearch" title="Ricerca vocale" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v1a7 7 0 0 1-14 0v-1"/></svg>
+      </button>
       <button class="btn-scan" id="btnScan">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><path d="M7 8v8M10 8v8M13 8v8M16 8v8"/></svg>
         Scan
@@ -902,6 +982,9 @@ body.viewonly .btn-folder{display:none !important}
     <div id="statsHost" style="display:none"></div>
     <div id="capHost" style="display:none"></div>
     <div id="prevHost" style="display:none"></div>
+    <div id="kanbanHost" style="display:none"></div>
+    <div id="weekHost" style="display:none"></div>
+    <div id="updateBannerSlot"></div>
   </div>
 
   <button class="fab" id="btnNew">
@@ -1007,6 +1090,16 @@ body.viewonly .btn-folder{display:none !important}
 
 <!-- toast -->
 <div class="ctx-menu" id="ctxMenu"></div>
+<div class="health-panel" id="healthPanel">
+  <div style="max-width:520px;margin:0 auto">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+      <h2 style="font-family:Archivo;font-weight:800">Health · Krio</h2>
+      <button class="icon-btn" id="healthClose" type="button">✕</button>
+    </div>
+    <pre id="healthPre">…</pre>
+    <button class="btn btn-primary" id="btnSnapshot" style="width:100%;margin-top:12px;height:46px">Scarica snapshot giornaliero</button>
+  </div>
+</div>
 
 <div class="toast" id="toast"><span id="toastIcon"></span><span id="toastMsg"></span></div>
 
@@ -1019,6 +1112,17 @@ const DEFAULT_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzvHnqvM1jMV
 
 const LAVORAZIONI = ["Motrice","Semirimorchio","KIT"];
 
+const FASI_DEFAULT = [
+  {id:"f1", nome:"Telaio / preparazione", fatto:false},
+  {id:"f2", nome:"Isolamento / pannelli", fatto:false},
+  {id:"f3", nome:"Porte e tenuta", fatto:false},
+  {id:"f4", nome:"Impianto e finiture", fatto:false},
+  {id:"f5", nome:"Collaudo e foto finali", fatto:false}
+];
+const ORDER_TEMPLATES = [
+  {id:"std35", nome:"Cella standard 3.5t", tipoCella:"", budget:{}, optional:[{nome:"Porta posteriore",fatto:false},{nome:"Sponda laterale",fatto:false}], note:"Template standard 3.5t"},
+  {id:"frigo", nome:"Allestimento frigo", tipoCella:"", budget:{}, optional:[{nome:"Unità frigo",fatto:false},{nome:"Sonda temperatura",fatto:false}], note:"Template allestimento frigo"}
+];
 const MANSIONI = [
   {id:"portalista",  label:"Portalista"},
   {id:"montatore",   label:"Montatore meccanico"},
@@ -1100,7 +1204,10 @@ const S = {
   timer: null,
   mediaList: [],
   mediaIdx: 0,
-  lastActivity: Date.now()
+  lastActivity: Date.now(),
+  logoTaps: 0,
+  operatorName: localStorage.getItem("cf_operator")||"",
+  templates: JSON.parse(localStorage.getItem("cf_templates")||"null") || null
 };
 const $ = s=>document.querySelector(s);
 const $$ = s=>[...document.querySelectorAll(s)];
@@ -1112,6 +1219,25 @@ const fuid = () => "F"+Date.now().toString(36).toUpperCase()+Math.random().toStr
 function fmtDate(d){ if(!d) return "—"; const p=d.split("-"); return p.length===3?`${p[2]}/${p[1]}/${p[0]}`:d; }
 function daysTo(d){ if(!d) return null; const t=new Date(); t.setHours(0,0,0,0); const x=new Date(d); return Math.round((x-t)/864e5); }
 function statoObj(id){ return STATI.find(s=>s.id===id)||STATI[0]; }
+
+function orderAlerts(o){
+  const a=[];
+  if((o.stato==="pronto"||o.stato==="cons") && !(o.mediaCount>0)) a.push({k:"photo",t:"Mancano foto"});
+  if((o.stato==="pronto"||o.stato==="cons") && sumActual(o)<=0) a.push({k:"hours",t:"Consuntivo vuoto"});
+  if(o.note && o.note.trim() && o.stato==="pronto") a.push({k:"note",t:"Controlla note"});
+  const fasi=o.fasi||[];
+  if(fasi.length && fasi.some(f=>!f.fatto) && (o.stato==="pronto"||o.stato==="cons")) a.push({k:"fase",t:"Fasi incomplete"});
+  return a;
+}
+function opInitials(name){
+  if(!name) return "";
+  const p=name.trim().split(/\s+/); return ((p[0]||"?")[0]+(p[1]?p[1][0]:"")).toUpperCase();
+}
+function ensureFasi(o){
+  if(!o.fasi || !o.fasi.length) o.fasi = FASI_DEFAULT.map(f=>({...f}));
+  return o.fasi;
+}
+
 
 /* ---------- folders helpers ---------- */
 function persistFolders(){
@@ -1477,14 +1603,19 @@ function rowHTML(o){
   const n=o.mediaCount||0;
   const hasNote=!!(o.note&&o.note.trim());
   const pinned=isPinned(o.id);
+  const alerts=orderAlerts(o);
   const pathTag=S.query?`<div class="folder-path-tag">❄ ${esc(folderNameOf(o.appFolderId))}</div>`:"";
+  const op=o.operatore?`<span class="op-chip" title="${esc(o.operatore)}">${esc(opInitials(o.operatore))}</span>`:"";
+  const tags=[o.tipoCella?`<span class="orow-tag">${esc(o.tipoCella)}</span>`:""].join("");
+  const dots=alerts.length?`<div class="alert-dots">${alerts.map(a=>`<span class="alert-dot a-${a.k}" title="${esc(a.t)}"></span>`).join("")}</div>`:"";
   return `<div class="orow b-${st.cls}${hasNote?' has-note':''}${pinned?' pinned':''}" data-id="${o.id}">
     <div class="orow-main">
       <div class="orow-code">${pinned?'<span class="pin-mark">◆</span>':''}${esc(o.codice||"—")}</div>
-      <div class="orow-sub">${esc(o.cliente||"—")}</div>
-      ${pathTag}
+      <div class="orow-sub">${esc(o.cliente||"—")} ${tags}</div>
+      ${pathTag}${dots}
     </div>
     <div class="orow-right">
+      ${op}
       ${hasNote?`<span class="note-badge" title="Note presenti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h6M8 17h4"/></svg>Nota</span>`:""}
       <span class="orow-dl ${di.cls}">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
@@ -1495,6 +1626,7 @@ function rowHTML(o){
     </div>
   </div>`;
 }
+function 
 function cardHTML(o){
   const st=statoObj(o.stato), di=deadlineInfo(o);
   const nMedia=o.mediaCount||0;
@@ -1526,7 +1658,7 @@ const IC={
   ext:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14 21 3"/></svg>'
 };
 
-function renderCurrent(){ buildLavFilters(); if(S.view==="stats") renderStats(); else if(S.view==="cap") renderCap(); else if(S.view==="prev") renderPrev(); else if(S.view==="archivio") renderArchive(); else render(); }
+function renderCurrent(){ buildLavFilters(); if(S.view==="stats") renderStats(); else if(S.view==="cap") renderCap(); else if(S.view==="prev") renderPrev(); else if(S.view==="archivio") renderArchive(); else if(S.view==="kanban") renderKanban(); else if(S.view==="settimana") renderWeek(); else render(); }
 function buildLavFilters(){
   const host=$("#lavFilters"); if(!host) return;
   const counts={all:S.orders.length};
@@ -1545,17 +1677,21 @@ function setView(v){
   $$("#viewswitch button").forEach(b=>b.classList.toggle("active", b.dataset.v===v));
   $$("#sideNav .side-item").forEach(b=>b.classList.toggle("active", b.dataset.v===v));
   const ord=v==="ordini", arch=v==="archivio", stats=v==="stats", cap=v==="cap", prev=v==="prev";
-  const noFilters = stats||cap||prev;
-  $("#lavFilters").style.display  = noFilters ? "none" : "";
+  const kan=v==="kanban", week=v==="settimana";
+  const noFilters = stats||cap||prev||kan||week;
+  $("#lavFilters").style.display  = (ord||arch) ? "" : "none";
   $("#filters").style.display     = ord ? "" : "none";
   $("#ordersHost").style.display  = ord ? "" : "none";
   $("#archiveHost").style.display = arch ? "" : "none";
   $("#statsHost").style.display   = stats ? "" : "none";
   $("#capHost").style.display     = cap ? "" : "none";
   $("#prevHost").style.display    = prev ? "" : "none";
+  const kh=$("#kanbanHost"); if(kh) kh.style.display = kan ? "" : "none";
+  const wh=$("#weekHost"); if(wh) wh.style.display = week ? "" : "none";
   $("#btnScan").style.display = ord ? "flex" : "none";
+  const vs=$("#btnVoiceSearch"); if(vs) vs.style.display = (ord||arch) ? "grid" : "none";
   const sb=document.querySelector(".search"); if(sb) sb.style.display = noFilters ? "none" : "flex";
-  $("#searchInput").placeholder = ord ? "Cerca codice lavoro, cliente, telaio…" : "Cerca cliente o codice lavoro…";
+  $("#searchInput").placeholder = ord ? "Cerca codice, cliente, telaio…" : "Cerca cliente o codice…";
   updateFabVisibility();
   closeSidebar();
   renderCurrent();
@@ -2104,9 +2240,105 @@ function wireTimer(){
   };
 }
 
+
+function renderFasi(){
+  const host=$("#faseList"); if(!host) return;
+  const fasi=ensureFasi(S.current);
+  host.innerHTML=fasi.map((f,i)=>`
+    <div class="fase-item ${f.fatto?'done':''}" data-i="${i}">
+      <span class="fase-num">${String(i+1).padStart(2,"0")}</span>
+      <div class="cb" style="width:22px;height:22px;border-radius:6px;border:2px solid var(--line-strong);flex:0 0 auto;display:grid;place-items:center;${f.fatto?'background:var(--green);border-color:var(--green)':''}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="${f.fatto?'#04140a':'transparent'}" stroke-width="3" style="width:14px;height:14px"><path d="M5 12l5 5L20 7"/></svg>
+      </div>
+      <div class="txt" style="flex:1;font-size:14px">${esc(f.nome)}</div>
+    </div>`).join("");
+  if(!S.canEdit) return;
+  $$("#faseList .fase-item").forEach(el=>{
+    el.onclick=()=>{ const i=+el.dataset.i; S.current.fasi[i].fatto=!S.current.fasi[i].fatto; renderFasi(); haptic(15); };
+  });
+}
+function applyTemplate(tid){
+  const tpls = S.templates || ORDER_TEMPLATES;
+  const t=tpls.find(x=>x.id===tid); if(!t||!S.current) return;
+  if(t.tipoCella) { const el=$("#f_tipo"); if(el) el.value=t.tipoCella; S.current.tipoCella=t.tipoCella; }
+  if(t.optional) S.current.optional=structuredClone(t.optional);
+  if(t.budget){ S.current.budget=structuredClone(t.budget); MANSIONI.forEach(m=>{ const bi=$("#bud_"+m.id); if(bi&&t.budget[m.id]!=null) bi.value=t.budget[m.id]; }); }
+  if(t.note && $("#f_note") && !$("#f_note").value) $("#f_note").value=t.note;
+  S.current.fasi=FASI_DEFAULT.map(f=>({...f}));
+  renderOptList(); renderOptSuggest(); renderFasi(); computeHours();
+  toast("Template «"+t.nome+"» applicato","ok");
+}
+function wireSignature(){
+  const cv=$("#sigCanvas"); if(!cv) return;
+  const ctx=cv.getContext("2d");
+  const ratio=Math.max(1, window.devicePixelRatio||1);
+  const w=cv.clientWidth||560, h=140;
+  cv.width=w*ratio; cv.height=h*ratio; ctx.scale(ratio,ratio);
+  ctx.strokeStyle="#46C6E6"; ctx.lineWidth=2.2; ctx.lineCap="round"; ctx.lineJoin="round";
+  let drawing=false, last=null;
+  const pos=(e)=>{ const r=cv.getBoundingClientRect(); const t=e.touches?e.touches[0]:e; return {x:t.clientX-r.left,y:t.clientY-r.top}; };
+  const start=(e)=>{ e.preventDefault(); drawing=true; last=pos(e); };
+  const move=(e)=>{ if(!drawing) return; e.preventDefault(); const p=pos(e); ctx.beginPath(); ctx.moveTo(last.x,last.y); ctx.lineTo(p.x,p.y); ctx.stroke(); last=p; };
+  const end=()=>{ drawing=false; };
+  cv.addEventListener("mousedown",start); cv.addEventListener("mousemove",move); window.addEventListener("mouseup",end);
+  cv.addEventListener("touchstart",start,{passive:false}); cv.addEventListener("touchmove",move,{passive:false}); cv.addEventListener("touchend",end);
+  const clr=$("#sigClear"); if(clr) clr.onclick=()=>{ ctx.clearRect(0,0,w,h); };
+  const sav=$("#sigSave"); if(sav) sav.onclick=async()=>{
+    if(!S.canEdit){ toast("Sola lettura","err"); return; }
+    const o=S.current; if(!o||o._new||!o.codice){ toast("Salva prima l'ordine","err"); return; }
+    const dataUrl=cv.toDataURL("image/png");
+    const b64=dataUrl.split(",")[1];
+    try{
+      await api("upload",{codice:o.codice,id:o.id,cliente:o.cliente,name:"Firma_collaudo_"+Date.now()+".png",mimeType:"image/png",data:b64});
+      toast("Firma salvata su Drive","ok"); loadMedia();
+    }catch(e){ toast(e.message,"err"); }
+  };
+}
+
+function renderKanban(){
+  const host=$("#kanbanHost"); if(!host) return;
+  let list=[...S.orders];
+  if(S.lav!=="all") list=list.filter(o=>o.tipoCella===S.lav);
+  host.innerHTML=`<div class="kanban">`+STATI.map(st=>{
+    const items=list.filter(o=>o.stato===st.id);
+    return `<div class="kanban-col"><div class="kanban-head"><span class="t" style="color:${st.color}">${st.label}</span><span class="n">${items.length}</span></div>
+      <div class="kanban-body">${items.map(o=>`<div class="kcard b-${st.cls}" data-id="${o.id}"><div class="kc">${esc(o.codice||"—")}</div><div class="ks">${esc(o.cliente||"—")}${o.operatore?" · "+esc(o.operatore):""}</div></div>`).join("")||`<div class="empty" style="padding:24px 8px"><p>Nessun ordine</p></div>`}</div></div>`;
+  }).join("")+`</div>`;
+  $$("#kanbanHost .kcard").forEach(c=>c.onclick=()=>openOrder(c.dataset.id));
+}
+function renderWeek(){
+  const host=$("#weekHost"); if(!host) return;
+  const now=new Date(); now.setHours(0,0,0,0);
+  // start Monday
+  const day=(now.getDay()+6)%7; const mon=new Date(now); mon.setDate(now.getDate()-day);
+  const hpp=parseFloat((S.settings&&S.settings.hpp)||8)||8;
+  // people approx from cap settings
+  let people=0;
+  try{
+    const org=(S.settings&&S.settings.organico)||{};
+    Object.values(org).forEach(v=>people+=parseFloat(v)||0);
+  }catch(_){}
+  if(!people) people=4;
+  const dayCap=people*hpp;
+  let html=`<div class="section-title">Carico settimana</div>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:12px;font-family:JetBrains Mono">Capacità stimata ${fmtH(dayCap)} h/giorno · ${people} persone × ${hpp} h</p>
+    <div class="week-grid">`;
+  for(let i=0;i<7;i++){
+    const d=new Date(mon); d.setDate(mon.getDate()+i);
+    const key=d.toISOString().slice(0,10);
+    const label=d.toLocaleDateString("it-IT",{weekday:"short",day:"numeric"});
+    const hours=S.orders.filter(o=>o.scadenza===key && o.stato!=="cons").reduce((s,o)=>s+sumBudget(o),0);
+    const over=hours>dayCap; const ok=hours>0&&!over;
+    html+=`<div class="week-day ${over?'over':ok?'ok':''}"><div class="d">${esc(label)}</div><div class="h">${fmtH(hours)}h</div></div>`;
+  }
+  html+=`</div>`;
+  host.innerHTML=html;
+}
+
+
 function blankOrder(codice){
   const today=new Date().toISOString().slice(0,10);
-  return {id:uid(),codice:codice||"",cliente:"",targa:"",tipoCella:"",dataOrdine:today,scadenza:"",stato:"bozza",optional:[],note:"",budget:{},actual:{},readyAt:"",mediaCount:0,appFolderId:S.folderId||null,_new:true};
+  return {id:uid(),codice:codice||"",cliente:"",targa:"",tipoCella:"",dataOrdine:today,scadenza:"",stato:"bozza",optional:[],note:"",budget:{},actual:{},readyAt:"",mediaCount:0,appFolderId:S.folderId||null,fasi:FASI_DEFAULT.map(f=>({...f})),operatore:S.operatorName||"",updatedBy:S.operatorName||"",clientUpdatedAt:new Date().toISOString(),_new:true};
 }
 function openOrder(id){
   if(!id && !S.canEdit){ toast("Sola lettura: non puoi creare lavori","err"); return; }
@@ -2121,9 +2353,16 @@ function openOrder(id){
 }
 function openWithCode(code){
   const found=S.orders.find(o=>(o.codice||"").toLowerCase()===code.toLowerCase());
-  if(found){ openOrder(found.id); return; }
+  if(found){
+    if(found.appFolderId && found.appFolderId!==S.folderId){
+      const fn=folderNameOf(found.appFolderId);
+      toast("Trovato in «"+fn+"» · apro la scheda","ok");
+      S.folderId=found.appFolderId; rememberFolder();
+    }
+    openOrder(found.id); return;
+  }
   if(!S.canEdit){ toast("Codice non trovato (sola lettura)","err"); return; }
-  if(!S.folderId){ toast("Entra in una cartella per creare un nuovo lavoro","err"); return; }
+  if(!S.folderId){ toast("Entra in una cartella sotto ICE per creare un lavoro","err"); return; }
   const b=blankOrder(code); S.current=b; renderSheet(); loadMedia(); $("#sheetScrim").classList.add("open"); $("#sheet").classList.add("open"); toast("Nuovo lavoro per "+code); setTimeout(()=>{$("#f_cliente")&&$("#f_cliente").focus();},300);
 }
 function closeSheet(){ $("#sheetScrim").classList.remove("open"); $("#sheet").classList.remove("open"); S.current=null; }
@@ -2166,6 +2405,14 @@ function renderSheet(){
       <label>Stato lavorazione</label>
       <select id="f_stato">${statoOptions}</select>
     </div>
+    <div class="grid-2">
+      <div class="field"><label>Operatore</label><input id="f_operatore" type="text" value="${esc(o.operatore||S.operatorName||"")}" placeholder="Nome operatore"></div>
+      <div class="field"><label>Audit</label><input type="text" disabled value="${esc((o.updatedBy||"—")+" · "+(o.clientUpdatedAt?new Date(o.clientUpdatedAt).toLocaleString("it-IT"):"—"))}"></div>
+    </div>
+    ${o._new && S.canEdit ? `<div class="section-title"><span class="n">TPL</span> Template</div><div class="tpl-row" id="tplRow"></div>`:""}
+
+    <div class="section-title"><span class="n">FASI</span> Check-list di processo</div>
+    <div class="fase-list" id="faseList"></div>
 
     <div class="section-title"><span class="n">OPT</span> Optional del mezzo</div>
     <div class="opt-add">
@@ -2214,6 +2461,14 @@ function renderSheet(){
     <div class="up-progress" id="upProg"><div class="bar" id="upBar"></div></div>
     <div class="up-label" id="upLabel"></div>
 
+    <div class="section-title"><span class="n">FIRMA</span> Collaudo / consegna</div>
+    <div class="sig-wrap"><canvas id="sigCanvas" width="560" height="140"></canvas>
+      <div class="sig-actions">
+        <button type="button" class="btn btn-ghost" id="sigClear" style="height:36px;flex:1">Pulisci</button>
+        <button type="button" class="btn btn-primary" id="sigSave" style="height:36px;flex:1">Salva firma su Drive</button>
+      </div>
+    </div>
+
     <div class="field" style="margin-top:22px">
       <label>Note</label>
       <textarea id="f_note" placeholder="Annotazioni, richieste particolari, riferimenti…">${esc(o.note)}</textarea>
@@ -2234,6 +2489,19 @@ function renderSheet(){
   S._prevStato = S.current.stato;
   computeHours();
   wireTimer();
+
+  // fasi
+  ensureFasi(S.current);
+  renderFasi();
+  // templates
+  const tplHost=$("#tplRow");
+  if(tplHost){
+    const tpls = S.templates || ORDER_TEMPLATES;
+    tplHost.innerHTML = tpls.map(t=>`<button type="button" class="tpl-chip" data-tpl="${esc(t.id)}">${esc(t.nome)}</button>`).join("");
+    $$("#tplRow .tpl-chip").forEach(b=>b.onclick=()=>applyTemplate(b.dataset.tpl));
+  }
+  wireSignature();
+
   if(!S.canEdit){
     $$("#sheetBody input, #sheetBody select, #sheetBody textarea").forEach(el=>el.disabled=true);
   }
@@ -2338,6 +2606,10 @@ function collectForm(){
   o.scadenza=$("#f_scad").value;
   o.stato=$("#f_stato").value;
   o.note=$("#f_note").value.trim();
+  const opEl=$("#f_operatore"); if(opEl){ o.operatore=opEl.value.trim(); if(o.operatore){ S.operatorName=o.operatore; localStorage.setItem("cf_operator",o.operatore); } }
+  o.fasi = S.current.fasi || ensureFasi(S.current);
+  o.updatedBy = S.operatorName || o.operatore || "";
+  o.clientUpdatedAt = new Date().toISOString();
   o.budget={}; o.actual={};
   MANSIONI.forEach(m=>{
     const bi=$("#bud_"+m.id); if(bi && bi.value!=="") o.budget[m.id]=parseFloat(bi.value)||0;
@@ -2353,12 +2625,18 @@ async function saveOrder(){
   const o=collectForm();
   if(!o.codice){ toast("Inserisci il codice lavoro","err"); $("#f_codice").focus(); return; }
   if(!o.tipoCella || !LAVORAZIONI.includes(o.tipoCella)){ toast("Seleziona la lavorazione","err"); $("#f_tipo").focus(); return; }
+  if((o.stato==="pronto"||o.stato==="cons")){
+    const fasi=o.fasi||[];
+    if(fasi.length && fasi.some(f=>!f.fatto)){
+      if(!confirm("Alcune fasi di processo non sono completate. Segnare comunque come "+(o.stato==="pronto"?"Pronto":"Consegnato")+"?")) return;
+    }
+  }
   const btn=$("#btnSave"); const old=btn.innerHTML; btn.innerHTML='<div class="spin"></div> Salvataggio…'; btn.disabled=true;
   try{
     if(o.appFolderId==null && S.folderId) o.appFolderId=S.folderId;
     const payload={id:o.id,codice:o.codice,cliente:o.cliente,targa:o.targa,tipoCella:o.tipoCella,
       dataOrdine:o.dataOrdine,scadenza:o.scadenza,stato:o.stato,optional:o.optional||[],note:o.note,
-      budget:o.budget||{},actual:o.actual||{},readyAt:o.readyAt||"",appFolderId:o.appFolderId||null};
+      budget:o.budget||{},actual:o.actual||{},readyAt:o.readyAt||"",appFolderId:o.appFolderId||null,fasi:o.fasi||[],operatore:o.operatore||"",updatedBy:o.updatedBy||"",clientUpdatedAt:o.clientUpdatedAt||""};
     const d=await api("save",{order:payload});
     o._new=false; if(d.order&&d.order.mediaCount!=null) o.mediaCount=d.order.mediaCount;
     // update local list
@@ -2545,6 +2823,9 @@ async function onFilesPicked(e){
   let done=0;
   for(const f of files){
     lbl.textContent=`Caricamento ${done+1}/${files.length} · ${f.name}`;
+    // idempotenza soft: salta se stesso nome già presente in griglia
+    const exists=[...document.querySelectorAll("#mediaGrid .media-cell .fn, #mediaGrid .media-cell")].some(el=>(el.textContent||"").includes(f.name));
+    if(exists && !confirm(`"${f.name}" sembra già caricato. Caricare di nuovo?`)){ done++; bar.style.width=(done/files.length*100)+"%"; continue; }
     let uf=f;
     try{ uf=await compressImage(f); }catch(_){}
     if(uf.size>45*1024*1024){ toast(`"${uf.name}" supera 45MB, saltato`,"err"); done++; bar.style.width=(done/files.length*100)+"%"; continue; }
@@ -3009,8 +3290,18 @@ function goUpFolder(){
   else render();
   return true;
 }
+function goHomeICE(){
+  // landing: Ordini + radice ICE
+  S.folderId = null;
+  rememberFolder();
+  S.query = "";
+  const si=$("#searchInput"); if(si) si.value="";
+  if(S.view !== "ordini") setView("ordini");
+  else render();
+  haptic(15);
+}
 function handleAppBack(){
-  // priorità: chiudi overlay → sali cartella → torna a Ordini
+  if($("#healthPanel") && $("#healthPanel").classList.contains("open")){ $("#healthPanel").classList.remove("open"); return true; }
   if($("#lightbox") && $("#lightbox").classList.contains("open")){ closeLightbox(); return true; }
   if($("#ctxMenu") && $("#ctxMenu").classList.contains("open")){ closeCtxMenu(); return true; }
   if($("#scanModal") && $("#scanModal").classList.contains("open")){ closeScan(); return true; }
@@ -3018,26 +3309,97 @@ function handleAppBack(){
   if($("#settingsScrim") && $("#settingsScrim").classList.contains("open")){ closeSettings(); return true; }
   if($("#sheet") && $("#sheet").classList.contains("open")){ closeSheet(); return true; }
   if($("#sidebar") && $("#sidebar").classList.contains("open")){ closeSidebar(); return true; }
-  // dentro una cartella: sali di un livello
   if(S.folderId){ goUpFolder(); return true; }
-  // in una vista diversa da ordini: torna a ordini
   if(S.view && S.view !== "ordini"){ setView("ordini"); return true; }
-  // già a root in ordini: resta nell'app (non uscire)
+  // già su landing ICE: non uscire
+  goHomeICE();
   return true;
 }
 function setupBackButton(){
-  // tiene sempre uno stato in history così "indietro" non chiude la PWA/tab
+  document.body.classList.add("krio-lock-nav");
   try{
-    if(!history.state || !history.state.krio){
-      history.replaceState({krio:1, root:true}, "");
-    }
+    history.replaceState({krio:1, root:true}, "");
+    history.pushState({krio:1}, "");
     history.pushState({krio:1}, "");
   }catch(_){}
-  window.addEventListener("popstate", function(){
-    try{ history.pushState({krio:1}, ""); }catch(_){}
+  window.addEventListener("popstate", function(e){
+    try{
+      history.pushState({krio:1}, "");
+      history.pushState({krio:1}, "");
+    }catch(_){}
     handleAppBack();
   });
+  // swipe dal bordo sinistro = indietro in-app (non gesture sistema se possibile)
+  let sx=0, sy=0, tracking=false;
+  document.addEventListener("touchstart", function(e){
+    if(!e.touches||!e.touches[0]) return;
+    const t=e.touches[0];
+    if(t.clientX < 28){ tracking=true; sx=t.clientX; sy=t.clientY; }
+  }, {passive:true});
+  document.addEventListener("touchmove", function(e){
+    if(!tracking||!e.touches||!e.touches[0]) return;
+    const t=e.touches[0];
+    const dx=t.clientX-sx, dy=Math.abs(t.clientY-sy);
+    if(dx>70 && dy<50){
+      tracking=false;
+      handleAppBack();
+    }
+  }, {passive:true});
+  document.addEventListener("touchend", function(){ tracking=false; }, {passive:true});
 }
+function setupVoiceSearch(){
+  const btn=$("#btnVoiceSearch"); if(!btn) return;
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){ btn.style.display="none"; return; }
+  const rec=new SR(); rec.lang="it-IT"; rec.interimResults=false;
+  btn.onclick=()=>{
+    try{
+      btn.classList.add("on");
+      const box=document.querySelector(".search"); if(box) box.classList.add("listening");
+      rec.start();
+    }catch(_){ btn.classList.remove("on"); }
+  };
+  rec.onresult=(ev)=>{
+    const txt=(ev.results[0]&&ev.results[0][0]&&ev.results[0][0].transcript)||"";
+    const si=$("#searchInput"); if(si){ si.value=txt; S.query=txt.trim(); renderCurrent(); }
+    toast("Ricerca: "+txt,"ok");
+  };
+  rec.onerror=()=>{ btn.classList.remove("on"); document.querySelector(".search")?.classList.remove("listening"); };
+  rec.onend=()=>{ btn.classList.remove("on"); document.querySelector(".search")?.classList.remove("listening"); };
+}
+function openHealth(){
+  const pre=$("#healthPre");
+  const info={
+    version: "krio-client",
+    online: navigator.onLine,
+    queue: (S.offlineQueue||[]).length,
+    orders: S.orders.length,
+    folders: S.folders.length,
+    view: S.view,
+    folderId: S.folderId,
+    role: S.role,
+    sw: !!(navigator.serviceWorker&&navigator.serviceWorker.controller),
+    lastActivity: new Date(S.lastActivity||Date.now()).toISOString(),
+    ua: navigator.userAgent.slice(0,120)
+  };
+  if(pre) pre.textContent=JSON.stringify(info,null,2);
+  $("#healthPanel").classList.add("open");
+}
+function downloadSnapshot(){
+  const payload={
+    exportedAt: new Date().toISOString(),
+    orders: S.orders,
+    folders: S.folders,
+    settings: S.settings
+  };
+  const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download="Krio_snapshot_"+new Date().toISOString().slice(0,10)+".json";
+  a.click();
+  toast("Snapshot scaricato","ok");
+}
+
 
 /* ===================================================================
    BOOT
@@ -3045,7 +3407,15 @@ function setupBackButton(){
 buildKeypad(); renderPin();
 registerSW(); updateInstallUI();
 setupBackButton();
+setupVoiceSearch();
 updateQueueLed();
+document.body.classList.add("krio-lock-nav");
+// 5 tap sul logo → health
+const logoTap=()=>{ S.logoTaps=(S.logoTaps||0)+1; clearTimeout(S._logoT); S._logoT=setTimeout(()=>S.logoTaps=0,900); if(S.logoTaps>=5){ S.logoTaps=0; openHealth(); } };
+document.querySelectorAll(".topbar .logo, .side-head .logo").forEach(el=>el.addEventListener("click",logoTap));
+const hc=$("#healthClose"); if(hc) hc.onclick=()=>$("#healthPanel").classList.remove("open");
+const sn=$("#btnSnapshot"); if(sn) sn.onclick=downloadSnapshot;
+
 window.addEventListener("online", ()=>{ flushQueue(); toast("Rete disponibile","ok"); });
 // banner aggiornamento SW
 if("serviceWorker" in navigator){

@@ -32,7 +32,7 @@ var SHEET_NAME       = 'Ordini';
 // appFolderId  = cartella organizzativa dell'app (es. "2026")
 var HEADERS = ['id','codice','cliente','targa','tipoCella','dataOrdine',
                'scadenza','stato','optional','note','folderId','appFolderId','updatedAt',
-               'budgetOre','oreEffettive','readyAt'];
+               'budgetOre','oreEffettive','readyAt','fasi','operatore','updatedBy','clientUpdatedAt'];
 
 /* ---------- entry points ---------- */
 function doPost(e){
@@ -140,6 +140,10 @@ function rowsToObjects(sh){
     try{ o.optional = o.optional ? JSON.parse(o.optional) : []; }catch(_){ o.optional=[]; }
     try{ o.budget = o.budgetOre ? JSON.parse(o.budgetOre) : {}; }catch(_){ o.budget={}; }
     try{ o.actual = o.oreEffettive ? JSON.parse(o.oreEffettive) : {}; }catch(_){ o.actual={}; }
+    try{ o.fasi = o.fasi ? JSON.parse(o.fasi) : []; }catch(_){ o.fasi=[]; }
+    o.operatore = o.operatore ? String(o.operatore) : '';
+    o.updatedBy = o.updatedBy ? String(o.updatedBy) : '';
+    o.clientUpdatedAt = o.clientUpdatedAt ? String(o.clientUpdatedAt) : '';
     // normalizza date (Sheet può restituire Date)
     ['dataOrdine','scadenza','readyAt'].forEach(function(k){
       if(o[k] instanceof Date) o[k]=Utilities.formatDate(o[k], Session.getScriptTimeZone(),'yyyy-MM-dd');
@@ -183,6 +187,7 @@ function saveOrder(o){
     if(h==='optional')     return JSON.stringify(o.optional||[]);
     if(h==='budgetOre')    return JSON.stringify(o.budget||{});
     if(h==='oreEffettive') return JSON.stringify(o.actual||{});
+    if(h==='fasi')         return JSON.stringify(o.fasi||[]);
     if(h==='folderId')     return driveFolderId;
     if(h==='appFolderId')  return appFolderId;
     return o[h]!=null ? o[h] : '';
