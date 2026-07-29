@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#0B0E12">
+<meta name="theme-color" content="#12161C">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="KRIO">
@@ -16,253 +16,27 @@
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  /* Industrial cold-room control panel */
-  --bg:#0B0E12; --bg-deep:#07090C; --surface:#161C24; --surface-2:#1A222C;
-  --line:#2A3340; --line-strong:#3A4554;
-  --text:#E8EEF4; --muted:#8B9AAB; --muted-2:#5E6C7C;
-  --frost:#3DB8D9; --frost-dim:#1A4552; --frost-glow:rgba(61,184,217,.12);
-  --amber:#E8A317; --green:#3FA86A; --red:#E24B3B;
-  --r:8px; --r-lg:12px;
-  --shadow:0 4px 16px rgba(0,0,0,.35);
+  --bg:#12161C; --bg-deep:#0D1116; --surface:#1A212B; --surface-2:#212A36;
+  --line:#2C3644; --line-strong:#3B4759;
+  --text:#E7EDF4; --muted:#8593A3; --muted-2:#5E6C7C;
+  --frost:#46C6E6; --frost-dim:#1E4E5C; --frost-glow:rgba(70,198,230,.15);
+  --amber:#F5A524; --green:#3FB84F; --red:#F0553D;
+  --r:10px; --r-lg:14px;
+  --shadow:0 8px 28px rgba(0,0,0,.45);
   --safe-b:env(safe-area-inset-bottom,0px);
-  --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{height:100%}
 body{
   background:var(--bg); color:var(--text);
-  font-family:'Inter',system-ui,sans-serif; font-size:14px; line-height:1.45;
+  font-family:'Inter',system-ui,sans-serif; font-size:15px; line-height:1.5;
   -webkit-font-smoothing:antialiased; overflow-x:hidden;
 }
 button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
 input,select,textarea{font-family:inherit;font-size:15px}
 ::selection{background:var(--frost);color:#04141a}
 .mono{font-family:'JetBrains Mono',monospace}
-.eyebrow{font-family:'Archivo',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.12em;font-size:10px;color:var(--muted-2)}
-
-
-/* ---- UI: nuova cartella come nuovo ordine + logo brillante ---- */
-
-.folder-bar-clean{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;flex-wrap:wrap}
-.folder-nav-simple{display:flex;align-items:center;gap:6px;flex:1;min-width:0;flex-wrap:wrap}
-.folder-root-btn{
-  height:36px;padding:0 12px;border-radius:8px;border:1px solid var(--line);
-  background:var(--surface);color:var(--muted);font-family:'Archivo';font-weight:700;
-  font-size:11px;text-transform:uppercase;letter-spacing:.04em;max-width:160px;
-  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
-}
-.folder-root-btn.on{border-color:var(--frost-dim);color:var(--text);box-shadow:inset 3px 0 0 var(--frost)}
-#settingsViewHost{min-height:50vh;padding-bottom:24px}
-.appear-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
-.settings-block{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:14px;margin-bottom:14px}
-.settings-block h3{font-family:'Archivo';font-weight:800;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted-2);margin-bottom:10px}
-
-.folder-bar-clean:empty{display:none}
-.fab-inline{
-  height:44px;padding:0 16px;border-radius:8px;
-  background:var(--frost);color:#04141a;
-  font-family:'Archivo';font-weight:800;font-size:12px;letter-spacing:.04em;
-  text-transform:uppercase;display:inline-flex;align-items:center;gap:8px;
-  box-shadow:0 2px 0 rgba(0,0,0,.35);border:none;cursor:pointer;
-}
-.fab-inline svg{width:18px;height:18px}
-.fab-inline:active{transform:scale(.98)}
-.breadcrumb{display:none!important}
-
-/* Logo fiocco più brillante */
-.logo,.keypad-head .logo,.topbar .logo,.side-head .logo{
-  background:linear-gradient(145deg,#7AE0F5 0%,var(--frost) 40%,#2A9BB8 100%)!important;
-  box-shadow:0 0 0 1px rgba(122,224,245,.5),0 0 18px rgba(61,184,217,.55),inset 0 1px 0 rgba(255,255,255,.45)!important;
-  color:#031820!important;
-  border:none!important;
-}
-.logo .snow,.keypad-head .logo .snow,.topbar .logo .snow{
-  filter:drop-shadow(0 0 3px rgba(255,255,255,.9)) drop-shadow(0 0 8px rgba(122,224,245,.8));
-  stroke:#031820;stroke-width:1.8;
-}
-
-/* Appearance / settings panel bits */
-.appear-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
-.appear-swatch{
-  border:1px solid var(--line);border-radius:var(--r);padding:12px;text-align:left;background:var(--surface);
-  font-family:'Archivo';font-weight:700;font-size:12px;color:var(--muted);cursor:pointer;
-}
-.appear-swatch.on{border-color:var(--frost);color:var(--text);box-shadow:inset 3px 0 0 var(--frost)}
-.appear-swatch .dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:8px;vertical-align:middle}
-.side-item.side-settings{margin-top:8px;border-top:1px solid var(--line);padding-top:14px;border-radius:0 0 8px 8px}
-
-/* Themes via data-theme on body */
-body[data-theme="midnight"]{--bg:#06080C;--bg-deep:#040506;--surface:#121820;--surface-2:#182028;--line:#243040;--frost:#4EC8E8}
-body[data-theme="slate"]{--bg:#14181E;--bg-deep:#0E1218;--surface:#1E252E;--surface-2:#262E38;--line:#343E4C;--frost:#5B9FD4;--text:#EDF1F5}
-body[data-theme="contrast"]{--bg:#000;--bg-deep:#000;--surface:#111;--surface-2:#1A1A1A;--line:#444;--text:#FFF;--muted:#CCC;--frost:#5CF;--amber:#FC0;--green:#0F6;--red:#F44}
-body[data-density="compact"] .orow{padding:7px 8px 7px 10px!important}
-body[data-density="compact"] .ticket{padding:8px!important}
-body[data-density="compact"]{font-size:13px}
-body[data-accent="amber"]{--frost:#E8A317;--frost-dim:#5C4010;--frost-glow:rgba(232,163,23,.14)}
-body[data-accent="green"]{--frost:#3FA86A;--frost-dim:#1A4A30;--frost-glow:rgba(63,168,106,.14)}
-body[data-accent="violet"]{--frost:#9B7AED;--frost-dim:#3A2A6A;--frost-glow:rgba(155,122,237,.14)}
-/* ===== Industrial density & hierarchy (design pass) ===== */
-.section-title,.dr-sec .lab,.cap-jobs .lab,.sheet-sec-title{
-  font-family:'Archivo',sans-serif;font-weight:800;text-transform:uppercase;
-  letter-spacing:.1em;font-size:10px;color:var(--muted-2);
-}
-.section-title .n,.dr-sec .lab .n{
-  display:inline-flex;align-items:center;justify-content:center;
-  min-width:18px;height:18px;padding:0 5px;margin-right:8px;
-  border-radius:4px;border:1px solid var(--line);background:var(--surface-2);
-  font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:0;
-}
-.topbar{
-  background:rgba(11,14,18,.94)!important;
-  border-bottom-color:var(--line)!important;
-  padding:10px 14px!important;
-  padding-top:calc(10px + env(safe-area-inset-top,0px))!important;
-}
-.topbar h1{font-size:13px!important;letter-spacing:.04em}
-.topbar .logo,.side-head .logo,.keypad-head .logo{
-  box-shadow:none!important;
-  background:var(--frost-dim)!important;
-  border:1px solid rgba(61,184,217,.35);
-  border-radius:8px!important;
-}
-.wrap{padding:12px 12px calc(88px + var(--safe-b))!important;max-width:920px}
-.search{height:42px!important;border-radius:var(--r)!important}
-.search:focus-within{box-shadow:0 0 0 2px var(--frost-glow)!important}
-.btn-scan{
-  height:42px!important;background:var(--surface)!important;
-  border:1px solid var(--line-strong)!important;color:var(--text)!important;
-  box-shadow:none!important;
-}
-.btn-scan:active{border-color:var(--frost-dim)!important;color:var(--frost)!important}
-.chip{padding:6px 12px!important;font-size:11px!important;border-radius:6px!important}
-.chip.active{border-color:var(--line-strong)!important;background:var(--surface-2)!important;color:var(--text)!important;box-shadow:inset 3px 0 0 var(--frost)}
-.chip .count{font-size:10px!important}
-
-/* Dense order rows */
-.orders{gap:8px!important;grid-template-columns:repeat(auto-fill,minmax(150px,1fr))!important}
-.ticket{
-  border-radius:var(--r)!important;box-shadow:none!important;
-  padding:10px 10px 9px!important;
-  transition:transform .12s ease, border-color .12s ease!important;
-}
-.ticket:active{transform:scale(.98)!important}
-.ticket-code{font-size:15px!important;letter-spacing:.01em!important}
-.ticket-client{font-size:11px!important;color:var(--muted)!important}
-.ticket .stamp,.orow-stamp{
-  font-size:8px!important;padding:2px 6px!important;border-radius:4px!important;
-  letter-spacing:.08em!important;border-width:1.5px!important;background:transparent!important;
-}
-.ticket::before,.orow::before{width:3px!important}
-.orow{padding:9px 10px 9px 12px!important;border-radius:var(--r)!important;gap:10px!important}
-.orow-code{font-size:14px!important}
-.orow-sub{font-size:11px!important}
-.orow-dl{font-size:10px!important}
-
-/* FAB: single solid industrial, less glow */
-.fab{
-  height:48px!important;padding:0 18px!important;border-radius:8px!important;
-  background:var(--frost)!important;color:#04141a!important;
-  box-shadow:0 2px 0 rgba(0,0,0,.35)!important;
-  font-size:13px!important;letter-spacing:.04em!important;
-}
-.fab:active{transform:scale(.98)!important}
-
-/* Primary buttons */
-.btn-primary,.xls-btn{
-  border-radius:var(--r)!important;
-  box-shadow:none!important;
-}
-.btn.btn-primary,button.btn-primary{
-  background:var(--frost)!important;color:#04141a!important;
-  background-image:none!important;
-}
-
-/* Sheet / panels */
-.sheet,.keypad-panel,.arch-client,.stat-card,.cap-card,.pv-card,.dr-sess,.dr-detail,.pv-detail{
-  border-radius:var(--r-lg)!important;
-  box-shadow:none!important;
-  border-color:var(--line)!important;
-}
-.sheet-head{border-bottom:1px solid var(--line)}
-
-/* Side nav industrial */
-.sidebar{background:var(--bg-deep)!important}
-.side-item{border-radius:8px!important;font-size:13px!important}
-.side-item.active{background:var(--surface)!important;box-shadow:inset 3px 0 0 var(--frost)}
-.side-item.active svg{color:var(--frost)!important}
-
-/* Forms denser */
-.field{margin-bottom:12px}
-.field label{
-  font-family:'Archivo',sans-serif;font-weight:700;text-transform:uppercase;
-  letter-spacing:.1em;font-size:9px;color:var(--muted-2);margin-bottom:6px;display:block;
-}
-.field input,.field select,.field textarea,
-input.hours-in,.stat-select,.dr-ta{
-  border-radius:var(--r)!important;
-}
-.field input:focus,.field textarea:focus,.hours-in:focus,.stat-select:focus,.dr-ta:focus{
-  box-shadow:0 0 0 2px var(--frost-glow)!important;
-}
-
-/* Deadline colors only when needed */
-.deadline.warn,.orow-dl.warn{color:var(--amber)!important}
-.deadline.late,.orow-dl.late{color:var(--red)!important}
-.deadline.done,.orow-dl.done{color:var(--green)!important}
-
-/* Login keypad — control panel */
-#login{background:radial-gradient(100% 80% at 50% -20%,#152028 0%,var(--bg-deep) 55%)!important}
-.keypad-panel{border-radius:14px!important;box-shadow:var(--shadow)!important}
-.pin-dot.on{background:var(--frost)!important;box-shadow:0 0 0 3px var(--frost-glow)!important}
-.key.ok{color:var(--frost)!important}
-
-/* LED */
-.led.ok{box-shadow:0 0 6px rgba(63,168,106,.5)!important}
-.led.busy{background:var(--amber)!important}
-.led.err{background:var(--red)!important}
-
-/* Empty states — single stroke feel */
-.empty svg{opacity:.55}
-.empty h3{font-size:15px!important;letter-spacing:.02em}
-.empty p{font-size:12px!important;color:var(--muted)!important}
-
-/* Design review chips — dashed industrial, not stickers */
-.dr-chip{
-  border-radius:6px!important;border-style:dashed!important;
-  background:var(--bg)!important;
-}
-.dr-chip:active{color:var(--frost)!important;border-color:var(--frost-dim)!important}
-
-/* Preventivi home buttons */
-.pv-home-btn{
-  border-radius:var(--r-lg)!important;
-  box-shadow:none!important;
-}
-.pv-home-btn .ic{
-  background:var(--surface-2)!important;
-  border:1px solid var(--line)!important;
-  border-radius:8px!important;
-  color:var(--frost)!important;
-}
-
-/* Reduce barcode noise on list: keep only detail */
-.ticket .barcode{display:none!important}
-
-/* Icon buttons quieter */
-.icon-btn{border-radius:8px!important;width:36px!important;height:36px!important}
-.icon-btn.on{background:var(--surface)!important}
-
-/* Status semantic — no fill, outline only */
-.st-bozza{color:var(--muted)!important}
-.st-lav{color:var(--frost)!important}
-.st-pronto{color:var(--amber)!important}
-.st-cons{color:var(--green)!important}
-
-/* View transition short */
-.ticket,.orow,.folder-row,.side-item,.chip,.btn,.fab,.pv-opt,.dr-sess{
-  transition:transform .12s ease, background .12s ease, border-color .12s ease!important;
-}
-
+.eyebrow{font-family:'Archivo',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.14em;font-size:11px;color:var(--muted)}
 
 /* barcode decorative strip */
 .barcode{
@@ -436,6 +210,12 @@ input.hours-in,.stat-select,.dr-ta{
 .fab svg{width:20px;height:20px}
 .fab:active{transform:scale(.96)}
 
+/* view switch */
+.viewswitch{display:flex;gap:4px;background:var(--surface);border:1px solid var(--line);border-radius:100px;padding:4px;margin-bottom:14px}
+.viewswitch button{flex:1;height:38px;border-radius:100px;font-family:'Archivo';font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);display:flex;align-items:center;justify-content:center;gap:8px;transition:.14s}
+.viewswitch button svg{width:16px;height:16px}
+.viewswitch button.active{background:linear-gradient(145deg,var(--frost),#2b9cba);color:#04141a}
+
 /* archive: cliente > ordine > foto */
 .arch-client{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);margin-bottom:12px;overflow:hidden}
 .arch-client-head{display:flex;align-items:center;gap:12px;padding:14px;cursor:pointer}
@@ -507,6 +287,13 @@ body.viewonly .opt-add,
 body.viewonly .opt-suggest,
 body.viewonly .opt-item .del{display:none !important}
 body.viewonly .sheet-foot{justify-content:flex-end}
+body.viewonly #viewswitch [data-v="stats"],
+body.viewonly #viewswitch [data-v="cap"],
+body.viewonly #viewswitch [data-v="prev"]{display:none !important}
+.viewswitch{overflow-x:auto}
+.viewswitch::-webkit-scrollbar{display:none}
+.viewswitch button{flex:0 0 auto;padding:0 15px;white-space:nowrap}
+
 /* card compatte (ordini) */
 .orders{grid-template-columns:repeat(auto-fill,minmax(158px,1fr));gap:10px}
 .ticket{padding:12px 12px 10px}
@@ -588,6 +375,10 @@ body.viewonly .sheet-foot{justify-content:flex-end}
 .stat-select{width:100%;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:11px 12px;color:var(--text);outline:none;font-family:'JetBrains Mono';font-size:13px;margin-bottom:12px}
 .stat-select:focus{border-color:var(--frost-dim);box-shadow:0 0 0 3px var(--frost-glow)}
 
+/* switch a 4 tab */
+.viewswitch button{font-size:11px;letter-spacing:.04em}
+@media(max-width:440px){ .viewswitch button svg{display:none} .viewswitch button{gap:0} }
+
 /* organico / capacità */
 .cap-nav{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
 .cap-nav button{width:40px;height:40px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--text);display:grid;place-items:center}
@@ -646,58 +437,6 @@ body.viewonly .sheet-foot{justify-content:flex-end}
 .note-box{background:var(--bg-deep);border:1px solid var(--line);border-left:3px solid var(--amber);border-radius:var(--r);padding:12px 14px;font-size:14px;line-height:1.55;color:var(--text);white-space:pre-wrap;max-height:42vh;overflow:auto}
 
 /* ---- Preventivi ---- */
-
-/* preventivi landing */
-
-/* Design Review */
-.dr-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
-.dr-head h2{font-family:'Archivo';font-weight:800;font-size:17px}
-.dr-sess{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:14px;margin-bottom:10px;cursor:pointer}
-.dr-sess:active{background:var(--surface-2)}
-.dr-sess .d{font-family:'JetBrains Mono';font-size:11px;color:var(--muted)}
-.dr-sess .t{font-family:'Archivo';font-weight:800;font-size:15px;margin-top:4px}
-.dr-sess .meta{font-size:12px;color:var(--muted);margin-top:6px}
-.dr-chips{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 12px}
-.dr-chip{padding:7px 12px;border-radius:100px;border:1px dashed var(--line-strong);font-size:11px;font-family:'Archivo';font-weight:700;color:var(--muted);background:var(--surface)}
-.dr-chip:active{border-color:var(--frost);color:var(--frost)}
-.dr-sec{margin-bottom:16px}
-.dr-sec .lab{font-family:'Archivo';font-weight:800;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:8px;display:flex;align-items:center;gap:8px}
-.dr-check{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);margin-bottom:6px}
-.dr-check .box{width:22px;height:22px;border-radius:6px;border:1.5px solid var(--line-strong);flex:0 0 auto;display:grid;place-items:center;margin-top:1px}
-.dr-check.on .box{background:var(--frost);border-color:var(--frost);color:#04141a}
-.dr-check .box svg{width:14px;height:14px}
-.dr-check .body{flex:1;min-width:0}
-.dr-check .body input{width:100%;background:none;border:none;outline:none;color:var(--text);font-size:13px}
-.dr-check .rm{color:var(--muted-2);padding:4px;flex:0 0 auto}
-.dr-ta{width:100%;min-height:88px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px;color:var(--text);outline:none;resize:vertical;line-height:1.45}
-.dr-ta:focus{border-color:var(--frost-dim);box-shadow:0 0 0 3px var(--frost-glow)}
-.dr-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
-.dr-actions button{height:36px;padding:0 12px;border-radius:8px;border:1px solid var(--line);background:var(--surface-2);font-family:'Archivo';font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
-.dr-actions button:active{color:var(--frost);border-color:var(--frost-dim)}
-.pv-home{display:flex;flex-direction:column;gap:12px;padding:8px 0 24px}
-.pv-home-title{font-family:'Archivo';font-weight:800;font-size:18px;margin-bottom:4px}
-.pv-home-sub{font-size:13px;color:var(--muted);margin-bottom:8px}
-.pv-home-btn{display:flex;align-items:center;gap:14px;padding:18px 16px;border-radius:var(--r-lg);border:1px solid var(--line);background:var(--surface);cursor:pointer;text-align:left;width:100%}
-.pv-home-btn:active{background:var(--surface-2);border-color:var(--line-strong)}
-.pv-home-btn .ic{width:48px;height:48px;border-radius:12px;display:grid;place-items:center;flex:0 0 auto;background:linear-gradient(145deg,var(--frost-dim),#153a45);color:var(--frost);border:1px solid var(--frost-dim)}
-.pv-home-btn .ic svg{width:24px;height:24px}
-.pv-home-btn .tx{flex:1;min-width:0}
-.pv-home-btn .tx .t{font-family:'Archivo';font-weight:800;font-size:15px}
-.pv-home-btn .tx .s{font-size:12px;color:var(--muted);margin-top:3px}
-.pv-home-btn .chev{color:var(--muted-2)}
-.pv-home-btn .chev svg{width:18px;height:18px}
-.pv-home-btn .badge{font-family:'JetBrains Mono';font-size:11px;background:var(--surface-2);border:1px solid var(--line);color:var(--frost);padding:3px 8px;border-radius:100px;margin-top:6px;display:inline-block}
-.pv-back{display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 12px;border-radius:var(--r);border:1px solid var(--line);background:var(--surface);color:var(--muted);font-family:'Archivo';font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.05em;margin-bottom:14px}
-.pv-back svg{width:16px;height:16px}
-.pv-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:14px;margin-bottom:10px;cursor:pointer;position:relative}
-.pv-card:active{background:var(--surface-2)}
-.pv-card .pc-code{font-family:'JetBrains Mono';font-weight:700;font-size:15px}
-.pv-card .pc-cli{font-size:13px;color:var(--muted);margin-top:2px}
-.pv-card .pc-meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px;font-family:'JetBrains Mono';font-size:11px;color:var(--muted-2)}
-.pv-card .pc-ore{color:var(--frost);font-weight:700}
-.pv-card .pc-del{position:absolute;top:10px;right:10px;width:34px;height:34px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--muted);display:grid;place-items:center}
-.pv-card .pc-del svg{width:15px;height:15px}
-.pv-detail{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:16px;margin-bottom:12px}
 .pv-sub{display:flex;gap:4px;background:var(--surface);border:1px solid var(--line);border-radius:100px;padding:4px;margin-bottom:16px}
 .pv-sub button{flex:1;height:36px;border-radius:100px;font-family:'Archivo';font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
 .pv-sub button.active{background:var(--surface-2);color:var(--frost)}
@@ -942,6 +681,7 @@ body.viewonly .sheet-foot{justify-content:flex-end}
 .side-item.active svg{color:var(--frost)}
 .side-item:active{background:var(--surface-2)}
 .side-foot{padding:12px 16px calc(14px + var(--safe-b));border-top:1px solid var(--line);font-size:11px;color:var(--muted-2);font-family:'JetBrains Mono'}
+.viewswitch{display:none !important}
 
 /* ======= FOLDERS ======= */
 .folder-bar{display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap}
@@ -1025,6 +765,21 @@ body.viewonly .btn-folder{display:none !important}
 .fase-item.done{opacity:.7}
 .fase-item.done .txt{text-decoration:line-through;color:var(--muted)}
 .fase-num{font-family:'JetBrains Mono';font-size:11px;color:var(--frost);width:20px}
+/* kanban */
+.kanban{display:flex;gap:10px;overflow-x:auto;padding-bottom:12px;min-height:50vh;-webkit-overflow-scrolling:touch}
+.kanban-col{flex:0 0 min(260px,78vw);background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);display:flex;flex-direction:column;max-height:70vh}
+.kanban-head{padding:12px 14px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:8px}
+.kanban-head .t{font-family:'Archivo';font-weight:800;font-size:12px;text-transform:uppercase;letter-spacing:.06em}
+.kanban-head .n{font-family:'JetBrains Mono';font-size:11px;color:var(--muted)}
+.kanban-body{flex:1;overflow-y:auto;padding:8px}
+.kcard{background:var(--bg);border:1px solid var(--line);border-radius:var(--r);padding:10px 12px;margin-bottom:8px;cursor:pointer;border-left:3px solid var(--line-strong)}
+.kcard:active{background:var(--surface-2)}
+.kcard .kc{font-family:'JetBrains Mono';font-weight:700;font-size:13px}
+.kcard .ks{font-size:11px;color:var(--muted);margin-top:2px}
+.kcard.b-bozza{border-left-color:var(--muted-2)}
+.kcard.b-lav{border-left-color:var(--frost)}
+.kcard.b-pronto{border-left-color:var(--amber)}
+.kcard.b-cons{border-left-color:var(--green)}
 /* week load */
 .week-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:14px}
 .week-day{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:8px 4px;text-align:center;min-height:72px}
@@ -1114,6 +869,24 @@ body.select-mode .orow .sel-check,body.select-mode .folder-row .sel-check{displa
 .lb-nav svg{width:22px;height:22px}
 
 
+
+.settings-block{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:12px}
+.settings-block h3{font-family:'Archivo';font-weight:800;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted-2);margin-bottom:10px}
+.appear-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.appear-swatch{border:1px solid var(--line);border-radius:8px;padding:12px;text-align:left;background:var(--bg);font-family:'Archivo';font-weight:700;font-size:12px;color:var(--muted)}
+.appear-swatch.on{border-color:var(--frost);color:var(--text);box-shadow:inset 3px 0 0 var(--frost)}
+#settingsViewHost{min-height:40vh;padding-bottom:24px}
+body[data-theme="midnight"]{--bg:#06080C;--bg-deep:#040506;--surface:#121820;--surface-2:#182028;--line:#243040;--frost:#4EC8E8}
+body[data-theme="slate"]{--bg:#14181E;--surface:#1E252E;--surface-2:#262E38;--line:#343E4C;--frost:#5B9FD4}
+body[data-theme="contrast"]{--bg:#000;--surface:#111;--surface-2:#1A1A1A;--line:#444;--text:#FFF;--muted:#CCC;--frost:#5CF}
+body[data-density="compact"] .orow{padding:7px 8px!important}
+body[data-accent="amber"]{--frost:#E8A317;--frost-dim:#5C4010}
+body[data-accent="green"]{--frost:#3FA86A;--frost-dim:#1A4A30}
+body[data-accent="violet"]{--frost:#9B7AED;--frost-dim:#3A2A6A}
+.folder-nav-simple{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.folder-root-btn{height:34px;padding:0 12px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--muted);font-family:'Archivo';font-weight:700;font-size:11px;text-transform:uppercase}
+.folder-root-btn.on{border-color:var(--frost-dim);color:var(--text);box-shadow:inset 3px 0 0 var(--frost)}
+
 </style>
 </head>
 <body>
@@ -1195,12 +968,8 @@ body.select-mode .orow .sel-check,body.select-mode .folder-row .sel-check{displa
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
         Settimana
       </button>
-      <button class="side-item" data-v="design">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-        Design review
-      </button>
     </nav>
-    <div class="side-foot">KRIO · FRIGOBOX</div>
+    <div class="side-foot">Krio · v1</div>
   </aside>
 
   <div class="wrap">
@@ -1218,7 +987,6 @@ body.select-mode .orow .sel-check,body.select-mode .folder-row .sel-check{displa
       </button>
     </div>
 
-
     <div class="filters" id="lavFilters"></div>
     <div class="filters" id="filters"></div>
     <div id="ordersHost">
@@ -1228,8 +996,8 @@ body.select-mode .orow .sel-check,body.select-mode .folder-row .sel-check{displa
     <div id="statsHost" style="display:none"></div>
     <div id="capHost" style="display:none"></div>
     <div id="prevHost" style="display:none"></div>
+    
     <div id="weekHost" style="display:none"></div>
-    <div id="designHost" style="display:none"></div>
     <div id="settingsViewHost" style="display:none"></div>
     <div id="updateBannerSlot"></div>
   </div>
@@ -1380,7 +1148,12 @@ const MANSIONI = [
 
 /* ---- Configuratore preventivi ---- */
 const PV_VEICOLI = ["MOTRICE ULTIMO MIGLIO 3.5 t","MOTRICE 2 ASSI – 7.5 t – 11.5 t","MOTRICE 3 ASSI - fino a 26 t","SEMIRIMORCHIO","AUTOTRENO","KIT"];
-const PV_TIPI = ["Box","Completo","Kit"];
+const PV_ALLEST_DEFAULT = ["Standard","Allestimento carne con guidovie","Allestimento carne con tubovie","Fiori","Doppio piano di carico","Multitemperatura"];
+const PV_ALLEST_BY = {
+  "MOTRICE 2 ASSI – 7.5 t – 11.5 t":["Standard","Allestimento carne con guidovie","Fiori","Multitemperatura"],
+  "SEMIRIMORCHIO":["Standard","Allestimento carne con guidovie","Allestimento carne con tubovie","Fiori","Doppio piano di carico","Multitemperatura"]
+};
+const PV_TIPI = ["Cassa assemblata","Kit"];
 const _M = (p,mo,i,f,e)=>({portalista:p,montatore:mo,interni:i,finizione:f,elettrauto:e});
 const PV_LIST_DEFAULT = {
   veicoli:{
@@ -1391,7 +1164,8 @@ const PV_LIST_DEFAULT = {
     "AUTOTRENO":_M(24,92,50,44,10),
     "KIT":_M(4,16,10,8,2)
   },
-  tipo:{"Box":_M(0,0,0,0,0),"Completo":_M(0,0,0,0,0),"Kit":_M(0,0,0,0,0)},
+  tipo:{"Cassa assemblata":_M(0,0,0,0,0),"Kit":_M(0,0,0,0,0)},
+  allest:{"Standard":_M(0,0,0,0,0),"Allestimento carne con guidovie":_M(2,8,6,8,6),"Allestimento carne con tubovie":_M(2,10,7,9,7),"Fiori":_M(2,6,5,5,2),"Doppio piano di carico":_M(3,18,12,10,2),"Multitemperatura":_M(2,10,6,8,14)},
   accessori:[
     {nome:"Sponda idraulica",ore:_M(1,5,1,1,4)},{nome:"Pedana di carico",ore:_M(0,3,1,1,1)},
     {nome:"Bandelle paracolpi",ore:_M(0,1,1,1,0)},{nome:"Faro di lavoro LED",ore:_M(0,0,0,0,2)},
@@ -1428,10 +1202,7 @@ const S = {
   statGran: "mese",
   statCode: "all",
   capMonth: new Date().toISOString().slice(0,7),
-  pv: {home:"home", sub:"prev", step:1, veicolo:null, tipo:null, accSel:new Set(), codice:"", cliente:"", note:"", detailId:null},
-  preventivi: JSON.parse(localStorage.getItem("cf_preventivi")||"[]"),
-  designSessions: JSON.parse(localStorage.getItem("cf_design")||"[]"),
-  designId: null,
+  pv: {sub:"prev", step:1, veicolo:null, tipo:null, allest:null, accSel:new Set(), codice:"", cliente:"", note:""},
   settings: JSON.parse(localStorage.getItem("cf_settings")||"{}"),
   query: "",
   role: sessionStorage.getItem("cf_role") || "edit",
@@ -1609,188 +1380,6 @@ async function api(action, payload={}){
   return data;
 }
 
-
-/* ===================================================================
-   I18N — it · en · fr · ro · sq
-   =================================================================== */
-const I18N = {
-  it: {
-    app_sub:"FRIGOBOX", pin_msg:"Inserisci il PIN di accesso", pin_short:"Il PIN è di almeno 4 cifre",
-    pin_wrong:"PIN errato", verifying:"Verifica…", welcome:"Benvenuto, {name}!",
-    orders:"Ordini", archive:"Archivio", stats:"Statistiche", capacity:"Capacità",
-    quotes:"Preventivi", week:"Settimana", design:"Design review",
-    all:"Tutti", new_folder:"+ Cartella", new_order:"Nuovo lavoro",
-    paste_here:"Incolla qui", cancel:"Annulla", cut:"Taglia", copy:"Copia",
-    selected:"{n} selezionati — apri una cartella o tocca Taglia/Copia",
-    clip_hint:"{mode}: {label} — entra in una cartella e incolla",
-    cut_done:"Tagliati", copy_done:"Copiati",
-    clip_empty:"Appunti vuoti", readonly:"Sola lettura", paste_fail:"Incolla non riuscita",
-    pasted:"Incollati {n} elementi", settings:"Impostazioni",
-    theme:"Tema", density:"Densità elenco", accent:"Colore accento",
-    language:"Lingua", operator:"Operatore", operator_name:"Nome mostrato",
-    save_name:"Salva nome", notifications:"Notifiche scadenze",
-    notif_on:"Promemoria attivi · tocca per spegnere", notif_off:"Attiva promemoria scadenze",
-    local_data:"Dati locali", clear_draft:"Cancella bozza auto-salvata",
-    script_url:"URL script Google", logout:"Esci dall'app",
-    theme_ind:"Industriale", theme_mid:"Midnight", theme_slate:"Ardesia", theme_con:"Alto contrasto",
-    dens_com:"Comoda", dens_com2:"Compatta",
-    lang_it:"Italiano", lang_en:"English", lang_fr:"Français", lang_ro:"Română", lang_sq:"Shqip",
-    empty_folder:"Cartella vuota. Tocca «Nuovo lavoro» o crea una cartella.",
-    empty_root:"Crea una cartella, poi aggiungi i lavori al suo interno.",
-    draft_cleared:"Bozza eliminata", name_saved:"Nome operatore salvato",
-    theme_ok:"Tema applicato", dens_ok:"Densità aggiornata", acc_ok:"Accento aggiornato", lang_ok:"Lingua aggiornata",
-    cut_copy_toast:"{mode} {n} · apri la cartella destinazione e tocca Incolla",
-    search_ph:"Cerca codice, cliente, telaio…",
-  },
-  en: {
-    app_sub:"FRIGOBOX", pin_msg:"Enter access PIN", pin_short:"PIN must be at least 4 digits",
-    pin_wrong:"Wrong PIN", verifying:"Checking…", welcome:"Welcome, {name}!",
-    orders:"Orders", archive:"Archive", stats:"Stats", capacity:"Capacity",
-    quotes:"Quotes", week:"Week", design:"Design review",
-    all:"All", new_folder:"+ Folder", new_order:"New job",
-    paste_here:"Paste here", cancel:"Cancel", cut:"Cut", copy:"Copy",
-    selected:"{n} selected — open a folder or Cut/Copy",
-    clip_hint:"{mode}: {label} — open a folder and paste",
-    cut_done:"Cut", copy_done:"Copied",
-    clip_empty:"Clipboard empty", readonly:"Read only", paste_fail:"Paste failed",
-    pasted:"Pasted {n} items", settings:"Settings",
-    theme:"Theme", density:"List density", accent:"Accent color",
-    language:"Language", operator:"Operator", operator_name:"Display name",
-    save_name:"Save name", notifications:"Deadline alerts",
-    notif_on:"Alerts on · tap to disable", notif_off:"Enable deadline alerts",
-    local_data:"Local data", clear_draft:"Clear auto-saved draft",
-    script_url:"Google script URL", logout:"Log out",
-    theme_ind:"Industrial", theme_mid:"Midnight", theme_slate:"Slate", theme_con:"High contrast",
-    dens_com:"Comfortable", dens_com2:"Compact",
-    lang_it:"Italiano", lang_en:"English", lang_fr:"Français", lang_ro:"Română", lang_sq:"Shqip",
-    empty_folder:"Empty folder. Tap «New job» or create a folder.",
-    empty_root:"Create a folder, then add jobs inside.",
-    draft_cleared:"Draft cleared", name_saved:"Operator name saved",
-    theme_ok:"Theme applied", dens_ok:"Density updated", acc_ok:"Accent updated", lang_ok:"Language updated",
-    cut_copy_toast:"{mode} {n} · open destination folder and Paste",
-    search_ph:"Search code, client, VIN…",
-  },
-  fr: {
-    app_sub:"FRIGOBOX", pin_msg:"Entrez le code PIN", pin_short:"Le PIN doit avoir au moins 4 chiffres",
-    pin_wrong:"PIN incorrect", verifying:"Vérification…", welcome:"Bienvenue, {name} !",
-    orders:"Commandes", archive:"Archives", stats:"Stats", capacity:"Capacité",
-    quotes:"Devis", week:"Semaine", design:"Design review",
-    all:"Tous", new_folder:"+ Dossier", new_order:"Nouveau job",
-    paste_here:"Coller ici", cancel:"Annuler", cut:"Couper", copy:"Copier",
-    selected:"{n} sélectionnés — ouvrez un dossier ou Couper/Copier",
-    clip_hint:"{mode}: {label} — ouvrez un dossier et collez",
-    cut_done:"Coupés", copy_done:"Copiés",
-    clip_empty:"Presse-papiers vide", readonly:"Lecture seule", paste_fail:"Échec du collage",
-    pasted:"{n} éléments collés", settings:"Paramètres",
-    theme:"Thème", density:"Densité", accent:"Couleur d'accent",
-    language:"Langue", operator:"Opérateur", operator_name:"Nom affiché",
-    save_name:"Enregistrer", notifications:"Alertes échéances",
-    notif_on:"Alertes actives · toucher pour désactiver", notif_off:"Activer les alertes",
-    local_data:"Données locales", clear_draft:"Effacer le brouillon",
-    script_url:"URL script Google", logout:"Déconnexion",
-    theme_ind:"Industriel", theme_mid:"Midnight", theme_slate:"Ardoise", theme_con:"Contraste élevé",
-    dens_com:"Confortable", dens_com2:"Compacte",
-    lang_it:"Italiano", lang_en:"English", lang_fr:"Français", lang_ro:"Română", lang_sq:"Shqip",
-    empty_folder:"Dossier vide. Touchez «Nouveau job».",
-    empty_root:"Créez un dossier, puis ajoutez des jobs.",
-    draft_cleared:"Brouillon effacé", name_saved:"Nom enregistré",
-    theme_ok:"Thème appliqué", dens_ok:"Densité mise à jour", acc_ok:"Accent mis à jour", lang_ok:"Langue mise à jour",
-    cut_copy_toast:"{mode} {n} · ouvrez le dossier et Collez",
-    search_ph:"Rechercher code, client…",
-  },
-  ro: {
-    app_sub:"FRIGOBOX", pin_msg:"Introduceți PIN-ul", pin_short:"PIN-ul trebuie să aibă cel puțin 4 cifre",
-    pin_wrong:"PIN greșit", verifying:"Verificare…", welcome:"Bine ați venit, {name}!",
-    orders:"Comenzi", archive:"Arhivă", stats:"Statistici", capacity:"Capacitate",
-    quotes:"Oferte", week:"Săptămână", design:"Design review",
-    all:"Toate", new_folder:"+ Folder", new_order:"Lucrare nouă",
-    paste_here:"Lipește aici", cancel:"Anulează", cut:"Taie", copy:"Copiază",
-    selected:"{n} selectate — deschide un folder sau Taie/Copiază",
-    clip_hint:"{mode}: {label} — deschide un folder și lipește",
-    cut_done:"Tăiate", copy_done:"Copiate",
-    clip_empty:"Clipboard gol", readonly:"Doar citire", paste_fail:"Lipirea a eșuat",
-    pasted:"Lipite {n} elemente", settings:"Setări",
-    theme:"Temă", density:"Densitate listă", accent:"Culoare accent",
-    language:"Limbă", operator:"Operator", operator_name:"Nume afișat",
-    save_name:"Salvează numele", notifications:"Alerte termene",
-    notif_on:"Alerte active · atinge pentru oprire", notif_off:"Activează alertele",
-    local_data:"Date locale", clear_draft:"Șterge ciorna",
-    script_url:"URL script Google", logout:"Ieșire",
-    theme_ind:"Industrial", theme_mid:"Midnight", theme_slate:"Ardezie", theme_con:"Contrast mare",
-    dens_com:"Confortabil", dens_com2:"Compact",
-    lang_it:"Italiano", lang_en:"English", lang_fr:"Français", lang_ro:"Română", lang_sq:"Shqip",
-    empty_folder:"Folder gol. Atinge «Lucrare nouă».",
-    empty_root:"Creează un folder, apoi adaugă lucrări.",
-    draft_cleared:"Ciornă ștearsă", name_saved:"Nume salvat",
-    theme_ok:"Temă aplicată", dens_ok:"Densitate actualizată", acc_ok:"Accent actualizat", lang_ok:"Limbă actualizată",
-    cut_copy_toast:"{mode} {n} · deschide folderul și Lipește",
-    search_ph:"Caută cod, client…",
-  },
-  sq: {
-    app_sub:"FRIGOBOX", pin_msg:"Vendos PIN-in", pin_short:"PIN duhet të ketë të paktën 4 shifra",
-    pin_wrong:"PIN i gabuar", verifying:"Duke kontrolluar…", welcome:"Mirë se vini, {name}!",
-    orders:"Porosi", archive:"Arkivi", stats:"Statistika", capacity:"Kapaciteti",
-    quotes:"Preventiva", week:"Java", design:"Design review",
-    all:"Të gjitha", new_folder:"+ Dosje", new_order:"Punë e re",
-    paste_here:"Ngjit këtu", cancel:"Anulo", cut:"Pri", copy:"Kopjo",
-    selected:"{n} të zgjedhura — hap një dosje ose Pri/Kopjo",
-    clip_hint:"{mode}: {label} — hap dosjen dhe ngjit",
-    cut_done:"Prire", copy_done:"Kopjuar",
-    clip_empty:"Clipboard bosh", readonly:"Vetëm lexim", paste_fail:"Ngjitja dështoi",
-    pasted:"U ngjitën {n} elemente", settings:"Cilësimet",
-    theme:"Tema", density:"Dendësia", accent:"Ngjyra",
-    language:"Gjuha", operator:"Operatori", operator_name:"Emri i shfaqur",
-    save_name:"Ruaj emrin", notifications:"Njoftime afatesh",
-    notif_on:"Njoftime aktive · prek për fikje", notif_off:"Aktivizo njoftimet",
-    local_data:"Të dhëna lokale", clear_draft:"Fshi draftin",
-    script_url:"URL script Google", logout:"Dil",
-    theme_ind:"Industriale", theme_mid:"Midnight", theme_slate:"Ardesia", theme_con:"Kontrast i lartë",
-    dens_com:"Komode", dens_com2:"Kompakte",
-    lang_it:"Italiano", lang_en:"English", lang_fr:"Français", lang_ro:"Română", lang_sq:"Shqip",
-    empty_folder:"Dosje bosh. Prek «Punë e re».",
-    empty_root:"Krijo një dosje, pastaj shto punë.",
-    draft_cleared:"Drafti u fshi", name_saved:"Emri u ruajt",
-    theme_ok:"Tema u aplikua", dens_ok:"Dendësia u përditësua", acc_ok:"Ngjyra u përditësua", lang_ok:"Gjuha u përditësua",
-    cut_copy_toast:"{mode} {n} · hap dosjen dhe Ngjit",
-    search_ph:"Kërko kod, klient…",
-  }
-};
-function getLang(){
-  try{ return localStorage.getItem("cf_lang") || "it"; }catch(_){ return "it"; }
-}
-function setLang(code){
-  localStorage.setItem("cf_lang", code || "it");
-  document.documentElement.lang = code || "it";
-  applyChromeI18n();
-}
-function t(key, vars){
-  const lang = getLang();
-  const pack = I18N[lang] || I18N.it;
-  let s = pack[key] != null ? pack[key] : (I18N.it[key] != null ? I18N.it[key] : key);
-  if(vars){ Object.keys(vars).forEach(k=>{ s=String(s).replace(new RegExp("\\{"+k+"\\}","g"), vars[k]); }); }
-  return s;
-}
-function applyChromeI18n(){
-  try{
-    const sub = document.querySelector("#login .keypad-head p, .topbar small");
-    document.querySelectorAll("#login .keypad-head p").forEach(el=>{ el.textContent = t("app_sub"); });
-    document.querySelectorAll(".topbar small").forEach(el=>{ el.textContent = t("app_sub"); });
-    const pm=$("#pinMsg"); if(pm && !pm.classList.contains("err")) pm.textContent=t("pin_msg");
-    const map={ordini:"orders",archivio:"archive",stats:"stats",cap:"capacity",prev:"quotes",settimana:"week",design:"design"};
-    $$("#sideNav .side-item[data-v]").forEach(b=>{
-      const k=map[b.dataset.v]; if(!k) return;
-      // keep svg, replace text node
-      const label=t(k);
-      const svg=b.querySelector("svg");
-      b.textContent="";
-      if(svg) b.appendChild(svg);
-      b.appendChild(document.createTextNode(" "+label));
-    });
-    const fab=$("#btnNew"); if(fab){ const svg=fab.querySelector("svg"); fab.textContent=""; if(svg) fab.appendChild(svg); fab.appendChild(document.createTextNode(" "+t("new_order"))); }
-    const si=$("#searchInput"); if(si) si.placeholder=t("search_ph");
-  }catch(_){}
-}
-
 /* ===================================================================
    LOGIN — tastierino PIN
    =================================================================== */
@@ -1849,34 +1438,18 @@ function applyRole(){
   const b=$("#roleBadge"); if(b) b.style.display = S.canEdit ? "none" : "inline-flex";
   if(!S.canEdit && (S.view==="stats"||S.view==="cap")) setView("ordini");
 }
-function welcomeNameForPin(pin){
-  const p=String(pin||"");
-  if(p==="0000") return "guest";
-  if(p==="1990") return "Gabriel";
-  // edit PIN generico → Gabriel se non impostato altrimenti operatore
-  if(S.role==="view") return "guest";
-  return (S.operatorName && S.operatorName.trim()) ? S.operatorName.trim().split(/\s+/)[0] : "Gabriel";
-}
-function showWelcome(){
-  const name=welcomeNameForPin(S.pin);
-  toast(t("welcome",{name:name}),"ok");
-}
 function enterApp(){
+  try{applyAppearance();}catch(_){}
   $("#login").classList.remove("active");
   $("#app").classList.add("active");
   document.body.classList.add("krio-lock-nav");
   window.scrollTo(0,0);
   document.removeEventListener("keydown",keyListener);
   applyRole();
-  applyAppearance();
-  applyChromeI18n();
   updateBell();
   if(!S._notifTimer) S._notifTimer=setInterval(checkDeadlines, 30*60*1000);
-  restoreOrderDraft();
   render(); // show cache instantly
   loadOrders();
-  setTimeout(showWelcome, 280);
-  setupAutoSave();
 }
 function logout(silent){
   S.pin=""; pinBuf=""; S.role="edit"; S.canEdit=true;
@@ -1899,7 +1472,7 @@ async function loadOrders(){
   try{
     const d=await api("list");
     S.orders=d.orders||[];
-    if(d.settings){ S.settings=d.settings; localStorage.setItem("cf_settings",JSON.stringify(S.settings)); ensureFoldersFromSettings(); if(Array.isArray(S.settings.preventivi)){ S.preventivi=S.settings.preventivi; localStorage.setItem("cf_preventivi",JSON.stringify(S.preventivi)); } if(Array.isArray(S.settings.designSessions)){ S.designSessions=S.settings.designSessions; localStorage.setItem("cf_design",JSON.stringify(S.designSessions)); } }
+    if(d.settings){ S.settings=d.settings; localStorage.setItem("cf_settings",JSON.stringify(S.settings)); ensureFoldersFromSettings(); }
     localStorage.setItem("cf_cache",JSON.stringify(S.orders));
     ensureFolder2026();
     renderCurrent();
@@ -1912,9 +1485,10 @@ async function loadOrders(){
    =================================================================== */
 function buildFilters(){
   const host=$("#filters");
-  // stesso ambito della lista: radice = tutti; cartella = solo quella
   let base=[...S.orders];
-  if(S.folderId && getFolder(S.folderId)) base=base.filter(o=>String(o.appFolderId||"")===String(S.folderId));
+  if(S.folderId && typeof getFolder==="function" && getFolder(S.folderId)){
+    base=base.filter(o=>String(o.appFolderId||"")===String(S.folderId));
+  }
   const counts={all:base.length};
   STATI.forEach(s=>counts[s.id]=base.filter(o=>o.stato===s.id).length);
   const chips=[{id:"all",label:"Tutti",color:"var(--frost)"},...STATI];
@@ -1934,9 +1508,9 @@ function buildFilters(){
 }
 function filtered(){
   let list=[...S.orders];
-  // Cartella inesistente → torna in radice
-  if(S.folderId && !getFolder(S.folderId)){ S.folderId=null; rememberFolder(); }
-  // In una cartella: solo ordini di quella cartella. In radice: TUTTI gli ordini.
+  // Cartella inesistente → radice
+  if(S.folderId && typeof getFolder==="function" && !getFolder(S.folderId)){ S.folderId=null; try{rememberFolder();}catch(_){} }
+  // In cartella: solo quella. In radice (folderId null): TUTTI gli ordini
   if(!S.query && S.folderId){
     list=list.filter(o=>String(o.appFolderId||"")===String(S.folderId));
   }
@@ -1993,24 +1567,17 @@ function renderPasteBar(){
   const items = S.clipboard.items || (S.clipboard.data ? [{type:S.clipboard.type, data:S.clipboard.data}] : []);
   if(!items.length) return "";
   const mode = S.clipboard.mode==="cut" ? "Tagliati" : "Copiati";
-  const n = items.length;
   let label;
-  if(n===1){
+  if(items.length===1){
     const it=items[0];
-    label = it.type==="folder" ? ("cartella «"+(it.data.name||"")+"»") : ("ordine "+(it.data.codice||""));
+    label = it.type==="folder" ? ("cartella «"+((it.data&&it.data.name)||"")+"»") : ("ordine "+((it.data&&it.data.codice)||""));
   } else {
-    const no=items.filter(x=>x.type==="order").length;
-    const nf=items.filter(x=>x.type==="folder").length;
-    const parts=[];
-    if(no) parts.push(no+" ordin"+(no===1?"e":"i"));
-    if(nf) parts.push(nf+" cartell"+(nf===1?"a":"e"));
-    label = parts.join(", ");
+    label = items.length + " elementi";
   }
-  const modeL = S.clipboard.mode==="cut" ? t("cut_done") : t("copy_done");
   return `<div class="paste-bar on">
-    <div class="info">${esc(modeL)}: <b>${esc(label)}</b></div>
-    <button type="button" class="do-paste" id="btnPasteHere">${esc(t("paste_here"))}</button>
-    <button type="button" class="do-cancel" id="btnClipCancel">${esc(t("cancel"))}</button>
+    <div class="info">${mode}: <b>${esc(label)}</b></div>
+    <button type="button" class="do-paste" id="btnPasteHere">Incolla qui</button>
+    <button type="button" class="do-cancel" id="btnClipCancel">Annulla</button>
   </div>`;
 }
 function render(){
@@ -2020,19 +1587,19 @@ function render(){
   const host=$("#ordersHost");
   const hasFolders=S.folders.length>0;
   const curF=S.folderId?getFolder(S.folderId):null;
-  let top=`<div class="folder-bar folder-bar-clean">
+  let top=`<div class="folder-bar" style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between">
     <div class="folder-nav-simple">
-      <button type="button" class="folder-root-btn ${!S.folderId?"on":""}" id="btnRootOrders">${esc(t("all"))}</button>
-      ${curF?`<button type="button" class="folder-root-btn on" id="btnFolderUp" title="Cartella corrente">${esc(curF.name)}</button>`:""}
+      <button type="button" class="folder-root-btn ${!S.folderId?"on":""}" id="btnRootOrders">Tutti</button>
+      ${curF?`<button type="button" class="folder-root-btn on" id="btnFolderUp">${esc(curF.name)}</button>`:""}
     </div>
-    ${S.canEdit?`<button type="button" class="fab-inline" id="btnNewFolder"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>${esc(t("new_folder"))}</button>`:""}
+    ${S.canEdit?`<button class="btn-folder" id="btnNewFolder"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-8l-2-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2z"/><path d="M12 11v6M9 14h6"/></svg>Nuova cartella</button>`:""}
   </div>${renderSelBar()}${renderPasteBar()}`;
 
   if(!folders.length && !list.length){
     const filtering = S.query||S.filter!=="all"||S.lav!=="all"||S.noteFilter!=="all";
     const emptyMsg = !hasFolders
       ? "Crea una cartella sotto ICE, poi aggiungi i lavori al suo interno."
-      : (S.folderId ? "Cartella vuota. Tocca «Nuovo lavoro» o «Nuova cartella»." : "Nessun ordine. Crea una cartella o un nuovo lavoro.");
+      : (S.folderId ? "Cartella vuota. Tocca «Nuovo lavoro» per aggiungere un ordine." : "Entra in una cartella sotto ICE o creane una nuova.");
     host.innerHTML=top+`<div class="empty">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-8l-2-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2z"/></svg>
       <h3>${filtering?"Nessun lavoro trovato":(!hasFolders?"Archivio ICE vuoto":"Cartella vuota")}</h3>
@@ -2070,7 +1637,7 @@ function wireFolderUI(){
   const root=$("#btnRootOrders");
   if(root) root.onclick=()=>{ S.folderId=null; rememberFolder(); render(); };
   const up=$("#btnFolderUp");
-  if(up) up.onclick=()=>{ goUpFolder(); };
+  if(up) up.onclick=()=>{ if(typeof goUpFolder==="function") goUpFolder(); else { const f=getFolder(S.folderId); S.folderId=f&&f.parentId?f.parentId:null; rememberFolder(); render(); } };
   const nf=$("#btnNewFolder"); if(nf) nf.onclick=createFolder;
   $$(".folder-row").forEach(r=>{
     r.classList.toggle("selected", S.selectedFolders.has(r.dataset.fid));
@@ -2080,11 +1647,11 @@ function wireFolderUI(){
       r.insertBefore(sc, r.firstChild);
     }
     r.onclick=function(e){
-      // Tap = entra nella cartella (anche in selezione multipla, così puoi incollare)
       if(e.target.closest(".sel-check")){
         e.preventDefault(); e.stopPropagation();
         toggleSelectFolder(r.dataset.fid); render(); return;
       }
+      // Tap cartella = entra (anche con selezione attiva, per poter incollare)
       S.folderId=r.dataset.fid; rememberFolder(); render();
     };
     bindLongPress(r, function(){
@@ -2094,36 +1661,23 @@ function wireFolderUI(){
       render();
     });
   });
-  wirePasteButtons();
-  wireSelBar();
-}
-function wirePasteButtons(){
   const pb=$("#btnPasteHere");
   if(pb){
-    pb.onclick=function(e){
-      e.preventDefault();
-      e.stopPropagation();
-      runPaste();
-    };
+    pb.onclick=function(e){ e.preventDefault(); e.stopPropagation(); doPaste(); };
   }
   const cc=$("#btnClipCancel");
-  if(cc) cc.onclick=function(e){ e.preventDefault(); S.clipboard=null; render(); };
+  if(cc) cc.onclick=function(e){ e.preventDefault(); S.clipboard=null; try{sessionStorage.removeItem("cf_clipboard");}catch(_){} render(); };
+  wireSelBar();
 }
-async function runPaste(){
-  if(!S.canEdit){ toast(t("readonly"),"err"); return; }
-  if(!S.clipboard){ toast(t("clip_empty"),"err"); return; }
-  const items = S.clipboard.items || (S.clipboard.data ? [{type:S.clipboard.type, data:S.clipboard.data}] : []);
-  if(!items.length){ toast(t("clip_empty"),"err"); return; }
-  // force multi-item path
-  if(!S.clipboard.items) S.clipboard.items = items;
-  try{
-    await pasteSelection();
-  }catch(err){
-    console.error(err);
-    toast((err && err.message) || t("paste_fail"),"err");
-  }
+function doPaste(){
+  if(!S.canEdit){ toast("Sola lettura","err"); return; }
+  if(!S.clipboard){ toast("Appunti vuoti","err"); return; }
+  const items = S.clipboard.items || (S.clipboard.data ? [{type:S.clipboard.type||"order", data:S.clipboard.data}] : []);
+  if(!items.length){ toast("Appunti vuoti","err"); return; }
+  // normalizza formato multi
+  S.clipboard.items = items;
+  pasteSelectionLocal();
 }
-
 function updateFabVisibility(){
   const btn=$("#btnNew");
   if(!btn) return;
@@ -2199,11 +1753,15 @@ const IC={
   ext:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14 21 3"/></svg>'
 };
 
-function renderCurrent(){ buildLavFilters(); if(S.view==="stats") renderStats(); else if(S.view==="cap") renderCap(); else if(S.view==="prev") renderPrev(); else if(S.view==="archivio") renderArchive(); else if(S.view==="settimana") renderWeek(); else if(S.view==="design") renderDesign(); else if(S.view==="impostazioni") renderSettingsView(); else render(); }
+function renderCurrent(){ buildLavFilters(); if(S.view==="stats") renderStats(); else if(S.view==="cap") renderCap(); else if(S.view==="prev") renderPrev(); else if(S.view==="archivio") renderArchive(); else if(S.view==="settimana") renderWeek(); else if(S.view==="impostazioni") renderSettingsView(); else render(); }
 function buildLavFilters(){
   const host=$("#lavFilters"); if(!host) return;
-  const counts={all:S.orders.length};
-  LAVORAZIONI.forEach(l=>counts[l]=S.orders.filter(o=>o.tipoCella===l).length);
+  let base=[...S.orders];
+  if(S.folderId && typeof getFolder==="function" && getFolder(S.folderId)){
+    base=base.filter(o=>String(o.appFolderId||"")===String(S.folderId));
+  }
+  const counts={all:base.length};
+  LAVORAZIONI.forEach(l=>counts[l]=base.filter(o=>o.tipoCella===l).length);
   const chips=[{id:"all",label:"Tutte"},...LAVORAZIONI.map(l=>({id:l,label:l}))];
   host.innerHTML=chips.map(c=>`
     <button class="chip ${S.lav===c.id?'active':''}" data-l="${esc(c.id)}">
@@ -2217,8 +1775,8 @@ function setView(v){
   S.view=v;
   $$("#sideNav .side-item").forEach(b=>b.classList.toggle("active", b.dataset.v===v));
   const ord=v==="ordini", arch=v==="archivio", stats=v==="stats", cap=v==="cap", prev=v==="prev";
-  const week=v==="settimana", design=v==="design", imp=v==="impostazioni";
-  const noFilters = stats||cap||prev||week||design||imp;
+  const week=v==="settimana", imp=v==="impostazioni";
+  const noFilters = stats||cap||prev||week||imp;
   $("#lavFilters").style.display  = (ord||arch) ? "" : "none";
   $("#filters").style.display     = ord ? "" : "none";
   $("#ordersHost").style.display  = ord ? "" : "none";
@@ -2227,8 +1785,7 @@ function setView(v){
   $("#capHost").style.display     = cap ? "" : "none";
   $("#prevHost").style.display    = prev ? "" : "none";
   const wh=$("#weekHost"); if(wh) wh.style.display = week ? "" : "none";
-  const dh=$("#designHost"); if(dh) dh.style.display = design ? "" : "none";
-  const sh=$("#settingsViewHost"); if(sh) sh.style.display = imp ? "" : "none";
+  const sh=$("#settingsViewHost"); if(sh) sh.style.display = (typeof imp!=="undefined" && imp) ? "" : "none";
   $("#btnScan").style.display = ord ? "flex" : "none";
   const vs=$("#btnVoiceSearch"); if(vs) vs.style.display = (ord||arch) ? "grid" : "none";
   const sb=document.querySelector(".search"); if(sb) sb.style.display = noFilters ? "none" : "flex";
@@ -2589,527 +2146,82 @@ function ensureListino(){
   if(!S.settings) S.settings={};
   if(!S.settings.listino) S.settings.listino = structuredClone(PV_LIST_DEFAULT);
   const L=S.settings.listino;
-  if(!L.veicoli) L.veicoli={}; if(!L.tipo) L.tipo={}; if(!Array.isArray(L.accessori)) L.accessori=[];
+  if(!L.veicoli) L.veicoli={}; if(!L.tipo) L.tipo={}; if(!L.allest) L.allest={}; if(!Array.isArray(L.accessori)) L.accessori=[];
   PV_VEICOLI.forEach(v=>{ L.veicoli[v]=pvNormM(L.veicoli[v]||PV_LIST_DEFAULT.veicoli[v]); });
-  // migrazione vecchia voce "Cassa assemblata" -> "Box"
-  if(L.tipo["Cassa assemblata"] && !L.tipo["Box"]) L.tipo["Box"]=L.tipo["Cassa assemblata"];
-  delete L.tipo["Cassa assemblata"];
   PV_TIPI.forEach(t=>{ L.tipo[t]=pvNormM(L.tipo[t]||PV_LIST_DEFAULT.tipo[t]); });
+  PV_ALLEST_DEFAULT.forEach(a=>{ L.allest[a]=pvNormM(L.allest[a]||PV_LIST_DEFAULT.allest[a]); });
   L.accessori.forEach(a=>a.ore=pvNormM(a.ore));
   return L;
 }
-function pvObjOf(g,k){ const L=ensureListino(); if(g==="veic")return L.veicoli[k]; if(g==="tipo")return L.tipo[k]; if(g==="acc")return L.accessori[+k].ore; }
+function pvObjOf(g,k){ const L=ensureListino(); if(g==="veic")return L.veicoli[k]; if(g==="tipo")return L.tipo[k]; if(g==="all")return L.allest[k]; if(g==="acc")return L.accessori[+k].ore; }
 function pvByM(){
   const L=ensureListino(); const r=pvM0();
   const add=o=>{ if(!o)return; MANSIONI.forEach(m=>r[m.id]+=parseFloat(o[m.id])||0); };
   if(S.pv.veicolo) add(L.veicoli[S.pv.veicolo]);
   if(S.pv.tipo) add(L.tipo[S.pv.tipo]);
+  if(S.pv.allest) add(L.allest[S.pv.allest]);
   L.accessori.forEach(a=>{ if(S.pv.accSel.has(a.nome)) add(a.ore); });
   return r;
 }
 function pvTotal(){ const r=pvByM(); return MANSIONI.reduce((s,m)=>s+r[m.id],0); }
 function pvMapLavorazione(v){ if(!v)return ""; if(v.indexOf("MOTRICE")===0)return "Motrice"; if(v.indexOf("SEMIRIMORCHIO")===0)return "Semirimorchio"; if(v.indexOf("KIT")===0)return "KIT"; return ""; }
 
-
-/* ===================================================================
-   DESIGN REVIEW — riunioni analisi lavori / cartellini / disegni
-   =================================================================== */
-const DR_TEMPLATES = {
-  allest: ["Guidovie carne","Tubovie carne","Doppio piano","Multitemperatura","Porta laterale","Sponda idraulica","Pedana","Tendina termica","Inox interni","ATP"],
-  mod: ["Spessore isolante","Altezza interna","Lunghezza cassa","Posizione gruppo frigo","Soglia posteriore","Parete divisoria","Illuminazione LED","Passacavi extra"],
-  check: ["Cartellino presente","Quote cartellino ok","Disegno 2D completo","Disegno 3D / assieme","Distinta materiali","Quote critiche verificate","Interferenze controllate","Note cliente riportate"]
-};
-function persistDesign(){
-  if(!Array.isArray(S.designSessions)) S.designSessions=[];
-  localStorage.setItem("cf_design", JSON.stringify(S.designSessions));
-  S.settings = S.settings || {};
-  S.settings.designSessions = S.designSessions;
-  try{ persistSettings(); }catch(_){}
-}
-function blankDesignSession(){
-  const today=new Date().toISOString().slice(0,10);
-  return {
-    id: uid(),
-    title: "Design review "+today,
-    date: today,
-    partecipanti: S.operatorName||"",
-    lavori: "",
-    checklist: DR_TEMPLATES.check.map(t=>({testo:t, ok:false})),
-    allestimenti: "",
-    modifiche: "",
-    decisioni: "",
-    noteLibere: "",
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
-  };
-}
-function renderDesign(){
-  const host=$("#designHost"); if(!host) return;
-  if(!Array.isArray(S.designSessions)) S.designSessions=[];
-  if(S.designId){
-    const s=S.designSessions.find(x=>x.id===S.designId);
-    if(!s){ S.designId=null; }
-    else { host.innerHTML=drDetailHTML(s); wireDrDetail(s); return; }
-  }
-  host.innerHTML=drListHTML();
-  wireDrList();
-}
-function drListHTML(){
-  const list=[...S.designSessions].sort((a,b)=>(b.date||b.createdAt||"").localeCompare(a.date||a.createdAt||""));
-  let h=`<div class="dr-head"><h2>Design review</h2>
-    ${S.canEdit?`<button type="button" class="btn btn-primary" id="drNew" style="flex:0 0 auto;height:40px;padding:0 16px;width:auto">+ Nuova</button>`:""}
-  </div>
-  <p style="font-size:13px;color:var(--muted);margin-bottom:14px">Riunioni per analizzare nuovi lavori, cartellini, disegni, allestimenti particolari e modifiche cliente.</p>`;
-  if(!list.length){
-    h+=`<div class="empty"><h3>Nessuna review</h3><p>Crea una sessione per prendere note strutturate in riunione.</p></div>`;
-    return h;
-  }
-  h+=list.map(s=>{
-    const nOk=(s.checklist||[]).filter(c=>c.ok).length, nTot=(s.checklist||[]).length;
-    return `<div class="dr-sess" data-dr="${esc(s.id)}">
-      <div class="d">${esc(s.date||"")} ${s.partecipanti?"· "+esc(s.partecipanti):""}</div>
-      <div class="t">${esc(s.title||"Senza titolo")}</div>
-      <div class="meta">${nTot?`Checklist ${nOk}/${nTot}`:""}${(s.lavori||"").trim()?" · "+esc(String(s.lavori).slice(0,60)):""}</div>
-    </div>`;
-  }).join("");
-  return h;
-}
-function wireDrList(){
-  const n=$("#drNew"); if(n) n.onclick=()=>{
-    if(!S.canEdit){ toast("Sola lettura","err"); return; }
-    const s=blankDesignSession();
-    S.designSessions.unshift(s);
-    persistDesign();
-    S.designId=s.id;
-    renderDesign();
-  };
-  $$("#designHost .dr-sess[data-dr]").forEach(el=>{
-    el.onclick=()=>{ S.designId=el.dataset.dr; renderDesign(); };
-  });
-}
-function drDetailHTML(s){
-  const ro=!S.canEdit;
-  const checks=(s.checklist||[]).map((c,i)=>`
-    <div class="dr-check ${c.ok?"on":""}" data-ci="${i}">
-      <div class="box">${c.ok?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg>':""}</div>
-      <div class="body"><input type="text" value="${esc(c.testo||"")}" data-ct="${i}" ${ro?"readonly":""} placeholder="Voce checklist…"></div>
-      ${ro?"":`<button type="button" class="rm" data-crm="${i}"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button>`}
-    </div>`).join("");
-  return `<button type="button" class="pv-back" id="drBack"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg>Lista review</button>
-    <div class="field"><label>Titolo sessione</label><input id="dr_title" value="${esc(s.title||"")}" ${ro?"readonly":""}></div>
-    <div style="display:flex;gap:10px">
-      <div class="field" style="flex:1"><label>Data</label><input id="dr_date" type="date" value="${esc(s.date||"")}" ${ro?"readonly":""}></div>
-      <div class="field" style="flex:1"><label>Partecipanti</label><input id="dr_part" value="${esc(s.partecipanti||"")}" placeholder="Nomi…" ${ro?"readonly":""}></div>
-    </div>
-
-    <div class="dr-sec">
-      <div class="lab">Lavori analizzati</div>
-      <textarea class="dr-ta" id="dr_lavori" placeholder="Codici lavoro, clienti, riferimenti disegni…" ${ro?"readonly":""}>${esc(s.lavori||"")}</textarea>
-      ${ro?"":`<div class="dr-actions"><button type="button" data-ins="lavori" data-txt="Codice: ">＋ Codice</button><button type="button" data-ins="lavori" data-txt="Cliente: ">＋ Cliente</button><button type="button" data-ins="lavori" data-txt="Disegno n° ">＋ Disegno</button></div>`}
-    </div>
-
-    <div class="dr-sec">
-      <div class="lab">Checklist cartellini & disegni</div>
-      <div id="drChecks">${checks||'<div class="empty" style="padding:16px"><p>Nessuna voce</p></div>'}</div>
-      ${ro?"":`<div class="dr-actions"><button type="button" id="drAddCheck">＋ Voce</button><button type="button" id="drResetCheck">Ripristina standard</button></div>`}
-    </div>
-
-    <div class="dr-sec">
-      <div class="lab">Allestimenti particolari</div>
-      <textarea class="dr-ta" id="dr_allest" placeholder="Es. guidovie carne, multitemperatura, richieste speciali…" ${ro?"readonly":""}>${esc(s.allestimenti||"")}</textarea>
-      ${ro?"":`<div class="dr-chips">${DR_TEMPLATES.allest.map(t=>`<button type="button" class="dr-chip" data-chip="allest" data-val="${esc(t)}">${esc(t)}</button>`).join("")}</div>`}
-    </div>
-
-    <div class="dr-sec">
-      <div class="lab">Modifiche a richiesta cliente</div>
-      <textarea class="dr-ta" id="dr_mod" placeholder="Cosa chiede il cliente, impatto su disegno/tempi…" ${ro?"readonly":""}>${esc(s.modifiche||"")}</textarea>
-      ${ro?"":`<div class="dr-chips">${DR_TEMPLATES.mod.map(t=>`<button type="button" class="dr-chip" data-chip="mod" data-val="${esc(t)}">${esc(t)}</button>`).join("")}</div>`}
-    </div>
-
-    <div class="dr-sec">
-      <div class="lab">Decisioni & azioni</div>
-      <textarea class="dr-ta" id="dr_dec" placeholder="Cosa fare, chi, entro quando…" ${ro?"readonly":""}>${esc(s.decisioni||"")}</textarea>
-      ${ro?"":`<div class="dr-actions"><button type="button" data-ins="dec" data-txt="→ Azione: ">＋ Azione</button><button type="button" data-ins="dec" data-txt="✓ Deciso: ">＋ Deciso</button><button type="button" data-ins="dec" data-txt="⚠ Da verificare: ">＋ Da verificare</button></div>`}
-    </div>
-
-    <div class="dr-sec">
-      <div class="lab">Note libere</div>
-      <textarea class="dr-ta" id="dr_note" placeholder="Altro…" ${ro?"readonly":""}>${esc(s.noteLibere||"")}</textarea>
-    </div>
-
-    <div class="pv-nav">
-      ${S.canEdit?`<button type="button" class="btn btn-primary" id="drSave" style="flex:1">Salva review</button>
-      <button type="button" class="btn btn-ghost" id="drDel" style="flex:0 0 auto;padding:0 14px;color:var(--red)">Elimina</button>`:""}
-    </div>`;
-}
-function wireDrDetail(s){
-  const back=$("#drBack"); if(back) back.onclick=()=>{ S.designId=null; renderDesign(); };
-  const save=()=>{
-    if(!S.canEdit) return;
-    s.title=($("#dr_title")||{}).value||s.title;
-    s.date=($("#dr_date")||{}).value||s.date;
-    s.partecipanti=($("#dr_part")||{}).value||"";
-    s.lavori=($("#dr_lavori")||{}).value||"";
-    s.allestimenti=($("#dr_allest")||{}).value||"";
-    s.modifiche=($("#dr_mod")||{}).value||"";
-    s.decisioni=($("#dr_dec")||{}).value||"";
-    s.noteLibere=($("#dr_note")||{}).value||"";
-    s.updatedAt=new Date().toISOString();
-    persistDesign();
-  };
-  ["dr_title","dr_date","dr_part","dr_lavori","dr_allest","dr_mod","dr_dec","dr_note"].forEach(id=>{
-    const el=$("#"+id); if(el) el.onchange=save;
-  });
-  $$("#designHost .dr-check .box").forEach(box=>{
-    box.onclick=()=>{
-      if(!S.canEdit) return;
-      const i=+box.parentElement.dataset.ci;
-      s.checklist[i].ok=!s.checklist[i].ok;
-      persistDesign(); renderDesign();
-    };
-  });
-  $$("#designHost input[data-ct]").forEach(inp=>{
-    inp.onchange=()=>{ s.checklist[+inp.dataset.ct].testo=inp.value; persistDesign(); };
-  });
-  $$("#designHost [data-crm]").forEach(b=>{
-    b.onclick=()=>{ s.checklist.splice(+b.dataset.crm,1); persistDesign(); renderDesign(); };
-  });
-  const ac=$("#drAddCheck"); if(ac) ac.onclick=()=>{ s.checklist.push({testo:"", ok:false}); persistDesign(); renderDesign(); };
-  const rc=$("#drResetCheck"); if(rc) rc.onclick=()=>{
-    if(!confirm("Ripristinare la checklist standard?")) return;
-    s.checklist=DR_TEMPLATES.check.map(t=>({testo:t, ok:false}));
-    persistDesign(); renderDesign();
-  };
-  $$("#designHost .dr-chip").forEach(ch=>{
-    ch.onclick=()=>{
-      if(!S.canEdit) return;
-      const key=ch.dataset.chip, val=ch.dataset.val;
-      const map={allest:"dr_allest", mod:"dr_mod"};
-      const el=$("#"+map[key]); if(!el) return;
-      const cur=(el.value||"").trim();
-      el.value = cur ? (cur + (cur.endsWith("\n")?"":"\n") + "• "+val) : ("• "+val);
-      save();
-    };
-  });
-  $$("#designHost [data-ins]").forEach(b=>{
-    b.onclick=()=>{
-      if(!S.canEdit) return;
-      const map={lavori:"dr_lavori", dec:"dr_dec"};
-      const el=$("#"+map[b.dataset.ins]); if(!el) return;
-      const cur=el.value||"";
-      el.value = cur + (cur && !cur.endsWith("\n") ? "\n" : "") + b.dataset.txt;
-      el.focus(); save();
-    };
-  });
-  const sv=$("#drSave"); if(sv) sv.onclick=()=>{ save(); toast("Review salvata","ok"); };
-  const dl=$("#drDel"); if(dl) dl.onclick=()=>{
-    if(!confirm("Eliminare questa design review?")) return;
-    S.designSessions=S.designSessions.filter(x=>x.id!==s.id);
-    S.designId=null; persistDesign(); toast("Review eliminata","ok"); renderDesign();
-  };
-}
-
-
-/* ===================================================================
-   ASPETTO / IMPOSTAZIONI GRAFICHE
-   =================================================================== */
-function getAppearance(){
-  try{ return JSON.parse(localStorage.getItem("cf_appear")||"{}"); }catch(_){ return {}; }
-}
-function setAppearance(patch){
-  const a=Object.assign(getAppearance(), patch||{});
-  localStorage.setItem("cf_appear", JSON.stringify(a));
-  applyAppearance();
-  return a;
-}
-function applyAppearance(){
-  const a=getAppearance();
-  document.body.dataset.theme = a.theme || "industrial";
-  document.body.dataset.density = a.density || "comfortable";
-  document.body.dataset.accent = a.accent || "frost";
-  if(a.theme==="industrial" || !a.theme) document.body.removeAttribute("data-theme");
-  if((a.density||"comfortable")==="comfortable") document.body.removeAttribute("data-density");
-  if((a.accent||"frost")==="frost") document.body.removeAttribute("data-accent");
-}
-function renderSettingsView(){
-  const host=$("#settingsViewHost"); if(!host) return;
-  const a=getAppearance();
-  const theme=a.theme||"industrial";
-  const dens=a.density||"comfortable";
-  const acc=a.accent||"frost";
-  const op=S.operatorName||"";
-  const notif=localStorage.getItem("cf_notif")==="on";
-  host.innerHTML=`
-    <div class="section-title"><span class="n">⚙</span> Impostazioni</div>
-    <p style="font-size:13px;color:var(--muted);margin-bottom:16px">Aspetto, preferenze e connessione su questo dispositivo.</p>
-
-    <div class="settings-block">
-      <h3>Tema</h3>
-      <div class="appear-grid">
-        <button type="button" class="appear-swatch ${theme==="industrial"||!theme?"on":""}" data-theme="industrial"><span class="dot" style="background:#3DB8D9"></span>Industriale</button>
-        <button type="button" class="appear-swatch ${theme==="midnight"?"on":""}" data-theme="midnight"><span class="dot" style="background:#4EC8E8"></span>Midnight</button>
-        <button type="button" class="appear-swatch ${theme==="slate"?"on":""}" data-theme="slate"><span class="dot" style="background:#5B9FD4"></span>Ardesia</button>
-        <button type="button" class="appear-swatch ${theme==="contrast"?"on":""}" data-theme="contrast"><span class="dot" style="background:#5CF"></span>Alto contrasto</button>
-      </div>
-    </div>
-
-    <div class="settings-block">
-      <h3>${esc(t("language"))}</h3>
-      <div class="appear-grid">
-        <button type="button" class="appear-swatch ${getLang()==="it"?"on":""}" data-lang="it">${esc(t("lang_it"))}</button>
-        <button type="button" class="appear-swatch ${getLang()==="en"?"on":""}" data-lang="en">${esc(t("lang_en"))}</button>
-        <button type="button" class="appear-swatch ${getLang()==="fr"?"on":""}" data-lang="fr">${esc(t("lang_fr"))}</button>
-        <button type="button" class="appear-swatch ${getLang()==="ro"?"on":""}" data-lang="ro">${esc(t("lang_ro"))}</button>
-        <button type="button" class="appear-swatch ${getLang()==="sq"?"on":""}" data-lang="sq">${esc(t("lang_sq"))}</button>
-      </div>
-    </div>
-
-    <div class="settings-block">
-      <h3>Densità elenco</h3>
-      <div class="appear-grid">
-        <button type="button" class="appear-swatch ${dens==="comfortable"?"on":""}" data-dens="comfortable">Comoda</button>
-        <button type="button" class="appear-swatch ${dens==="compact"?"on":""}" data-dens="compact">Compatta</button>
-      </div>
-    </div>
-
-    <div class="settings-block">
-      <h3>Colore accento</h3>
-      <div class="appear-grid">
-        <button type="button" class="appear-swatch ${acc==="frost"?"on":""}" data-acc="frost"><span class="dot" style="background:#3DB8D9"></span>Frost</button>
-        <button type="button" class="appear-swatch ${acc==="amber"?"on":""}" data-acc="amber"><span class="dot" style="background:#E8A317"></span>Ambra</button>
-        <button type="button" class="appear-swatch ${acc==="green"?"on":""}" data-acc="green"><span class="dot" style="background:#3FA86A"></span>Verde</button>
-        <button type="button" class="appear-swatch ${acc==="violet"?"on":""}" data-acc="violet"><span class="dot" style="background:#9B7AED"></span>Viola</button>
-      </div>
-    </div>
-
-    <div class="settings-block">
-      <h3>Operatore</h3>
-      <div class="field" style="margin:0"><label>Nome mostrato</label>
-        <input id="set_operator" type="text" value="${esc(op)}" placeholder="Es. Gabriel" style="width:100%;background:var(--bg);border:1px solid var(--line);border-radius:var(--r);padding:11px 12px;color:var(--text)">
-      </div>
-      <button type="button" class="btn btn-primary" id="btnSaveOp" style="width:100%;height:42px;margin-top:10px">Salva nome</button>
-    </div>
-
-    <div class="settings-block">
-      <h3>Notifiche scadenze</h3>
-      <button type="button" class="btn ${notif?"btn-primary":"btn-ghost"}" id="btnToggleNotifSet" style="width:100%;height:42px">${notif?"Promemoria attivi · tocca per spegnere":"Attiva promemoria scadenze"}</button>
-    </div>
-
-    <div class="settings-block">
-      <h3>Dati locali</h3>
-      <button type="button" class="btn btn-ghost" id="btnClearDraft" style="width:100%;height:42px;margin-bottom:8px">Cancella bozza auto-salvata</button>
-      <button type="button" class="btn btn-ghost" id="btnOpenConn" style="width:100%;height:42px;margin-bottom:8px">URL script Google</button>
-      <button type="button" class="btn btn-ghost" id="btnFromSettingsLogout" style="width:100%;height:42px;color:var(--red)">Esci dall'app</button>
-    </div>
-  `;
-  $$("#settingsViewHost [data-lang]").forEach(b=>b.onclick=()=>{ setLang(b.dataset.lang); renderSettingsView(); if(S.view==="ordini") render(); toast(t("lang_ok"),"ok"); });
-  $$("#settingsViewHost [data-theme]").forEach(b=>b.onclick=()=>{ setAppearance({theme:b.dataset.theme}); renderSettingsView(); toast(t("theme_ok"),"ok"); });
-  $$("#settingsViewHost [data-dens]").forEach(b=>b.onclick=()=>{ setAppearance({density:b.dataset.dens}); renderSettingsView(); toast(t("dens_ok"),"ok"); });
-  $$("#settingsViewHost [data-acc]").forEach(b=>b.onclick=()=>{ setAppearance({accent:b.dataset.acc}); renderSettingsView(); toast(t("acc_ok"),"ok"); });
-  const so=$("#btnSaveOp");
-  if(so) so.onclick=()=>{
-    const v=($("#set_operator")||{}).value||"";
-    S.operatorName=v.trim();
-    localStorage.setItem("cf_operator", S.operatorName);
-    toast(t("name_saved"),"ok");
-  };
-  const tn=$("#btnToggleNotifSet"); if(tn) tn.onclick=()=>{ if(typeof toggleNotif==="function") toggleNotif(); setTimeout(renderSettingsView, 300); };
-  const cd=$("#btnClearDraft"); if(cd) cd.onclick=()=>{ localStorage.removeItem("cf_order_draft"); toast(t("draft_cleared"),"ok"); };
-  const c=$("#btnOpenConn"); if(c) c.onclick=()=>openSettings(false);
-  const l=$("#btnFromSettingsLogout"); if(l) l.onclick=()=>logout(false);
-}
-
-
-
-function persistPreventivi(){
-  if(!Array.isArray(S.preventivi)) S.preventivi=[];
-  localStorage.setItem("cf_preventivi", JSON.stringify(S.preventivi));
-  S.settings = S.settings || {};
-  S.settings.preventivi = S.preventivi;
-  try{ persistSettings(); }catch(_){}
-}
-function buildPreventivoRecord(){
-  const budget=pvByM();
-  const accSel=[...S.pv.accSel];
-  return {
-    id: uid(),
-    codice: (S.pv.codice||"").trim(),
-    cliente: (S.pv.cliente||"").trim(),
-    veicolo: S.pv.veicolo||"",
-    tipo: S.pv.tipo||"",
-    accessori: accSel,
-    note: (S.pv.note||"").trim(),
-    budget: budget,
-    totaleOre: pvTotal(),
-    createdAt: new Date().toISOString(),
-    updatedBy: S.operatorName||""
-  };
-}
-function resetPvConfig(){
-  S.pv.step=1; S.pv.veicolo=null; S.pv.tipo=null; S.pv.accSel=new Set();
-  S.pv.codice=""; S.pv.cliente=""; S.pv.note=""; S.pv.detailId=null;
-}
-
 function renderPrev(){
-  const host=$("#prevHost"); if(!host) return;
-  if(!Array.isArray(S.preventivi)) S.preventivi=[];
-  const home=S.pv.home||"home";
-  if(home==="home"){ host.innerHTML=pvLandingHTML(); wirePvLanding(); return; }
-  if(home==="eseguiti"){ host.innerHTML=pvEseguitiHTML(); wirePvEseguiti(); return; }
-  const sub=`<button type="button" class="pv-back" id="pvBackHome"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg>Indietro</button>`;
-  host.innerHTML = sub + pvConfigHTML();
-  const bh=$("#pvBackHome"); if(bh) bh.onclick=()=>{ S.pv.home="home"; renderPrev(); };
-  wirePvConfig();
-}
-
-function pvLandingHTML(){
-  const n=(S.preventivi||[]).length;
-  return `<div class="pv-home">
-    <div class="pv-home-title">Preventivi</div>
-    <div class="pv-home-sub">Scegli una sezione</div>
-    <button type="button" class="pv-home-btn" id="pvGoEseguiti">
-      <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
-      <div class="tx"><div class="t">Preventivi eseguiti</div><div class="s">Archivio dei preventivi salvati</div><span class="badge">${n} salvat${n===1?"o":"i"}</span></div>
-      <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 6l6 6-6 6"/></svg></span>
-    </button>
-    <button type="button" class="pv-home-btn" id="pvGoConfig">
-      <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div>
-      <div class="tx"><div class="t">Configuratore</div><div class="s">Calcola ore per veicolo, tipo e accessori</div></div>
-      <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 6l6 6-6 6"/></svg></span>
-    </button>
+  const host=$("#prevHost");
+  const sub=`<div class="pv-sub">
+    <button data-sub="prev" class="${S.pv.sub==='prev'?'active':''}">Preventivo</button>
+    <button data-sub="listino" class="${S.pv.sub==='listino'?'active':''}">Listino ore</button>
   </div>`;
-}
-function wirePvLanding(){
-  const a=$("#pvGoEseguiti"); if(a) a.onclick=()=>{ S.pv.home="eseguiti"; S.pv.detailId=null; renderPrev(); };
-  const b=$("#pvGoConfig"); if(b) b.onclick=()=>{ S.pv.home="config"; S.pv.sub="prev"; renderPrev(); };
-}
-
-function pvEseguitiHTML(){
-  let h=`<button type="button" class="pv-back" id="pvBackHome"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg>Indietro</button>`;
-  h+=`<div class="section-title" style="margin-top:0"><span class="n">✓</span> Preventivi eseguiti</div>`;
-  if(S.pv.detailId){
-    const pr=(S.preventivi||[]).find(x=>x.id===S.pv.detailId);
-    if(pr){
-      const r=pr.budget||{}, max=Math.max(1,...MANSIONI.map(m=>parseFloat(r[m.id])||0));
-      h+=`<div class="pv-detail">
-        <div style="font-family:'JetBrains Mono';font-weight:700;font-size:17px">${esc(pr.codice||"—")}</div>
-        <div style="color:var(--muted);margin-top:4px">${esc(pr.cliente||"Senza cliente")}</div>
-        <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:12px;font-family:'JetBrains Mono';font-size:12px;color:var(--muted)">
-          <span>${esc(pr.veicolo||"—")}</span><span>·</span><span>${esc(pr.tipo||"—")}</span><span>·</span>
-          <span style="color:var(--frost);font-weight:700">${fmtH(pr.totaleOre)} h</span>
-        </div>
-        ${(pr.accessori&&pr.accessori.length)?`<div style="margin-top:12px;font-size:13px;color:var(--muted)">Accessori: ${pr.accessori.map(esc).join(", ")}</div>`:""}
-        ${pr.note?`<div style="margin-top:10px;font-size:13px;white-space:pre-wrap">${esc(pr.note)}</div>`:""}
-        <div class="section-title"><span class="n">⏱</span> Ore per mansione</div>
-        ${MANSIONI.map(m=>`<div class="pv-mbk"><div class="top"><span>${m.label}</span><span class="v">${fmtH(r[m.id]||0)} h</span></div><div class="bar"><i style="width:${Math.round((parseFloat(r[m.id])||0)/max*100)}%"></i></div></div>`).join("")}
-        <div class="pv-total"><span class="k">Totale ore</span><span class="v">${fmtH(pr.totaleOre)} h</span></div>
-        <div style="font-size:11px;color:var(--muted-2);font-family:'JetBrains Mono';margin-bottom:12px">${pr.createdAt?new Date(pr.createdAt).toLocaleString("it-IT"):""}${pr.updatedBy?" · "+esc(pr.updatedBy):""}</div>
-        <div class="pv-nav">
-          <button type="button" class="btn btn-ghost" id="pvDetBack" style="flex:0 0 auto;padding:0 16px">Lista</button>
-          ${S.canEdit?`<button type="button" class="btn btn-primary" id="pvDetOrder" style="flex:1">Crea bozza ordine</button>`:""}
-        </div>
-      </div>`;
-      return h;
-    }
-    S.pv.detailId=null;
-  }
-  const list=[...(S.preventivi||[])].sort((a,b)=>(b.createdAt||"").localeCompare(a.createdAt||""));
-  if(!list.length){
-    h+=`<div class="empty"><h3>Nessun preventivo salvato</h3><p>Usa il configuratore per calcolare le ore e salvare un preventivo.</p></div>`;
-    return h;
-  }
-  h+=list.map(pr=>`<div class="pv-card" data-pid="${esc(pr.id)}">
-    ${S.canEdit?`<button type="button" class="pc-del" data-pdel="${esc(pr.id)}" title="Elimina"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg></button>`:""}
-    <div class="pc-code">${esc(pr.codice||"—")}</div>
-    <div class="pc-cli">${esc(pr.cliente||"Senza cliente")}</div>
-    <div class="pc-meta"><span>${esc(pr.tipo||"—")}</span><span class="pc-ore">${fmtH(pr.totaleOre)} h</span><span>${pr.createdAt?new Date(pr.createdAt).toLocaleDateString("it-IT"):""}</span></div>
-  </div>`).join("");
-  return h;
-}
-function wirePvEseguiti(){
-  const bh=$("#pvBackHome"); if(bh) bh.onclick=()=>{ S.pv.home="home"; S.pv.detailId=null; renderPrev(); };
-  const db=$("#pvDetBack"); if(db) db.onclick=()=>{ S.pv.detailId=null; renderPrev(); };
-  const ord=$("#pvDetOrder"); if(ord) ord.onclick=()=>pvOrderFromSaved(S.pv.detailId);
-  $$("#prevHost .pv-card[data-pid]").forEach(c=>{
-    c.onclick=e=>{ if(e.target.closest("[data-pdel]")) return; S.pv.detailId=c.dataset.pid; renderPrev(); };
-  });
-  $$("#prevHost [data-pdel]").forEach(b=>{
-    b.onclick=e=>{
-      e.stopPropagation();
-      if(!S.canEdit){ toast("Sola lettura","err"); return; }
-      if(!confirm("Eliminare questo preventivo?")) return;
-      S.preventivi=(S.preventivi||[]).filter(x=>x.id!==b.dataset.pdel);
-      if(S.pv.detailId===b.dataset.pdel) S.pv.detailId=null;
-      persistPreventivi(); toast("Preventivo eliminato","ok"); renderPrev();
-    };
-  });
+  host.innerHTML = sub + (S.pv.sub==="listino" ? pvListinoHTML() : pvConfigHTML());
+  $$("#prevHost .pv-sub button").forEach(b=>b.onclick=()=>{ S.pv.sub=b.dataset.sub; renderPrev(); });
+  if(S.pv.sub==="listino") wirePvListino(); else wirePvConfig();
 }
 
 function pvSteps(){
   const L=[["1","Veicolo"],["2","Allestimento"],["3","Preventivo"]];
-  const step=+(S.pv.step)||1;
-  return `<div class="pv-steps">`+L.map((l,i)=>{const n=i+1,cls=step===n?"active":(step>n?"done":"");return `<div class="pv-step ${cls}"><span class="n">${step>n?"✓":l[0]}</span>${l[1]}</div>`;}).join("")+`</div>`;
+  return `<div class="pv-steps">`+L.map((l,i)=>{const n=i+1,cls=S.pv.step===n?"active":(S.pv.step>n?"done":"");return `<div class="pv-step ${cls}"><span class="n">${S.pv.step>n?"✓":l[0]}</span>${l[1]}</div>`;}).join("")+`</div>`;
 }
 function pvConfigHTML(){
   const L=ensureListino();
-  const step=+(S.pv.step)||1;
-  S.pv.step=step;
   let h=pvSteps();
-  if(step===1){
+  if(S.pv.step===1){
     h+=`<div class="section-title"><span class="n">01</span> Veicolo</div>`+
       PV_VEICOLI.map(v=>`<div class="pv-opt ${S.pv.veicolo===v?'sel':''}" data-veic="${esc(v)}"><div class="mk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg></div><div class="t">${esc(v)}</div>${pvTag(L.veicoli[v])}</div>`).join("");
-  } else if(step===2){
+  } else if(S.pv.step===2){
+    const allList=PV_ALLEST_BY[S.pv.veicolo]||PV_ALLEST_DEFAULT;
     h+=`<div class="section-title"><span class="n">02</span> Tipo costruzione</div><div class="pv-seg">`+
       PV_TIPI.map(t=>`<div class="s ${S.pv.tipo===t?'sel':''}" data-tipo="${esc(t)}"><span class="t">${esc(t)}</span>${pvTag(L.tipo[t])}</div>`).join("")+`</div>
-      <div class="section-title"><span class="n">·</span> Accessori</div>`+
+      <div class="section-title"><span class="n">·</span> Allestimento</div>`+
+      allList.map(a=>`<div class="pv-opt ${S.pv.allest===a?'sel':''}" data-all="${esc(a)}"><div class="mk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg></div><div class="t">${esc(a)}${a==="Standard"?' <span style="color:var(--muted-2);font-size:11px">(incluso)</span>':''}</div>${pvTag(L.allest[a])}</div>`).join("")+
+      `<div class="section-title"><span class="n">·</span> Accessori</div>`+
       L.accessori.map(a=>`<div class="pv-opt check ${S.pv.accSel.has(a.nome)?'sel':''}" data-acc="${esc(a.nome)}"><div class="mk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg></div><div class="t">${esc(a.nome)}</div>${pvTag(a.ore)}</div>`).join("");
   } else {
+    const r=pvByM(), max=Math.max(1,...MANSIONI.map(m=>r[m.id]));
     h+=`<div class="section-title"><span class="n">03</span> Dati preventivo</div>
       <div class="field"><label>Codice lavoro</label><input id="pv_cod" value="${esc(S.pv.codice)}" placeholder="es. L-2026-0142" style="font-family:'JetBrains Mono'"></div>
       <div class="field"><label>Cliente</label><input id="pv_cli" value="${esc(S.pv.cliente)}" placeholder="Ragione sociale"></div>
-      <div class="field"><label>Note</label><textarea id="pv_note" placeholder="Richieste particolari…">${esc(S.pv.note)}</textarea></div>`;
+      <div class="field"><label>Note</label><textarea id="pv_note" placeholder="Richieste particolari…">${esc(S.pv.note)}</textarea></div>
+      <div class="section-title"><span class="n">⏱</span> Ripartizione per mansione</div>`+
+      MANSIONI.map(m=>`<div class="pv-mbk"><div class="top"><span>${m.label}</span><span class="v">${fmtH(r[m.id])} h</span></div><div class="bar"><i style="width:${Math.round(r[m.id]/max*100)}%"></i></div></div>`).join("");
   }
   h+=`<div class="pv-total"><span class="k">Totale ore</span><span class="v">${fmtH(pvTotal())} h</span></div>`;
   h+=`<div class="pv-nav">`;
-  if(S.pv.step>1) h+=`<button type="button" class="btn btn-ghost" id="pvBack" style="flex:0 0 auto;padding:0 20px">Indietro</button>`;
-  if(S.pv.step<3){
-    const dis=(S.pv.step===1&&!S.pv.veicolo)||(S.pv.step===2&&!S.pv.tipo);
-    h+=`<button type="button" class="btn btn-primary" id="pvNext" style="flex:1${dis?";opacity:.45":""}">Avanti</button>`;
-  } else {
-    h+=`<button type="button" class="btn btn-primary" id="pvSave" style="flex:1">${S.canEdit?"Salva preventivo":"Sola lettura"}</button>`;
-    if(S.canEdit) h+=`<button type="button" class="btn btn-ghost" id="pvGen" style="flex:0 0 auto;padding:0 14px;font-size:12px">+ Ordine</button>`;
-  }
+  if(S.pv.step>1) h+=`<button class="btn btn-ghost" id="pvBack" style="flex:0 0 auto;padding:0 20px">Indietro</button>`;
+  if(S.pv.step<3){ const dis=(S.pv.step===1&&!S.pv.veicolo)||(S.pv.step===2&&(!S.pv.tipo||!S.pv.allest)); h+=`<button class="btn btn-primary" id="pvNext" style="flex:1" ${dis?"disabled":""}>Avanti</button>`; }
+  else h+=`<button class="btn btn-primary" id="pvGen" style="flex:1">${S.canEdit?'Genera bozza ordine':'Sola lettura'}</button>`;
   h+=`</div>`;
   return h;
 }
 function wirePvConfig(){
-  $$('#prevHost [data-veic]').forEach(el=>el.onclick=()=>{
-    S.pv.veicolo=el.getAttribute("data-veic")||el.dataset.veic;
-    renderPrev();
-  });
-  $$('#prevHost [data-tipo]').forEach(el=>el.onclick=()=>{
-    S.pv.tipo=el.getAttribute("data-tipo")||el.dataset.tipo;
-    renderPrev();
-  });
-  $$('#prevHost [data-acc]').forEach(el=>el.onclick=()=>{
-    const n=el.getAttribute("data-acc")||el.dataset.acc;
-    if(S.pv.accSel.has(n)) S.pv.accSel.delete(n); else S.pv.accSel.add(n);
-    renderPrev();
-  });
-  const b=$("#pvBack");
-  if(b) b.onclick=()=>{ S.pv.step=Math.max(1, (+S.pv.step||1)-1); renderPrev(); };
-  const nx=$("#pvNext");
-  if(nx) nx.onclick=()=>{
-    const step=+(S.pv.step)||1;
-    if(step===1 && !S.pv.veicolo){ toast("Seleziona un veicolo","err"); return; }
-    if(step===2 && !S.pv.tipo){ toast("Seleziona il tipo di costruzione (Box, Completo o Kit)","err"); return; }
-    S.pv.step=step+1;
-    renderPrev();
-  };
+  $$('#prevHost [data-veic]').forEach(el=>el.onclick=()=>{ S.pv.veicolo=el.dataset.veic; renderPrev(); });
+  $$('#prevHost [data-tipo]').forEach(el=>el.onclick=()=>{ S.pv.tipo=el.dataset.tipo; renderPrev(); });
+  $$('#prevHost [data-all]').forEach(el=>el.onclick=()=>{ S.pv.allest=el.dataset.all; renderPrev(); });
+  $$('#prevHost [data-acc]').forEach(el=>el.onclick=()=>{ const n=el.dataset.acc; if(S.pv.accSel.has(n))S.pv.accSel.delete(n); else S.pv.accSel.add(n); renderPrev(); });
+  const b=$("#pvBack"); if(b) b.onclick=()=>{ S.pv.step--; renderPrev(); };
+  const nx=$("#pvNext"); if(nx) nx.onclick=()=>{ S.pv.step++; renderPrev(); };
   const cod=$("#pv_cod"); if(cod) cod.oninput=e=>S.pv.codice=e.target.value;
   const cli=$("#pv_cli"); if(cli) cli.oninput=e=>S.pv.cliente=e.target.value;
   const nt=$("#pv_note"); if(nt) nt.oninput=e=>S.pv.note=e.target.value;
-  const sv=$("#pvSave"); if(sv) sv.onclick=pvSalvaPreventivo;
   const gen=$("#pvGen"); if(gen) gen.onclick=pvGenera;
 }
 
@@ -3123,9 +2235,10 @@ function pvListinoHTML(){
   const L=ensureListino();
   const ro=!S.canEdit;
   return `<div class="note-listino" style="background:var(--surface);border:1px dashed var(--line-strong);border-radius:var(--r);padding:12px 14px;font-size:12px;color:var(--muted);margin-bottom:16px;line-height:1.55">Ore per mansione di ogni voce (tocca per espandere). È <b style="color:var(--frost)">condiviso</b> tra tutti i dispositivi.${ro?" Sola lettura.":""}</div>
-    <div class="section-title"><span class="n">A</span> Veicolo</div>${PV_VEICOLI.map(v=>pvLcard("veic",v,v,L.veicoli[v])).join("")}
+    <div class="section-title"><span class="n">A</span> Veicolo (allestimento standard)</div>${PV_VEICOLI.map(v=>pvLcard("veic",v,v,L.veicoli[v])).join("")}
     <div class="section-title"><span class="n">B</span> Tipo costruzione</div>${PV_TIPI.map(t=>pvLcard("tipo",t,t,L.tipo[t])).join("")}
-    <div class="section-title"><span class="n">C</span> Accessori</div><div id="pvAccList">${L.accessori.map((a,i)=>pvLcard("acc",i,a.nome,a.ore,ro?null:i)).join("")}</div>
+    <div class="section-title"><span class="n">C</span> Allestimento (ore vs standard)</div>${PV_ALLEST_DEFAULT.map(a=>pvLcard("all",a,a+(a==="Standard"?" (incluso)":""),L.allest[a])).join("")}
+    <div class="section-title"><span class="n">D</span> Accessori</div><div id="pvAccList">${L.accessori.map((a,i)=>pvLcard("acc",i,a.nome,a.ore,ro?null:i)).join("")}</div>
     ${ro?"":`<div class="opt-add" style="margin-top:8px"><input id="pvAccName" type="text" placeholder="Nuovo accessorio…"><button id="pvAccAdd">+</button></div>`}
     <div class="pv-saved" id="pvSaved">✓ listino salvato</div>`;
 }
@@ -3143,100 +2256,37 @@ function wirePvListino(){
   const add=$("#pvAccAdd"); if(add) add.onclick=()=>{ const n=$("#pvAccName").value.trim(); if(!n)return; ensureListino().accessori.push({nome:n,ore:pvM0()}); persistSettings(); renderPrev(); };
 }
 
-function pvSalvaPreventivo(){
-  if(!S.canEdit){ toast("Sola lettura","err"); return; }
-  const codice=(S.pv.codice||"").trim();
-  if(!codice){ toast("Inserisci il codice lavoro","err"); const el=$("#pv_cod"); if(el) el.focus(); return; }
-  if(!S.pv.veicolo){ toast("Seleziona un veicolo","err"); return; }
-  if(!S.pv.tipo){ toast("Seleziona il tipo di costruzione","err"); return; }
-  const rec=buildPreventivoRecord();
-  S.preventivi = S.preventivi || [];
-  S.preventivi.unshift(rec);
-  persistPreventivi();
-  resetPvConfig();
-  S.pv.home="eseguiti";
-  S.pv.detailId=rec.id;
-  toast("Preventivo salvato","ok");
-  renderPrev();
-}
-
-async function pvOrderFromSaved(id){
-  if(!S.canEdit){ toast("Sola lettura","err"); return; }
-  const pr=(S.preventivi||[]).find(x=>x.id===id); if(!pr) return;
-  if(S.orders.some(o=>(o.codice||"").toLowerCase()===(pr.codice||"").toLowerCase())){
-    if(!confirm("Esiste già un lavoro con questo codice. Crearne comunque uno nuovo in bozza?")) return;
-  }
-  const optional=[];
-  if(pr.tipo) optional.push({nome:"Tipo: "+pr.tipo, fatto:false});
-  (pr.accessori||[]).forEach(n=>optional.push({nome:n, fatto:false}));
-  const lines=["— Da preventivo —","Veicolo: "+(pr.veicolo||"—"),"Tipo: "+(pr.tipo||"—")];
-  if(pr.accessori&&pr.accessori.length) lines.push("Accessori: "+pr.accessori.join(", "));
-  lines.push("Totale preventivo: "+fmtH(pr.totaleOre)+" h");
-  if(pr.note) lines.push("", pr.note);
-  const order={
-    id:uid(), codice:pr.codice||"", cliente:pr.cliente||"", targa:"",
-    tipoCella:pvMapLavorazione(pr.veicolo),
-    dataOrdine:new Date().toISOString().slice(0,10), scadenza:"", stato:"bozza",
-    optional, note:lines.join("\n"), budget:pr.budget||{}, actual:{}, readyAt:"",
-    mediaCount:0, appFolderId:S.folderId||null,
-    fasi: (typeof FASI_DEFAULT!=="undefined" ? FASI_DEFAULT.map(function(f){return Object.assign({},f);}) : []),
-    operatore:S.operatorName||"", updatedBy:S.operatorName||"",
-    clientUpdatedAt:new Date().toISOString()
-  };
-  try{
-    await api("save",{order});
-    S.orders.unshift(structuredClone(order));
-    localStorage.setItem("cf_cache",JSON.stringify(S.orders));
-    toast("Bozza ordine creata","ok");
-    setView("ordini");
-  }catch(e){ toast(e.message,"err"); }
-}
-
 async function pvGenera(){
   if(!S.canEdit){ toast("Sola lettura","err"); return; }
   const codice=(S.pv.codice||"").trim();
   if(!codice){ toast("Inserisci il codice lavoro","err"); const el=$("#pv_cod"); if(el) el.focus(); return; }
-  if(!S.pv.veicolo){ toast("Seleziona un veicolo","err"); return; }
-  const rec=buildPreventivoRecord();
-  S.preventivi = S.preventivi || [];
-  S.preventivi.unshift(rec);
-  persistPreventivi();
-  if(S.orders.some(o=>(o.codice||"").toLowerCase()===codice.toLowerCase())){
-    if(!confirm("Esiste già un lavoro con questo codice. Crearne comunque uno nuovo in bozza?")) {
-      resetPvConfig(); S.pv.home="eseguiti"; S.pv.detailId=rec.id; renderPrev(); return;
-    }
-  }
-  const budget=rec.budget;
-  const accSel=rec.accessori||[];
+  if(S.orders.some(o=>(o.codice||"").toLowerCase()===codice.toLowerCase())){ if(!confirm("Esiste già un lavoro con questo codice. Crearne comunque uno nuovo in bozza?")) return; }
+  const budget=pvByM();
+  const accSel=[...S.pv.accSel];
   const optional=[];
-  if(rec.tipo) optional.push({nome:"Tipo: "+rec.tipo, fatto:false});
+  if(S.pv.tipo) optional.push({nome:"Tipo: "+S.pv.tipo, fatto:false});
+  if(S.pv.allest) optional.push({nome:"Allestimento: "+S.pv.allest, fatto:false});
   accSel.forEach(n=>optional.push({nome:n, fatto:false}));
-  const lines=["— Da preventivo —","Veicolo: "+(rec.veicolo||"—"),"Tipo: "+(rec.tipo||"—")];
+  const lines=["— Da preventivo —","Veicolo: "+(S.pv.veicolo||"—"),"Tipo: "+(S.pv.tipo||"—"),"Allestimento: "+(S.pv.allest||"—")];
   if(accSel.length) lines.push("Accessori: "+accSel.join(", "));
-  lines.push("Totale preventivo: "+fmtH(rec.totaleOre)+" h");
-  if(rec.note) lines.push("", rec.note);
+  lines.push("Totale preventivo: "+fmtH(pvTotal())+" h");
+  if((S.pv.note||"").trim()) lines.push("", S.pv.note.trim());
   const order={
-    id:uid(), codice:codice, cliente:rec.cliente||"", targa:"",
-    tipoCella:pvMapLavorazione(rec.veicolo),
+    id:uid(), codice, cliente:(S.pv.cliente||"").trim(), targa:"",
+    tipoCella:pvMapLavorazione(S.pv.veicolo),
     dataOrdine:new Date().toISOString().slice(0,10), scadenza:"", stato:"bozza",
-    optional, note:lines.join("\n"), budget:budget, actual:{}, readyAt:"",
-    mediaCount:0, appFolderId:S.folderId||null,
-    fasi: (typeof FASI_DEFAULT!=="undefined" ? FASI_DEFAULT.map(function(f){return Object.assign({},f);}) : []),
-    operatore:S.operatorName||"", updatedBy:S.operatorName||"",
-    clientUpdatedAt:new Date().toISOString()
+    optional, note:lines.join("\n"), budget, actual:{}, readyAt:""
   };
-  const gen=$("#pvGen"); const old=gen?gen.innerHTML:""; if(gen){ gen.textContent="…"; gen.disabled=true; }
+  const gen=$("#pvGen"); const old=gen?gen.innerHTML:""; if(gen){ gen.innerHTML='<div class="spin"></div> Creo la bozza…'; gen.disabled=true; }
   try{
     await api("save",{order});
-    S.orders.unshift(structuredClone(order));
-    localStorage.setItem("cf_cache",JSON.stringify(S.orders));
-    resetPvConfig();
-    toast("Preventivo salvato e bozza ordine creata","ok");
+    const saved=structuredClone(order); saved.mediaCount=0;
+    S.orders.unshift(saved); localStorage.setItem("cf_cache",JSON.stringify(S.orders));
+    // reset configuratore (il listino resta)
+    S.pv.step=1; S.pv.veicolo=null; S.pv.tipo=null; S.pv.allest=null; S.pv.accSel=new Set(); S.pv.codice=""; S.pv.cliente=""; S.pv.note="";
+    toast("Bozza creata: completa i dettagli mancanti","ok");
     setView("ordini");
-  }catch(e){
-    toast(e.message,"err");
-    if(gen){ gen.innerHTML=old; gen.disabled=false; }
-  }
+  }catch(e){ toast(e.message,"err"); if(gen){ gen.innerHTML=old; gen.disabled=false; } }
 }
 
 /* ===================================================================
@@ -3343,6 +2393,17 @@ function wireSignature(){
   };
 }
 
+function renderKanban(){
+  const host=$("#kanbanHost"); if(!host) return;
+  let list=[...S.orders];
+  if(S.lav!=="all") list=list.filter(o=>o.tipoCella===S.lav);
+  host.innerHTML=`<div class="kanban">`+STATI.map(st=>{
+    const items=list.filter(o=>o.stato===st.id);
+    return `<div class="kanban-col"><div class="kanban-head"><span class="t" style="color:${st.color}">${st.label}</span><span class="n">${items.length}</span></div>
+      <div class="kanban-body">${items.map(o=>`<div class="kcard b-${st.cls}" data-id="${o.id}"><div class="kc">${esc(o.codice||"—")}</div><div class="ks">${esc(o.cliente||"—")}${o.operatore?" · "+esc(o.operatore):""}</div></div>`).join("")||`<div class="empty" style="padding:24px 8px"><p>Nessun ordine</p></div>`}</div></div>`;
+  }).join("")+`</div>`;
+  $$("#kanbanHost .kcard").forEach(c=>c.onclick=()=>openOrder(c.dataset.id));
+}
 function renderWeek(){
   const host=$("#weekHost"); if(!host) return;
   const now=new Date(); now.setHours(0,0,0,0);
@@ -3378,8 +2439,8 @@ function blankOrder(codice){
   return {id:uid(),codice:codice||"",cliente:"",targa:"",tipoCella:"",dataOrdine:today,scadenza:"",stato:"bozza",optional:[],note:"",budget:{},actual:{},readyAt:"",mediaCount:0,appFolderId:S.folderId||null,fasi:FASI_DEFAULT.map(f=>({...f})),operatore:S.operatorName||"",updatedBy:S.operatorName||"",clientUpdatedAt:new Date().toISOString(),_new:true};
 }
 function openOrder(id){
-  if(!id && !S.canEdit){ toast(t("readonly"),"err"); return; }
-  if(!id && !S.folderId){ toast(t("empty_root"),"err"); return; }
+  if(!id && !S.canEdit){ toast("Sola lettura: non puoi creare lavori","err"); return; }
+  if(!id && !S.folderId){ toast("Entra in una cartella per creare un nuovo lavoro","err"); return; }
   S.current = id ? structuredClone(S.orders.find(o=>o.id===id)) : blankOrder();
   if(!S.current) return;
   renderSheet();
@@ -3399,7 +2460,7 @@ function openWithCode(code){
     openOrder(found.id); return;
   }
   if(!S.canEdit){ toast("Codice non trovato (sola lettura)","err"); return; }
-  /* creazione consentita anche in radice */
+  if(!S.folderId){ toast("Entra in una cartella sotto ICE per creare un lavoro","err"); return; }
   const b=blankOrder(code); S.current=b; renderSheet(); loadMedia(); $("#sheetScrim").classList.add("open"); $("#sheet").classList.add("open"); toast("Nuovo lavoro per "+code); setTimeout(()=>{$("#f_cliente")&&$("#f_cliente").focus();},300);
 }
 function closeSheet(){ $("#sheetScrim").classList.remove("open"); $("#sheet").classList.remove("open"); S.current=null; }
@@ -3704,53 +2765,6 @@ async function saveOrder(){
   finally{ btn.innerHTML=old; btn.disabled=false; }
 }
 
-
-/* ---- Auto-salvataggio bozza se si esce dall'app con scheda aperta ---- */
-function setupAutoSave(){
-  if(S._autoSaveBound) return;
-  S._autoSaveBound=true;
-  const flush=()=>{
-    try{
-      if(!S.canEdit) return;
-      if(!$("#sheet") || !$("#sheet").classList.contains("open")) return;
-      if(!S.current) return;
-      // raccogli form se possibile
-      try{ if(typeof collectForm==="function"){ const o=collectForm(); if(o) S.current=Object.assign(S.current||{}, o); } }catch(_){}
-      const draft=structuredClone(S.current);
-      draft._autoSavedAt=new Date().toISOString();
-      localStorage.setItem("cf_order_draft", JSON.stringify(draft));
-      // aggiorna anche cache ordini in memoria
-      if(draft.id){
-        const idx=S.orders.findIndex(x=>x.id===draft.id);
-        const saved=structuredClone(draft); delete saved._new; delete saved._autoSavedAt;
-        if(idx>=0) S.orders[idx]=Object.assign({}, S.orders[idx], saved);
-        else if(!draft._new) S.orders.unshift(saved);
-        localStorage.setItem("cf_cache", JSON.stringify(S.orders));
-      }
-    }catch(_){}
-  };
-  document.addEventListener("visibilitychange", ()=>{ if(document.visibilityState==="hidden") flush(); });
-  window.addEventListener("pagehide", flush);
-  window.addEventListener("beforeunload", flush);
-}
-function restoreOrderDraft(){
-  try{
-    const raw=localStorage.getItem("cf_order_draft");
-    if(!raw) return;
-    const d=JSON.parse(raw);
-    if(!d || !d.id) return;
-    const idx=S.orders.findIndex(x=>x.id===d.id);
-    if(idx>=0){
-      S.orders[idx]=Object.assign({}, S.orders[idx], d);
-      delete S.orders[idx]._autoSavedAt; delete S.orders[idx]._new;
-    } else if(d.codice){
-      const c=structuredClone(d); delete c._autoSavedAt; delete c._new;
-      S.orders.unshift(c);
-    }
-    localStorage.setItem("cf_cache", JSON.stringify(S.orders));
-  }catch(_){}
-}
-
 /* delete */
 async function deleteOrder(){
   if(!S.canEdit){ toast("Sola lettura","err"); return; }
@@ -4027,6 +3041,98 @@ function saveSettings(){
 
 
 
+
+/* ===================================================================
+   IMPOSTAZIONI · aspetto + lingua
+   =================================================================== */
+function getAppearance(){
+  try{ return JSON.parse(localStorage.getItem("cf_appear")||"{}"); }catch(_){ return {}; }
+}
+function setAppearance(patch){
+  const a=Object.assign(getAppearance(), patch||{});
+  localStorage.setItem("cf_appear", JSON.stringify(a));
+  applyAppearance();
+  return a;
+}
+function applyAppearance(){
+  const a=getAppearance();
+  const theme=a.theme||"industrial";
+  const dens=a.density||"comfortable";
+  const acc=a.accent||"frost";
+  if(theme==="industrial") document.body.removeAttribute("data-theme");
+  else document.body.dataset.theme=theme;
+  if(dens==="comfortable") document.body.removeAttribute("data-density");
+  else document.body.dataset.density=dens;
+  if(acc==="frost") document.body.removeAttribute("data-accent");
+  else document.body.dataset.accent=acc;
+}
+function getLang(){ try{ return localStorage.getItem("cf_lang")||"it"; }catch(_){ return "it"; } }
+function setLang(code){ try{ localStorage.setItem("cf_lang", code||"it"); document.documentElement.lang=code||"it"; }catch(_){} }
+function renderSettingsView(){
+  const host=$("#settingsViewHost"); if(!host) return;
+  const a=getAppearance();
+  const theme=a.theme||"industrial";
+  const dens=a.density||"comfortable";
+  const acc=a.accent||"frost";
+  const lang=getLang();
+  const op=S.operatorName||"";
+  host.innerHTML=`
+    <div class="section-title" style="margin-top:4px"><span class="n">⚙</span> Impostazioni</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:14px">Aspetto e preferenze su questo dispositivo.</p>
+    <div class="settings-block">
+      <h3>Lingua</h3>
+      <div class="appear-grid">
+        <button type="button" class="appear-swatch ${lang==="it"?"on":""}" data-lang="it">Italiano</button>
+        <button type="button" class="appear-swatch ${lang==="en"?"on":""}" data-lang="en">English</button>
+        <button type="button" class="appear-swatch ${lang==="fr"?"on":""}" data-lang="fr">Français</button>
+        <button type="button" class="appear-swatch ${lang==="ro"?"on":""}" data-lang="ro">Română</button>
+        <button type="button" class="appear-swatch ${lang==="sq"?"on":""}" data-lang="sq">Shqip</button>
+      </div>
+    </div>
+    <div class="settings-block">
+      <h3>Tema</h3>
+      <div class="appear-grid">
+        <button type="button" class="appear-swatch ${theme==="industrial"?"on":""}" data-theme="industrial">Industriale</button>
+        <button type="button" class="appear-swatch ${theme==="midnight"?"on":""}" data-theme="midnight">Midnight</button>
+        <button type="button" class="appear-swatch ${theme==="slate"?"on":""}" data-theme="slate">Ardesia</button>
+        <button type="button" class="appear-swatch ${theme==="contrast"?"on":""}" data-theme="contrast">Alto contrasto</button>
+      </div>
+    </div>
+    <div class="settings-block">
+      <h3>Densità</h3>
+      <div class="appear-grid">
+        <button type="button" class="appear-swatch ${dens==="comfortable"?"on":""}" data-dens="comfortable">Comoda</button>
+        <button type="button" class="appear-swatch ${dens==="compact"?"on":""}" data-dens="compact">Compatta</button>
+      </div>
+    </div>
+    <div class="settings-block">
+      <h3>Accento</h3>
+      <div class="appear-grid">
+        <button type="button" class="appear-swatch ${acc==="frost"?"on":""}" data-acc="frost">Frost</button>
+        <button type="button" class="appear-swatch ${acc==="amber"?"on":""}" data-acc="amber">Ambra</button>
+        <button type="button" class="appear-swatch ${acc==="green"?"on":""}" data-acc="green">Verde</button>
+        <button type="button" class="appear-swatch ${acc==="violet"?"on":""}" data-acc="violet">Viola</button>
+      </div>
+    </div>
+    <div class="settings-block">
+      <h3>Operatore</h3>
+      <div class="field"><label>Nome</label><input id="set_operator" value="${esc(op)}" placeholder="Es. Gabriel" style="width:100%;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:11px 12px;color:var(--text)"></div>
+      <button type="button" class="btn btn-primary" id="btnSaveOp" style="width:100%;height:42px;margin-top:8px">Salva nome</button>
+    </div>
+    <div class="settings-block">
+      <h3>Connessione</h3>
+      <button type="button" class="btn btn-ghost" id="btnOpenConn" style="width:100%;height:42px;margin-bottom:8px">URL script Google</button>
+      <button type="button" class="btn btn-ghost" id="btnFromSettingsLogout" style="width:100%;height:42px;color:var(--red)">Esci</button>
+    </div>`;
+  $$("#settingsViewHost [data-lang]").forEach(b=>b.onclick=()=>{ setLang(b.dataset.lang); renderSettingsView(); toast("Lingua: "+b.dataset.lang,"ok"); });
+  $$("#settingsViewHost [data-theme]").forEach(b=>b.onclick=()=>{ setAppearance({theme:b.dataset.theme}); renderSettingsView(); toast("Tema applicato","ok"); });
+  $$("#settingsViewHost [data-dens]").forEach(b=>b.onclick=()=>{ setAppearance({density:b.dataset.dens}); renderSettingsView(); toast("Densità aggiornata","ok"); });
+  $$("#settingsViewHost [data-acc]").forEach(b=>b.onclick=()=>{ setAppearance({accent:b.dataset.acc}); renderSettingsView(); toast("Accento aggiornato","ok"); });
+  const so=$("#btnSaveOp"); if(so) so.onclick=()=>{ S.operatorName=($("#set_operator").value||"").trim(); localStorage.setItem("cf_operator",S.operatorName); toast("Nome salvato","ok"); };
+  const c=$("#btnOpenConn"); if(c) c.onclick=()=>openSettings(false);
+  const l=$("#btnFromSettingsLogout"); if(l) l.onclick=()=>logout(false);
+}
+
 /* ===================================================================
    SELEZIONE MULTIPLA
    =================================================================== */
@@ -4051,13 +3157,14 @@ function toggleSelectFolder(id){
 function selectionCount(){ return S.selectedOrders.size + S.selectedFolders.size; }
 function renderSelBar(){
   const n=selectionCount();
+  if(!n && !(S.clipboard && S.clipboard.items && S.clipboard.items.length)) return "";
   if(!n) return "";
   return `<div class="sel-bar on">
-    <div class="info">${esc(t("selected",{n:n}))}</div>
-    <button type="button" id="selCut">${esc(t("cut"))}</button>
-    <button type="button" id="selCopy">${esc(t("copy"))}</button>
-    <button type="button" class="primary" id="selPaste">${esc(t("paste_here"))}</button>
-    <button type="button" id="selClear">${esc(t("cancel"))}</button>
+    <div class="info">${n} selezionat${n===1?"o":"i"}</div>
+    <button type="button" id="selCut">Taglia</button>
+    <button type="button" id="selCopy">Copia</button>
+    <button type="button" class="primary" id="selPaste">Incolla</button>
+    <button type="button" id="selClear">Annulla</button>
   </div>`;
 }
 function copySelection(mode){
@@ -4070,78 +3177,103 @@ function copySelection(mode){
     const f=getFolder(id); if(f) items.push({type:"folder", data:structuredClone(f)});
   });
   S.clipboard={mode:mode, items:items};
+  try{ sessionStorage.setItem("cf_clipboard", JSON.stringify(S.clipboard)); }catch(_){}
+  toast((mode==="cut"?"Tagliati":"Copiati")+" "+items.length+" · apri cartella e Incolla");
   clearSelection();
-  toast(t("cut_copy_toast",{mode:(mode==="cut"?t("cut_done"):t("copy_done")), n:items.length}),"ok");
   render();
 }
-async function pasteSelection(){
-  if(!S.clipboard){ toast(t("clip_empty"),"err"); return; }
-  const items = S.clipboard.items || (S.clipboard.data ? [{type:S.clipboard.type, data:S.clipboard.data}] : []);
-  if(!items.length){ toast(t("clip_empty"),"err"); return; }
-  if(!S.canEdit){ toast(t("readonly"),"err"); return; }
+function pasteSelectionLocal(){
+  if(!S.clipboard){ toast("Appunti vuoti","err"); return; }
+  const items = S.clipboard.items || (S.clipboard.data ? [{type:S.clipboard.type||"order", data:S.clipboard.data}] : []);
+  if(!items.length){ toast("Appunti vuoti","err"); return; }
+  if(!S.canEdit){ toast("Sola lettura","err"); return; }
   const mode = S.clipboard.mode || "copy";
   const target = S.folderId || null;
-  let done=0, errors=0;
+  const toSync = [];
+  let done = 0;
+
   for(const it of items){
-    try{
-      if(it.type==="order"){
-        if(mode==="cut"){
-          const o=S.orders.find(x=>x.id===it.data.id);
-          if(o){
-            o.appFolderId=target;
-            o.clientUpdatedAt=new Date().toISOString();
-            try{ await api("save",{order:Object.assign({},o)}); }
-            catch(e){
-              S.offlineQueue=S.offlineQueue||[];
-              S.offlineQueue.push({t:Date.now(), action:"save", payload:{order:Object.assign({},o)}});
-              persistQueue();
-            }
-            done++;
-          }
-        } else {
-          const src=it.data;
-          const copy=structuredClone(src);
-          copy.id=uid();
-          copy.codice=(src.codice||"ORD")+"-COPIA";
-          copy.appFolderId=target;
-          copy.actual={}; copy.readyAt=""; copy.stato="bozza"; copy.mediaCount=0;
-          copy.clientUpdatedAt=new Date().toISOString();
-          S.orders.unshift(copy);
-          try{ await api("save",{order:copy}); }
-          catch(e){
-            S.offlineQueue=S.offlineQueue||[];
-            S.offlineQueue.push({t:Date.now(), action:"save", payload:{order:copy}});
-            persistQueue();
-          }
+    if(!it) continue;
+    const isOrder = it.type==="order" || (!it.type && it.data && (it.data.codice!=null || it.data.id));
+    if(isOrder){
+      const data = it.data || it;
+      if(mode==="cut"){
+        const o = S.orders.find(x => String(x.id) === String(data.id));
+        if(o){
+          o.appFolderId = target;
+          o.clientUpdatedAt = new Date().toISOString();
+          toSync.push(Object.assign({}, o));
           done++;
         }
-      } else if(it.type==="folder"){
-        if(mode==="cut"){
-          if(it.data.id===target || isDescendantFolder(target, it.data.id)){ errors++; continue; }
-          const f=getFolder(it.data.id);
-          if(f){ f.parentId=target; done++; }
-        } else {
-          const srcData=it.data;
-          const nf={id:fuid(), name:(srcData.name||"Cartella")+" (copia)", parentId:target};
-          S.folders.push(nf);
-          done++;
+      } else {
+        let copy;
+        try { copy = structuredClone(data); } catch(_){ copy = JSON.parse(JSON.stringify(data)); }
+        copy.id = uid();
+        let base = (data.codice || "ORD").replace(/-COPIA\d*$/,"");
+        copy.codice = base + "-COPIA";
+        let n = 2;
+        while(S.orders.some(x => (x.codice||"") === copy.codice)){
+          copy.codice = base + "-COPIA" + n;
+          n++;
         }
+        copy.appFolderId = target;
+        copy.actual = {};
+        copy.readyAt = "";
+        copy.stato = "bozza";
+        copy.mediaCount = 0;
+        copy.clientUpdatedAt = new Date().toISOString();
+        delete copy._new;
+        S.orders.unshift(copy);
+        toSync.push(Object.assign({}, copy));
+        done++;
       }
-    }catch(_){ errors++; }
+    } else if(it.type==="folder"){
+      const data = it.data || {};
+      if(mode==="cut"){
+        if(String(data.id)===String(target) || isDescendantFolder(target, data.id)){
+          toast("Cartella non spostabile qui","err");
+          continue;
+        }
+        const f = getFolder(data.id);
+        if(f){ f.parentId = target; done++; }
+      } else {
+        S.folders.push({id:fuid(), name:(data.name||"Cartella")+" (copia)", parentId:target});
+        done++;
+      }
+    }
   }
-  if(mode==="cut") S.clipboard=null;
-  else if(done) S.clipboard=null;
+
+  if(!done){
+    toast("Incolla non riuscita","err");
+    return;
+  }
+
   persistFolders();
   localStorage.setItem("cf_cache", JSON.stringify(S.orders));
+  S.clipboard = null;
+  try{ sessionStorage.removeItem("cf_clipboard"); }catch(_){}
   clearSelection();
-  if(done) toast(t("pasted", {n:done}),"ok");
-  else toast(t("paste_fail"),"err");
+  if(S.filter && S.filter !== "all") S.filter = "all";
+  toast("Incollati "+done+" elementi","ok");
+  try{ haptic(30); }catch(_){}
   render();
+
+  // Sync remoto in background — non blocca il pulsante
+  toSync.forEach(function(order){
+    if(!S.url) return;
+    Promise.resolve(api("save",{order:order})).catch(function(){
+      S.offlineQueue = S.offlineQueue || [];
+      S.offlineQueue.push({t:Date.now(), action:"save", payload:{order:order}});
+      try{ persistQueue(); }catch(_){}
+    });
+  });
 }
+async function pasteSelection(){ pasteSelectionLocal(); }
+
 function wireSelBar(){
   const c=$("#selCut"); if(c) c.onclick=function(){ copySelection("cut"); };
   const p=$("#selCopy"); if(p) p.onclick=function(){ copySelection("copy"); };
-  const v=$("#selPaste"); if(v) v.onclick=function(){ runPaste(); };
+  const v=$("#selPaste"); if(v) v.onclick=function(){ doPaste(); };
   const a=$("#selClear"); if(a) a.onclick=function(){ clearSelection(); render(); };
 }
 
@@ -4166,7 +3298,7 @@ function bindLongPress(el, onLong){
       if(lpMoved) return;
       if(navigator.vibrate) navigator.vibrate(40);
       onLong();
-    },1000);
+    },2000);
     const move=(ev)=>{
       const t=ev.touches?ev.touches[0]:ev;
       if(Math.abs(t.clientX-sx)>12||Math.abs(t.clientY-sy)>12){ lpMoved=true; clearTimeout(lpTimer); }
@@ -4302,6 +3434,17 @@ $$("#sideNav .side-item").forEach(b=>b.onclick=()=>setView(b.dataset.v));
 $("#btnRefresh").onclick=loadOrders;
 $("#btnSettings").onclick=()=>{ setView("impostazioni"); };
 $("#btnNew").onclick=()=>openOrder(null);
+if(!window.__cf_paste_delegate){
+  window.__cf_paste_delegate=true;
+  document.addEventListener("click", function(ev){
+    const btn = ev.target && ev.target.closest && ev.target.closest("#btnPasteHere, #selPaste");
+    if(!btn) return;
+    ev.preventDefault();
+    ev.stopPropagation();
+    doPaste();
+  }, true);
+}
+
 $("#btnScan").onclick=openScan;
 $("#btnCloseScan").onclick=closeScan;
 $("#btnManual").onclick=manualEntry;
@@ -4324,6 +3467,7 @@ $("#noteBack").onclick=()=>{
 $("#btnLogout").onclick=()=>logout(false);
 let searchT;
 $("#searchInput").oninput=e=>{ clearTimeout(searchT); searchT=setTimeout(()=>{S.query=e.target.value.trim();renderCurrent();},180); };
+$$("#viewswitch button").forEach(b=>b.onclick=()=>setView(b.dataset.v));
 $("#lbClose").onclick=closeLightbox;
 $("#lightbox").onclick=e=>{ if(e.target.id==="lightbox") closeLightbox(); };
 document.addEventListener("click",e=>{
@@ -4521,11 +3665,8 @@ try{ ensureFolder2026(); }catch(_){}
 try{
   const last=localStorage.getItem("cf_last_folder");
   if(last && getFolder(last)) S.folderId=last;
-  else {
-    localStorage.removeItem("cf_last_folder");
-    S.folderId=null;
-  }
-}catch(_){ S.folderId=null; }
+  else if(last && !getFolder(last)) localStorage.removeItem("cf_last_folder");
+}catch(_){}
 
 
 /* ===================================================================
@@ -4561,11 +3702,6 @@ function handleAppBack(){
   if($("#sheet") && $("#sheet").classList.contains("open")){ closeSheet(); return true; }
   if($("#sidebar") && $("#sidebar").classList.contains("open")){ closeSidebar(); return true; }
   if(S.folderId){ goUpFolder(); return true; }
-  if(S.view==="prev" && S.pv && S.pv.home && S.pv.home!=="home"){
-    if(S.pv.home==="eseguiti" && S.pv.detailId){ S.pv.detailId=null; renderPrev(); return true; }
-    S.pv.home="home"; S.pv.detailId=null; renderPrev(); return true;
-  }
-  if(S.view==="design" && S.designId){ S.designId=null; renderDesign(); return true; }
   if(S.view && S.view !== "ordini"){ setView("ordini"); return true; }
   // già su landing ICE: non uscire
   goHomeICE();
@@ -4665,8 +3801,7 @@ registerSW(); updateInstallUI();
 setupBackButton();
 setupVoiceSearch();
 updateQueueLed();
-try{ try{ applyAppearance(); setLang(getLang()); }catch(_){}
-buildKeypad(); renderPin(); }catch(_){}
+try{ buildKeypad(); renderPin(); }catch(_){}
 // 5 tap sul logo → health
 const logoTap=()=>{ S.logoTaps=(S.logoTaps||0)+1; clearTimeout(S._logoT); S._logoT=setTimeout(()=>S.logoTaps=0,900); if(S.logoTaps>=5){ S.logoTaps=0; openHealth(); } };
 document.querySelectorAll(".topbar .logo, .side-head .logo").forEach(el=>el.addEventListener("click",logoTap));
@@ -4709,6 +3844,7 @@ setInterval(()=>{
   }
 }, 60000);
 
+try{applyAppearance();}catch(_){}
 if(S.pin && S.url){
   // sessione attiva: prova a entrare (verifica silenziosa)
   enterApp();
