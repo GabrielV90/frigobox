@@ -1,17 +1,14 @@
 {
-  "name": "Krio · Controllo Lavori",
-  "short_name": "Krio",
-  "description": "Gestione lavori e archivio foto delle celle frigo per camion.",
-  "lang": "it",
-  "start_url": ".",
-  "scope": ".",
+  "name": "KRIO",
+  "short_name": "KRIO",
+  "description": "KRIO FRIGOBOX",
+  "start_url": "./index.html",
   "display": "standalone",
-  "orientation": "portrait",
-  "background_color": "#12161C",
-  "theme_color": "#12161C",
+  "background_color": "#0B0E12",
+  "theme_color": "#0B0E12",
   "icons": [
-    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
-    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    {"src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
+    {"src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
   ]
 }
