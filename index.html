@@ -1323,8 +1323,56 @@ function persistFolders(){
   localStorage.setItem("cf_folders", JSON.stringify(S.folders));
   S.settings = S.settings || {};
   S.settings.folders = S.folders;
-  try{ persistSettings(); }catch(_){}
+  try{ localStorage.setItem("cf_settings", JSON.stringify(S.settings)); }catch(_){}
+  // Sync immediata cartelle → server (tutti gli utenti)
+  try{ syncFoldersToServer(); }catch(_){}
 }
+/** Pubblica l'albero cartelle su Apps Script (settings.folders). */
+function syncFoldersToServer(){
+  if(!S.url || !S.canEdit) return Promise.resolve();
+  S.settings = S.settings || {};
+  S.settings.folders = S.folders || [];
+  return Promise.resolve(api("setSettings",{settings:S.settings})).then(function(d){
+    if(d && d.settings){
+      S.settings = d.settings;
+      if(Array.isArray(d.settings.folders)) S.folders = d.settings.folders;
+      try{ localStorage.setItem("cf_settings", JSON.stringify(S.settings)); }catch(_){}
+      try{ localStorage.setItem("cf_folders", JSON.stringify(S.folders)); }catch(_){}
+    }
+  }).catch(function(e){
+    S.offlineQueue = S.offlineQueue || [];
+    S.offlineQueue.push({t:Date.now(), action:"setSettings", payload:{settings:Object.assign({}, S.settings, {folders:S.folders})}});
+    try{ persistQueue(); }catch(_){}
+    console.warn("syncFoldersToServer", e);
+  });
+}
+/** Salva ordine sul server con appFolderId esplicito (anche vuoto). */
+function syncOrderFolder(order){
+  if(!S.url || !S.canEdit || !order) return Promise.resolve();
+  const payload = Object.assign({}, order);
+  // chiave sempre presente così GAS non riusa il vecchio valore
+  payload.appFolderId = (order.appFolderId == null || order.appFolderId === "") ? "" : String(order.appFolderId);
+  payload.clientUpdatedAt = new Date().toISOString();
+  payload.updatedBy = S.operatorName || payload.updatedBy || "";
+  return Promise.resolve(api("save",{order:payload})).then(function(d){
+    if(d && d.order && order.id){
+      const i = S.orders.findIndex(x=>String(x.id)===String(order.id));
+      if(i>=0){
+        // mantieni appFolderId client; aggiorna campi server utili
+        const keep = S.orders[i].appFolderId;
+        Object.assign(S.orders[i], d.order);
+        S.orders[i].appFolderId = keep != null && keep !== "" ? keep : (d.order.appFolderId || null);
+      }
+      try{ localStorage.setItem("cf_cache", JSON.stringify(S.orders)); }catch(_){}
+    }
+  }).catch(function(e){
+    S.offlineQueue = S.offlineQueue || [];
+    S.offlineQueue.push({t:Date.now(), action:"save", payload:{order:payload}});
+    try{ persistQueue(); }catch(_){}
+    console.warn("syncOrderFolder", e);
+  });
+}
+
 function ensureFoldersFromSettings(){
   if(S.settings && Array.isArray(S.settings.folders) && S.settings.folders.length){
     S.folders = S.settings.folders;
@@ -1375,16 +1423,18 @@ function ensureFolder2026(){
     S.folders.push(f2026);
     persistFolders();
   }
-  const valid = new Set(S.folders.map(f=>String(f.id)));
+  // NON riassegnare ordini con appFolderId "sconosciuto":
+  // potrebbe mancare solo il tree cartelle (settings non ancora sync).
+  // Solo ordini SENZA cartella → 2026.
   let moved=0;
   S.orders.forEach(o=>{
     const fid = o.appFolderId;
-    if(fid==null || fid==="" || !valid.has(String(fid))){
+    if(fid==null || fid===""){
       o.appFolderId = f2026.id;
       moved++;
     }
   });
-  // folderId corrente invalido → radice
+  const valid = new Set(S.folders.map(f=>String(f.id)));
   if(S.folderId && !valid.has(String(S.folderId))){
     S.folderId = null;
     try{ rememberFolder(); }catch(_){}
@@ -1616,6 +1666,7 @@ function enterApp(){
   updateBell();
   if(!S._notifTimer) S._notifTimer=setInterval(checkDeadlines, 30*60*1000);
   try{ reconcileOrders(); }catch(_){}
+  try{ pushWidgetStats(); }catch(_){}
   render(); // show cache instantly
   loadOrders();
 }
@@ -1636,6 +1687,57 @@ function logout(silent){
 /* ===================================================================
    DATA
    =================================================================== */
+
+/** Invia stats consegne del mese al widget Android (se bridge presente). */
+function pushWidgetStats(){
+  try{
+    if(typeof KrioAndroid === "undefined" || !KrioAndroid || typeof KrioAndroid.updateWidgetStats !== "function") return;
+    const now = new Date();
+    const y = now.getFullYear(), m = now.getMonth();
+    const inMonth = (iso)=>{
+      if(!iso) return false;
+      const d = new Date(iso);
+      if(isNaN(d.getTime())){
+        // prova YYYY-MM-DD
+        const p = String(iso).slice(0,10).split("-");
+        if(p.length===3){
+          const dd = new Date(+p[0], +p[1]-1, +p[2]);
+          return dd.getFullYear()===y && dd.getMonth()===m;
+        }
+        return false;
+      }
+      return d.getFullYear()===y && d.getMonth()===m;
+    };
+    let consegnati=0, inCorso=0, pronti=0;
+    (S.orders||[]).forEach(o=>{
+      const st = o.stato||"";
+      // data di riferimento consegna / attività
+      const ref = o.readyAt || o.clientUpdatedAt || o.scadenza || o.dataOrdine || "";
+      if(st==="cons" && inMonth(ref)) consegnati++;
+      else if(st==="cons" && !ref){
+        // senza data: conta comunque se aggiornato nel mese via clientUpdatedAt already checked
+      }
+      if(st==="lav" && (inMonth(o.scadenza)||inMonth(o.dataOrdine)||inMonth(o.clientUpdatedAt)||!o.scadenza)) inCorso++;
+      if(st==="pronto" && (inMonth(o.scadenza)||inMonth(o.dataOrdine)||inMonth(o.clientUpdatedAt)||!o.scadenza)) pronti++;
+    });
+    // Fallback più inclusivo: in corso / pronti globali aperti (non solo mese)
+    if(inCorso===0 && pronti===0){
+      (S.orders||[]).forEach(o=>{
+        if(o.stato==="lav") inCorso++;
+        if(o.stato==="pronto") pronti++;
+      });
+    }
+    const mesi=["Gen","Feb","Mar","Apr","Mag","Giu","Lug","Ago","Set","Ott","Nov","Dic"];
+    const mese = mesi[m]+" "+y;
+    KrioAndroid.updateWidgetStats(JSON.stringify({
+      consegnati: consegnati,
+      inCorso: inCorso,
+      pronti: pronti,
+      mese: mese
+    }));
+  }catch(e){ console.warn("pushWidgetStats", e); }
+}
+
 async function loadOrders(){
   try{
     const d=await api("list");
@@ -1644,6 +1746,7 @@ async function loadOrders(){
     localStorage.setItem("cf_cache",JSON.stringify(S.orders));
     reconcileOrders();
     renderCurrent();
+    try{ pushWidgetStats(); }catch(_){}
     checkDeadlines();
   }catch(e){ toast(e.message,"err"); reconcileOrders(); renderCurrent(); }
 }
@@ -3951,45 +4054,56 @@ function pasteSelectionLocal(){
   if(!S.canEdit){ toast(t("readonly"),"err"); return; }
   const mode = S.clipboard.mode || "copy";
   const target = S.folderId || null;
-  const toSync=[]; let done=0;
+  const toSync=[]; let done=0; let foldersChanged=false;
   for(const it of items){
     if(!it) continue;
     if(it.type==="order" || (!it.type && it.data)){
       const data=it.data||it;
       if(mode==="cut"){
         const o=S.orders.find(x=>String(x.id)===String(data.id));
-        if(o){ o.appFolderId=target; o.clientUpdatedAt=new Date().toISOString(); toSync.push(Object.assign({},o)); done++; }
+        if(o){
+          o.appFolderId = target;
+          o.clientUpdatedAt = new Date().toISOString();
+          toSync.push(Object.assign({}, o));
+          done++;
+        }
       } else {
         let copy; try{copy=structuredClone(data);}catch(_){copy=JSON.parse(JSON.stringify(data));}
         copy.id=uid();
-        // Mantieni il codice originale senza suffisso
         copy.codice = (data.codice != null ? data.codice : "");
-        copy.appFolderId=target; copy.actual={}; copy.readyAt=""; copy.stato="bozza"; copy.mediaCount=0;
+        copy.appFolderId = target;
+        copy.actual={}; copy.readyAt=""; copy.stato="bozza"; copy.mediaCount=0;
         copy.clientUpdatedAt=new Date().toISOString(); delete copy._new;
-        S.orders.unshift(copy); toSync.push(Object.assign({},copy)); done++;
+        S.orders.unshift(copy);
+        toSync.push(Object.assign({}, copy));
+        done++;
       }
     } else if(it.type==="folder"){
       const data=it.data||{};
       if(mode==="cut"){
         if(String(data.id)===String(target)||isDescendantFolder(target,data.id)) continue;
-        const f=getFolder(data.id); if(f){ f.parentId=target; done++; }
+        const f=getFolder(data.id); if(f){ f.parentId=target; foldersChanged=true; done++; }
       } else {
-        S.folders.push({id:fuid(), name:(data.name||"Cartella"), parentId:target}); done++;
+        S.folders.push({id:fuid(), name:(data.name||"Cartella"), parentId:target});
+        foldersChanged=true; done++;
       }
     }
   }
   if(!done){ toast(t("clip_empty"),"err"); return; }
-  persistFolders(); localStorage.setItem("cf_cache",JSON.stringify(S.orders));
+  try{ localStorage.setItem("cf_cache",JSON.stringify(S.orders)); }catch(_){}
+  // Tree cartelle → server (tutti gli utenti)
+  if(foldersChanged || true){
+    S.settings = S.settings || {};
+    S.settings.folders = S.folders;
+    try{ persistFolders(); }catch(_){}
+  }
   S.clipboard=null; clearSelection();
   if(S.filter&&S.filter!=="all") S.filter="all";
-  toast(t("pasted",{n:done}),"ok"); render();
-  toSync.forEach(order=>{
-    if(!S.url) return;
-    Promise.resolve(api("save",{order})).catch(()=>{
-      S.offlineQueue=S.offlineQueue||[];
-      S.offlineQueue.push({t:Date.now(),action:"save",payload:{order}});
-      try{persistQueue();}catch(_){}
-    });
+  toast(t("pasted",{n:done}),"ok");
+  render();
+  // Ordini spostati/copiati → save con appFolderId esplicito
+  toSync.forEach(function(order){
+    syncOrderFolder(order);
   });
 }
 async function pasteSelection(){ pasteSelectionLocal(); }
@@ -4132,27 +4246,37 @@ function pasteInto(targetFolderId){
   if(!S.clipboard){ toast("Appunti vuoti","err"); return; }
   if(!S.canEdit){ toast("Sola lettura","err"); return; }
   const clip=S.clipboard;
+  // Multi-item clipboard → stesso path di pasteSelectionLocal
+  if(clip.items && clip.items.length){
+    S.folderId = targetFolderId || null;
+    pasteSelectionLocal();
+    return;
+  }
   if(clip.type==="order"){
     if(clip.mode==="cut"){
-      const o=S.orders.find(x=>x.id===clip.data.id);
-      if(o){ o.appFolderId=targetFolderId||null; localStorage.setItem("cf_cache",JSON.stringify(S.orders));
-        api("save",{order:Object.assign({},o)}).catch(e=>toast(e.message,"err"));
+      const o=S.orders.find(x=>String(x.id)===String(clip.data.id));
+      if(o){
+        o.appFolderId = targetFolderId || null;
+        o.clientUpdatedAt = new Date().toISOString();
+        try{ localStorage.setItem("cf_cache",JSON.stringify(S.orders)); }catch(_){}
+        syncOrderFolder(o);
       }
       S.clipboard=null; toast("Ordine spostato","ok");
     } else {
       const src=clip.data;
-      const copy=structuredClone(src);
+      let copy; try{ copy=structuredClone(src); }catch(_){ copy=JSON.parse(JSON.stringify(src)); }
       copy.id=uid(); copy.codice=src.codice||""; copy._new=false;
       copy.appFolderId=targetFolderId||null; copy.actual={}; copy.readyAt=""; copy.stato="bozza"; copy.mediaCount=0;
+      copy.clientUpdatedAt=new Date().toISOString();
       S.orders.unshift(copy);
-      localStorage.setItem("cf_cache",JSON.stringify(S.orders));
-      api("save",{order:copy}).then(function(){toast("Ordine copiato","ok");}).catch(function(e){toast(e.message,"err");});
-      S.clipboard=null;
+      try{ localStorage.setItem("cf_cache",JSON.stringify(S.orders)); }catch(_){}
+      syncOrderFolder(copy);
+      S.clipboard=null; toast("Ordine copiato","ok");
     }
     render();
   } else if(clip.type==="folder"){
     if(clip.mode==="cut"){
-      if(clip.data.id===targetFolderId || isDescendantFolder(targetFolderId, clip.data.id)){
+      if(String(clip.data.id)===String(targetFolderId) || isDescendantFolder(targetFolderId, clip.data.id)){
         toast("Non puoi spostare una cartella dentro se stessa","err"); return;
       }
       const f=getFolder(clip.data.id);
@@ -4171,228 +4295,108 @@ function pasteInto(targetFolderId){
     }
   }
 }
-document.addEventListener("click",function(e){ if(!e.target.closest("#ctxMenu")) closeCtxMenu(); });
-document.addEventListener("scroll",closeCtxMenu,true);
 
-/* ===================================================================
-   WIRING
-   =================================================================== */
-$("#btnMenu").onclick=openSidebar;
-$("#sideScrim").onclick=closeSidebar;
-$$("#sideNav .side-item").forEach(b=>b.onclick=()=>setView(b.dataset.v));
-$("#btnRefresh").onclick=loadOrders;
-$("#btnSettings").onclick=()=>{ setView("impostazioni"); };
-$("#btnNew").onclick=()=>openOrder(null);
-$("#btnScan").onclick=openScan;
-$("#btnCloseScan").onclick=closeScan;
-$("#btnManual").onclick=manualEntry;
-$("#btnCloseSheet").onclick=closeSheet;
-$("#sheetScrim").onclick=closeSheet;
-$("#btnSave").onclick=saveOrder;
-$("#btnDelete").onclick=deleteOrder;
-$("#btnDupe").onclick=dupeOrder;
-$("#btnSaveSettings").onclick=saveSettings;
-$("#btnBell").onclick=toggleNotif;
-$("#btnExport").onclick=exportOrder;
-$("#btnInstall").onclick=doInstall;
-$("#noteOk").onclick=closeNoteReminder;
-$("#noteScrim").onclick=e=>{ if(e.target.id==="noteScrim") closeNoteReminder(); };
-$("#noteBack").onclick=()=>{
-  const sel=$("#f_stato"), prev=S._noteRevert||"lav";
-  if(sel){ sel.value=prev; S._prevStato=prev; applyStatoUI(prev); }
-  closeNoteReminder();
-};
-$("#btnLogout").onclick=()=>logout(false);
-let searchT;
-$("#searchInput").oninput=e=>{ clearTimeout(searchT); searchT=setTimeout(()=>{S.query=e.target.value.trim();renderCurrent();},180); };
-$("#lbClose").onclick=closeLightbox;
-$("#lightbox").onclick=e=>{ if(e.target.id==="lightbox") closeLightbox(); };
-document.addEventListener("click",e=>{
-  if(e.target.closest(".rm")) return;
-  const cell=e.target.closest(".media-cell[data-mid]");
-  if(cell) openMedia(cell.dataset.mid, cell.dataset.kind, cell.dataset.name, cell.dataset.url, cell.dataset.preview);
-});
-document.addEventListener("keydown",e=>{ if(e.key==="Escape"){ if($("#lightbox").classList.contains("open"))closeLightbox(); else if($("#scanModal").classList.contains("open"))closeScan(); else if($("#sheet").classList.contains("open"))closeSheet(); else if($("#settingsScrim").classList.contains("open"))closeSettings(); else if($("#sidebar").classList.contains("open"))closeSidebar(); else closeCtxMenu(); } });
-
-/* ===================================================================
-   COMPRESSIONE FOTO — ridimensiona lato client prima dell'upload
-   =================================================================== */
-
-/**
- * Comprime video sul dispositivo (canvas + MediaRecorder).
- * Target: max 1280px, ~1.2 Mbps, per restare sotto il limite Apps Script.
- * Se già piccolo o non supportato, restituisce il file originale.
- */
+/* ---- compressione media + note vocali ---- */
 async function compressVideo(file, onProgress){
   const mime = guessMime(file);
   if(!mime.startsWith("video/")) return file;
-  const SKIP_UNDER = 16 * 1024 * 1024; // già ok
+  const SKIP_UNDER = 16 * 1024 * 1024;
   if(file.size <= SKIP_UNDER) return file;
-  if(typeof MediaRecorder === "undefined"){
-    console.warn("MediaRecorder non disponibile");
-    return file;
-  }
+  if(typeof MediaRecorder === "undefined") return file;
 
   let outMime = "";
-  const candidates = [
-    "video/webm;codecs=vp8,opus",
-    "video/webm;codecs=vp9,opus",
-    "video/webm",
-    "video/mp4"
-  ];
+  const candidates = ["video/webm;codecs=vp8,opus","video/webm;codecs=vp9,opus","video/webm","video/mp4"];
   for(const c of candidates){
-    try{
-      if(MediaRecorder.isTypeSupported(c)){ outMime = c; break; }
-    }catch(_){}
+    try{ if(MediaRecorder.isTypeSupported(c)){ outMime=c; break; } }catch(_){}
   }
   if(!outMime) return file;
 
   const url = URL.createObjectURL(file);
   const video = document.createElement("video");
-  video.muted = true;
-  video.playsInline = true;
-  video.setAttribute("playsinline", "");
-  video.preload = "auto";
-  video.src = url;
+  video.muted = true; video.playsInline = true; video.setAttribute("playsinline","");
+  video.preload = "auto"; video.src = url;
 
   try{
     await new Promise(function(resolve, reject){
-      const t = setTimeout(function(){ reject(new Error("Timeout lettura video")); }, 45000);
-      video.onloadedmetadata = function(){ clearTimeout(t); resolve(); };
-      video.onerror = function(){ clearTimeout(t); reject(new Error("Video non leggibile")); };
+      const t=setTimeout(function(){ reject(new Error("Timeout lettura video")); }, 45000);
+      video.onloadedmetadata=function(){ clearTimeout(t); resolve(); };
+      video.onerror=function(){ clearTimeout(t); reject(new Error("Video non leggibile")); };
     });
-
     const duration = video.duration;
-    if(!isFinite(duration) || duration <= 0 || duration > 600){
-      // oltre 10 min: non comprimere qui
-      return file;
-    }
+    if(!isFinite(duration) || duration<=0 || duration>600) return file;
 
-    const maxW = 1280, maxH = 720;
-    let vw = video.videoWidth || 1280, vh = video.videoHeight || 720;
-    const scale = Math.min(1, maxW / vw, maxH / vh);
-    let cw = Math.round(vw * scale);
-    let ch = Math.round(vh * scale);
-    // dimensioni pari (encoder)
-    cw = Math.max(2, cw - (cw % 2));
-    ch = Math.max(2, ch - (ch % 2));
+    const maxW=1280, maxH=720;
+    let vw=video.videoWidth||1280, vh=video.videoHeight||720;
+    const scale=Math.min(1, maxW/vw, maxH/vh);
+    let cw=Math.max(2, Math.round(vw*scale)-(Math.round(vw*scale)%2));
+    let ch=Math.max(2, Math.round(vh*scale)-(Math.round(vh*scale)%2));
 
-    const canvas = document.createElement("canvas");
-    canvas.width = cw;
-    canvas.height = ch;
-    const ctx = canvas.getContext("2d", { alpha: false });
-    const fps = 24;
+    const canvas=document.createElement("canvas");
+    canvas.width=cw; canvas.height=ch;
+    const ctx=canvas.getContext("2d",{alpha:false});
     let canvasStream;
-    try{
-      canvasStream = canvas.captureStream(fps);
-    }catch(e){
-      console.warn("captureStream fail", e);
-      return file;
-    }
+    try{ canvasStream=canvas.captureStream(24); }catch(e){ return file; }
 
-    // audio dal video se possibile
-    let stream = canvasStream;
+    let stream=canvasStream;
     try{
-      if(typeof video.captureStream === "function"){
-        const vs = video.captureStream();
-        const audioTracks = vs.getAudioTracks();
-        if(audioTracks && audioTracks.length){
-          stream = new MediaStream([
-            canvasStream.getVideoTracks()[0],
-            audioTracks[0]
-          ]);
+      if(typeof video.captureStream==="function"){
+        const vs=video.captureStream();
+        const audioTracks=vs.getAudioTracks();
+        if(audioTracks&&audioTracks.length){
+          stream=new MediaStream([canvasStream.getVideoTracks()[0], audioTracks[0]]);
         }
       }
     }catch(_){}
 
-    const chunks = [];
+    const chunks=[];
     let recorder;
-    try{
-      recorder = new MediaRecorder(stream, {
-        mimeType: outMime,
-        videoBitsPerSecond: 1200000,
-        audioBitsPerSecond: 96000
-      });
-    }catch(_){
-      try{
-        recorder = new MediaRecorder(stream, { mimeType: outMime });
-      }catch(e2){
-        return file;
-      }
+    try{ recorder=new MediaRecorder(stream,{mimeType:outMime,videoBitsPerSecond:1200000,audioBitsPerSecond:96000}); }
+    catch(_){
+      try{ recorder=new MediaRecorder(stream,{mimeType:outMime}); }catch(e2){ return file; }
     }
-
-    recorder.ondataavailable = function(ev){
-      if(ev.data && ev.data.size) chunks.push(ev.data);
-    };
-
-    const stopped = new Promise(function(resolve, reject){
-      recorder.onstop = function(){ resolve(); };
-      recorder.onerror = function(ev){ reject((ev && ev.error) || new Error("MediaRecorder error")); };
+    recorder.ondataavailable=function(ev){ if(ev.data&&ev.data.size) chunks.push(ev.data); };
+    const stopped=new Promise(function(resolve,reject){
+      recorder.onstop=function(){ resolve(); };
+      recorder.onerror=function(ev){ reject((ev&&ev.error)||new Error("MediaRecorder error")); };
     });
 
-    video.currentTime = 0;
+    video.currentTime=0;
     await new Promise(function(resolve){
-      if(video.readyState >= 2) resolve();
-      else video.onloadeddata = function(){ resolve(); };
+      if(video.readyState>=2) resolve(); else video.onloadeddata=function(){ resolve(); };
     });
-
-    try{
-      await video.play();
-    }catch(playErr){
-      // autoplay policies: riprova muted
-      video.muted = true;
-      await video.play();
-    }
-
+    try{ await video.play(); }catch(_){ video.muted=true; await video.play(); }
     recorder.start(250);
 
-    await new Promise(function(resolve, reject){
-      let lastT = -1;
+    await new Promise(function(resolve,reject){
+      let lastT=-1;
       function tick(){
-        if(video.ended || video.paused && video.currentTime > 0 && video.currentTime >= duration - 0.15){
-          resolve();
-          return;
-        }
-        try{
-          ctx.drawImage(video, 0, 0, cw, ch);
-        }catch(_){}
-        if(typeof onProgress === "function" && duration){
-          const p = Math.min(1, video.currentTime / duration);
-          if(p - lastT > 0.02){ lastT = p; try{ onProgress(p); }catch(_){} }
+        if(video.ended || (video.paused && video.currentTime>0 && video.currentTime>=duration-0.15)){ resolve(); return; }
+        try{ ctx.drawImage(video,0,0,cw,ch); }catch(_){}
+        if(typeof onProgress==="function" && duration){
+          const p=Math.min(1, video.currentTime/duration);
+          if(p-lastT>0.02){ lastT=p; try{ onProgress(p); }catch(_){} }
         }
         if(video.ended){ resolve(); return; }
         requestAnimationFrame(tick);
       }
-      video.onended = function(){ resolve(); };
-      video.onerror = function(){ reject(new Error("Errore riproduzione")); };
+      video.onended=function(){ resolve(); };
+      video.onerror=function(){ reject(new Error("Errore riproduzione")); };
       requestAnimationFrame(tick);
-      // safety timeout: duration + 15s
-      setTimeout(function(){ resolve(); }, Math.ceil(duration * 1000) + 15000);
+      setTimeout(function(){ resolve(); }, Math.ceil(duration*1000)+15000);
     });
 
     try{ video.pause(); }catch(_){}
-    if(recorder.state !== "inactive"){
-      try{ recorder.stop(); }catch(_){}
-    }
+    if(recorder.state!=="inactive"){ try{ recorder.stop(); }catch(_){} }
     await stopped;
+    try{ stream.getTracks().forEach(function(tr){ tr.stop(); }); }catch(_){}
 
-    // stop tracks
-    try{
-      stream.getTracks().forEach(function(tr){ tr.stop(); });
-    }catch(_){}
-
-    const blobType = (outMime.split(";")[0]) || "video/webm";
-    const blob = new Blob(chunks, { type: blobType });
-    if(!blob || blob.size < 2000) return file;
-
-    // se non abbiamo risparmiato quasi nulla, tieni originale
-    if(blob.size >= file.size * 0.92) return file;
-
-    const ext = blobType.indexOf("mp4") >= 0 ? "mp4" : "webm";
-    const base = (file.name || "video").replace(/\.[^.]+$/, "");
-    const out = new File([blob], base + "." + ext, { type: blobType, lastModified: Date.now() });
-    console.log("Video compresso:", fmtBytes(file.size), "→", fmtBytes(out.size));
-    return out;
+    const blobType=(outMime.split(";")[0])||"video/webm";
+    const blob=new Blob(chunks,{type:blobType});
+    if(!blob||blob.size<2000) return file;
+    if(blob.size>=file.size*0.92) return file;
+    const ext=blobType.indexOf("mp4")>=0?"mp4":"webm";
+    const base=(file.name||"video").replace(/\.[^.]+$/,"");
+    return new File([blob], base+"."+ext, {type:blobType, lastModified:Date.now()});
   }catch(err){
     console.warn("compressVideo error", err);
     return file;
@@ -4418,9 +4422,6 @@ async function compressImage(file, maxDim=1600, quality=0.82){
   }catch(_){ return file; }
 }
 
-/* ===================================================================
-   NOTE VOCALI — registra e carica su Drive
-   =================================================================== */
 let mediaRecorder=null, audioChunks=[], recTimer=null, recStart=0;
 async function toggleVoice(){
   if(!S.canEdit){ toast("Sola lettura","err"); return; }
@@ -4446,6 +4447,7 @@ async function toggleVoice(){
     recTimer=setInterval(()=>updateVoiceUI(true),500);
   }catch(e){ toast("Microfono non disponibile","err"); }
 }
+
 function stopVoice(){
   if(mediaRecorder && mediaRecorder.state==="recording") mediaRecorder.stop();
   clearInterval(recTimer); updateVoiceUI(false);

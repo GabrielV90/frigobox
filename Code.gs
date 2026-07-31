@@ -177,12 +177,16 @@ function saveOrder(o){
   var known = existing ? existing.folderId : '';
   var driveFolderId = ensureOrderFolder(o.codice || o.id, o.id, o.cliente, known).getId();
   // cartella organizzativa app (NON confondere con Drive)
-  // accetta sia appFolderId sia folderId dal client se non è un id Drive
+  // Se il client invia esplicitamente appFolderId (anche stringa vuota), RISPETTALO:
+  // così cut/paste e spostamenti restano allineati per tutti gli utenti.
   var appFolderId = '';
-  if(o.appFolderId != null && o.appFolderId !== '') appFolderId = String(o.appFolderId);
-  else if(o.folderId != null && o.folderId !== '' && String(o.folderId).charAt(0) === 'F')
-    appFolderId = String(o.folderId); // id cartelle app generati dal frontend (prefisso F)
-  else if(existing && existing.appFolderId) appFolderId = String(existing.appFolderId);
+  if(o && Object.prototype.hasOwnProperty.call(o, 'appFolderId')){
+    appFolderId = (o.appFolderId != null && o.appFolderId !== '') ? String(o.appFolderId) : '';
+  } else if(o.folderId != null && o.folderId !== '' && String(o.folderId).charAt(0) === 'F'){
+    appFolderId = String(o.folderId);
+  } else if(existing && existing.appFolderId){
+    appFolderId = String(existing.appFolderId);
+  }
   var row = HEADERS.map(function(h){
     if(h==='optional')     return JSON.stringify(o.optional||[]);
     if(h==='budgetOre')    return JSON.stringify(o.budget||{});
