@@ -917,6 +917,476 @@ body.select-mode .orow .sel-check,body.select-mode .folder-row .sel-check{displa
 body[data-theme="midnight"]{--bg:#06080C;--surface:#121820;--surface-2:#182028;--line:#243040;--frost:#4EC8E8}
 body[data-theme="slate"]{--bg:#14181E;--surface:#1E252E;--frost:#5B9FD4}
 body[data-theme="contrast"]{--bg:#000;--surface:#111;--text:#FFF;--muted:#CCC;--frost:#5CF}
+
+/* ======= TEMA ICE / GLACIALE =======
+   Polar night + ghiaccio: ispirato a UI artiche, brand “cold tech”,
+   palette nordiche (ciano ghiaccio, neve blu, profondità oceanica).
+   ======= */
+body[data-theme="ice"]{
+  --bg:#07141C;
+  --bg-deep:#040E14;
+  --surface:#0E2430;
+  --surface-2:#153545;
+  --line:#2A5568;
+  --line-strong:#3D7A92;
+  --text:#EAF6FB;
+  --muted:#8FB8C9;
+  --muted-2:#5C8799;
+  --frost:#7EE7FF;
+  --frost-dim:#1F6B7E;
+  --frost-glow:rgba(126,231,255,.20);
+  --amber:#E8C07A;
+  --green:#5ED9A0;
+  --red:#FF7A68;
+  --shadow:0 12px 36px rgba(2,18,28,.55);
+}
+/* atmosfera polare: alone freddo dall'alto + leggera aurora */
+body[data-theme="ice"]{
+  background:
+    radial-gradient(120% 70% at 50% -15%, rgba(126,231,255,.14) 0%, transparent 55%),
+    radial-gradient(90% 50% at 100% 100%, rgba(60,140,180,.10) 0%, transparent 45%),
+    var(--bg) !important;
+}
+body[data-theme="ice"] #login{
+  background:
+    radial-gradient(100% 80% at 50% -20%, #1A3A4A 0%, var(--bg-deep) 55%) !important;
+}
+body[data-theme="ice"] .topbar,
+body[data-theme="ice"] .sidebar,
+body[data-theme="ice"] .sheet{
+  background:rgba(14,36,48,.92);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  border-color:rgba(126,231,255,.12);
+}
+body[data-theme="ice"] .orow,
+body[data-theme="ice"] .folder-row,
+body[data-theme="ice"] .chip,
+body[data-theme="ice"] .keypad-panel,
+body[data-theme="ice"] .sum-item{
+  background:linear-gradient(180deg, rgba(30,70,88,.55), rgba(14,36,48,.9));
+  border-color:rgba(126,231,255,.16);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
+}
+body[data-theme="ice"] .chip.active,
+body[data-theme="ice"] .orow.selected,
+body[data-theme="ice"] .folder-row.selected{
+  border-color:var(--frost);
+  box-shadow:0 0 0 3px var(--frost-glow), inset 0 1px 0 rgba(255,255,255,.06);
+}
+body[data-theme="ice"] .fab,
+body[data-theme="ice"] .btn-primary,
+body[data-theme="ice"] .pin-dot.on{
+  background:linear-gradient(145deg, #A8F0FF, #3DB8D9);
+  color:#042028;
+  box-shadow:0 0 20px rgba(126,231,255,.35);
+}
+body[data-theme="ice"] .topbar .logo,
+body[data-theme="ice"] .side-head .logo,
+body[data-theme="ice"] .keypad-head .logo{
+  background:linear-gradient(145deg, #B8F4FF, #2A9BB8);
+  box-shadow:0 0 0 1px rgba(126,231,255,.45), 0 0 16px rgba(126,231,255,.25);
+}
+body[data-theme="ice"] .search:focus-within{
+  border-color:var(--frost);
+  box-shadow:0 0 0 3px var(--frost-glow);
+}
+body[data-theme="ice"] .krio-export-bar,
+body[data-theme="ice"] .val-land-btn.primary{
+  border-color:rgba(126,231,255,.25);
+  background:linear-gradient(135deg, rgba(126,231,255,.12), transparent);
+}
+/* swatch preview in settings */
+.appear-swatch[data-theme="ice"]{
+  background:linear-gradient(135deg, #0E2430 40%, #7EE7FF 140%);
+  color:#EAF6FB;
+  border-color:rgba(126,231,255,.35);
+}
+/* ======= TEMA BIANCO GLACIALE (minimal) =======
+   Neve, carta fredda, aria: poco colore, molto spazio,
+   bordi sottili, accento ghiaccio unico.
+   ======= */
+body[data-theme="ice-white"]{
+  --bg:#F4F8FB;
+  --bg-deep:#E8EEF3;
+  --surface:#FFFFFF;
+  --surface-2:#F0F5F8;
+  --line:#D5E0E8;
+  --line-strong:#B8C9D4;
+  --text:#1A2B36;
+  --muted:#5A7383;
+  --muted-2:#8A9EAB;
+  --frost:#2BA8C4;
+  --frost-dim:#B8E4EF;
+  --frost-glow:rgba(43,168,196,.14);
+  --amber:#C4892A;
+  --green:#2F9B5F;
+  --red:#D94A38;
+  --shadow:0 8px 28px rgba(26,50,64,.08);
+}
+body[data-theme="ice-white"]{
+  background:
+    radial-gradient(100% 60% at 50% -10%, rgba(180,230,245,.45) 0%, transparent 50%),
+    var(--bg) !important;
+  color:var(--text);
+}
+body[data-theme="ice-white"] #login{
+  background:
+    radial-gradient(100% 80% at 50% -15%, #E4F4F9 0%, var(--bg-deep) 60%) !important;
+}
+body[data-theme="ice-white"] .topbar,
+body[data-theme="ice-white"] .sidebar,
+body[data-theme="ice-white"] .sheet{
+  background:rgba(255,255,255,.92);
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+  border-color:var(--line);
+}
+body[data-theme="ice-white"] .side-item.active{
+  background:var(--surface-2);
+  color:var(--text);
+}
+body[data-theme="ice-white"] .orow,
+body[data-theme="ice-white"] .folder-row,
+body[data-theme="ice-white"] .chip,
+body[data-theme="ice-white"] .keypad-panel,
+body[data-theme="ice-white"] .sum-item,
+body[data-theme="ice-white"] .settings-block{
+  background:var(--surface);
+  border-color:var(--line);
+  box-shadow:0 1px 0 rgba(255,255,255,.8);
+}
+body[data-theme="ice-white"] .orow:active,
+body[data-theme="ice-white"] .folder-row:active{
+  background:var(--surface-2);
+}
+body[data-theme="ice-white"] .chip.active,
+body[data-theme="ice-white"] .orow.selected,
+body[data-theme="ice-white"] .folder-row.selected{
+  border-color:var(--frost);
+  background:#F2FBFD;
+  box-shadow:0 0 0 3px var(--frost-glow);
+}
+body[data-theme="ice-white"] .fab,
+body[data-theme="ice-white"] .btn-primary{
+  background:var(--frost);
+  color:#fff;
+  box-shadow:0 4px 16px rgba(43,168,196,.28);
+}
+body[data-theme="ice-white"] .topbar .logo,
+body[data-theme="ice-white"] .side-head .logo,
+body[data-theme="ice-white"] .keypad-head .logo{
+  background:linear-gradient(145deg, #7EE7FF, #2BA8C4);
+  color:#fff;
+  box-shadow:none;
+}
+body[data-theme="ice-white"] .topbar h1 span,
+body[data-theme="ice-white"] .side-head h2 span{
+  color:var(--frost);
+}
+body[data-theme="ice-white"] .search{
+  background:var(--surface);
+  border-color:var(--line);
+}
+body[data-theme="ice-white"] .search:focus-within{
+  border-color:var(--frost);
+  box-shadow:0 0 0 3px var(--frost-glow);
+}
+body[data-theme="ice-white"] .key{
+  background:var(--surface);
+  color:var(--text);
+}
+body[data-theme="ice-white"] .key:active{
+  background:var(--surface-2);
+}
+body[data-theme="ice-white"] .pin-dot{
+  background:var(--line-strong);
+}
+body[data-theme="ice-white"] .pin-dot.on{
+  background:var(--frost);
+  box-shadow:0 0 0 4px var(--frost-glow);
+}
+body[data-theme="ice-white"] .icon-btn{
+  color:var(--muted);
+  border-color:var(--line);
+}
+body[data-theme="ice-white"] .icon-btn:active{
+  background:var(--surface-2);
+}
+body[data-theme="ice-white"] .sync-led,
+body[data-theme="ice-white"] .fmeta,
+body[data-theme="ice-white"] .orow-sub{
+  color:var(--muted);
+}
+body[data-theme="ice-white"] .barcode{
+  opacity:.25;
+}
+body[data-theme="ice-white"] ::selection{
+  background:var(--frost);
+  color:#fff;
+}
+.appear-swatch[data-theme="ice-white"]{
+  background:linear-gradient(135deg, #FFFFFF 35%, #B8E4EF 100%);
+  color:#1A2B36;
+  border-color:#D5E0E8;
+}
+
+/* =====================================================================
+   MATERIAL ICE — allineato a Material You (M3)
+   Seed color: ghiaccio #006A77 → schema dark HCT-like
+   Ruoli M3 mappati sulle variabili KRIO esistenti.
+   ===================================================================== */
+body[data-theme="material-ice"]{
+  /* —— Reference / System roles (Material You) —— */
+  --md-primary:#4FD8EC;
+  --md-on-primary:#00363D;
+  --md-primary-container:#004F58;
+  --md-on-primary-container:#97F0FF;
+  --md-secondary:#B1CBD2;
+  --md-on-secondary:#1C3439;
+  --md-secondary-container:#334B50;
+  --md-on-secondary-container:#CDE7EE;
+  --md-tertiary:#B6C4FF;
+  --md-on-tertiary:#1E2D61;
+  --md-tertiary-container:#354479;
+  --md-on-tertiary-container:#DCE1FF;
+  --md-error:#FFB4AB;
+  --md-on-error:#690005;
+  --md-error-container:#93000A;
+  --md-on-error-container:#FFDAD6;
+  --md-surface:#0B1214;
+  --md-surface-dim:#0B1214;
+  --md-surface-bright:#31383A;
+  --md-surface-container-lowest:#060D0F;
+  --md-surface-container-low:#131A1C;
+  --md-surface-container:#171E20;
+  --md-surface-container-high:#22292B;
+  --md-surface-container-highest:#2C3436;
+  --md-on-surface:#E1E3E4;
+  --md-on-surface-variant:#BAC9CC;
+  --md-outline:#849397;
+  --md-outline-variant:#3A494C;
+  --md-inverse-surface:#E1E3E4;
+  --md-inverse-on-surface:#2E3133;
+  --md-inverse-primary:#006A77;
+  --md-scrim:rgba(0,0,0,.42);
+  --md-shadow:rgba(0,0,0,.28);
+
+  /* —— Bridge → token KRIO (componenti esistenti) —— */
+  --bg:var(--md-surface);
+  --bg-deep:var(--md-surface-container-lowest);
+  --surface:var(--md-surface-container);
+  --surface-2:var(--md-surface-container-high);
+  --line:var(--md-outline-variant);
+  --line-strong:var(--md-outline);
+  --text:var(--md-on-surface);
+  --muted:var(--md-on-surface-variant);
+  --muted-2:var(--md-outline);
+  --frost:var(--md-primary);
+  --frost-dim:var(--md-primary-container);
+  --frost-glow:rgba(79,216,236,.18);
+  --amber:#E8C07A;
+  --green:#7DDA9A;
+  --red:var(--md-error);
+  --shadow:0 1px 2px var(--md-shadow), 0 8px 24px var(--md-shadow);
+  /* Shape M3 */
+  --r:12px;
+  --r-lg:16px;
+}
+
+body[data-theme="material-ice"]{
+  background:
+    radial-gradient(90% 50% at 50% -8%, rgba(79,216,236,.10) 0%, transparent 50%),
+    var(--md-surface) !important;
+  color:var(--md-on-surface);
+}
+body[data-theme="material-ice"] #login{
+  background:
+    radial-gradient(100% 70% at 50% -10%, var(--md-primary-container) 0%, var(--md-surface-container-lowest) 58%) !important;
+}
+
+/* Surface containers M3: topbar / nav / sheet */
+body[data-theme="material-ice"] .topbar{
+  background:color-mix(in srgb, var(--md-surface-container) 92%, transparent);
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--md-outline-variant);
+}
+body[data-theme="material-ice"] .sidebar{
+  background:var(--md-surface-container-low);
+  border-right:1px solid var(--md-outline-variant);
+}
+body[data-theme="material-ice"] .sheet{
+  background:var(--md-surface-container-low);
+  border-left:1px solid var(--md-outline-variant);
+  border-radius:var(--r-lg) 0 0 var(--r-lg);
+}
+
+/* Cards / list rows = surface-container-high + outline */
+body[data-theme="material-ice"] .orow,
+body[data-theme="material-ice"] .folder-row,
+body[data-theme="material-ice"] .keypad-panel,
+body[data-theme="material-ice"] .sum-item,
+body[data-theme="material-ice"] .settings-block,
+body[data-theme="material-ice"] .val-land-btn{
+  background:var(--md-surface-container-high);
+  border:1px solid var(--md-outline-variant);
+  border-radius:var(--r);
+  box-shadow:none;
+}
+body[data-theme="material-ice"] .orow:active,
+body[data-theme="material-ice"] .folder-row:active{
+  background:var(--md-surface-container-highest);
+}
+
+/* Chip / filter = secondary container pattern */
+body[data-theme="material-ice"] .chip{
+  background:var(--md-surface-container);
+  border:1px solid var(--md-outline-variant);
+  border-radius:8px;
+  color:var(--md-on-surface-variant);
+}
+body[data-theme="material-ice"] .chip.active{
+  background:var(--md-secondary-container);
+  border-color:transparent;
+  color:var(--md-on-secondary-container);
+  box-shadow:none;
+}
+
+/* Selected state = primary container */
+body[data-theme="material-ice"] .orow.selected,
+body[data-theme="material-ice"] .folder-row.selected{
+  background:var(--md-primary-container);
+  border-color:var(--md-primary);
+  color:var(--md-on-primary-container);
+  box-shadow:0 0 0 1px var(--md-primary);
+}
+body[data-theme="material-ice"] .orow.selected .orow-code,
+body[data-theme="material-ice"] .orow.selected .orow-sub{
+  color:var(--md-on-primary-container);
+}
+
+/* Primary button / FAB — filled primary */
+body[data-theme="material-ice"] .fab,
+body[data-theme="material-ice"] .btn-primary{
+  background:var(--md-primary);
+  color:var(--md-on-primary);
+  border:none;
+  border-radius:16px;
+  box-shadow:0 1px 3px var(--md-shadow);
+}
+body[data-theme="material-ice"] .fab:active,
+body[data-theme="material-ice"] .btn-primary:active{
+  box-shadow:0 2px 8px var(--md-shadow);
+}
+
+/* Tonal button / ghost */
+body[data-theme="material-ice"] .btn-ghost{
+  background:transparent;
+  color:var(--md-primary);
+  border:1px solid var(--md-outline);
+  border-radius:12px;
+}
+body[data-theme="material-ice"] .btn-danger{
+  background:var(--md-error-container);
+  color:var(--md-on-error-container);
+  border-radius:12px;
+}
+
+/* Logo / brand mark = primary container */
+body[data-theme="material-ice"] .topbar .logo,
+body[data-theme="material-ice"] .side-head .logo,
+body[data-theme="material-ice"] .keypad-head .logo{
+  background:var(--md-primary);
+  color:var(--md-on-primary);
+  border-radius:12px;
+  box-shadow:none;
+}
+body[data-theme="material-ice"] .topbar h1 span,
+body[data-theme="material-ice"] .side-head h2 span{
+  color:var(--md-primary);
+}
+
+/* Nav item active = secondary container */
+body[data-theme="material-ice"] .side-item{
+  border-radius:12px;
+  color:var(--md-on-surface-variant);
+}
+body[data-theme="material-ice"] .side-item.active{
+  background:var(--md-secondary-container);
+  color:var(--md-on-secondary-container);
+}
+body[data-theme="material-ice"] .side-item.active svg{
+  color:var(--md-primary);
+}
+
+/* Search / fields = outline */
+body[data-theme="material-ice"] .search,
+body[data-theme="material-ice"] input,
+body[data-theme="material-ice"] select,
+body[data-theme="material-ice"] textarea{
+  background:var(--md-surface-container-highest);
+  border-color:var(--md-outline);
+  border-radius:12px;
+  color:var(--md-on-surface);
+}
+body[data-theme="material-ice"] .search:focus-within,
+body[data-theme="material-ice"] input:focus,
+body[data-theme="material-ice"] select:focus,
+body[data-theme="material-ice"] textarea:focus{
+  border-color:var(--md-primary);
+  box-shadow:0 0 0 2px var(--frost-glow);
+  outline:none;
+}
+
+/* Keypad */
+body[data-theme="material-ice"] .key{
+  background:var(--md-surface-container-high);
+  color:var(--md-on-surface);
+}
+body[data-theme="material-ice"] .key:active{
+  background:var(--md-surface-container-highest);
+}
+body[data-theme="material-ice"] .key.ok{ color:var(--md-primary); }
+body[data-theme="material-ice"] .pin-dot.on{
+  background:var(--md-primary);
+  box-shadow:0 0 0 4px var(--frost-glow);
+}
+
+/* Icon buttons */
+body[data-theme="material-ice"] .icon-btn{
+  border-radius:12px;
+  color:var(--md-on-surface-variant);
+  border:1px solid transparent;
+}
+body[data-theme="material-ice"] .icon-btn:active{
+  background:color-mix(in srgb, var(--md-on-surface) 8%, transparent);
+}
+body[data-theme="material-ice"] .icon-btn.on{
+  color:var(--md-primary);
+  background:var(--md-primary-container);
+}
+
+/* Scrims M3 */
+body[data-theme="material-ice"] .sheet-scrim,
+body[data-theme="material-ice"] .side-scrim,
+body[data-theme="material-ice"] .modal-scrim{
+  background:var(--md-scrim);
+}
+
+/* State layer on primary elements */
+body[data-theme="material-ice"] ::selection{
+  background:var(--md-primary);
+  color:var(--md-on-primary);
+}
+
+.appear-swatch[data-theme="material-ice"]{
+  background:linear-gradient(135deg, #0B1214 30%, #004F58 70%, #4FD8EC 120%);
+  color:#E1E3E4;
+  border-color:#3A494C;
+}
+
+
 body[data-density="compact"] .orow{padding:7px 8px!important}
 body[data-accent="amber"]{--frost:#E8A317}
 body[data-accent="green"]{--frost:#3FA86A}
@@ -945,6 +1415,28 @@ body[data-accent="violet"]{--frost:#9B7AED}
 .cmd-bar button.danger{color:var(--red);border-color:rgba(240,85,61,.45)}
 .cmd-bar button:disabled{opacity:.35;pointer-events:none}
 .paste-bar.on{display:flex;flex-wrap:wrap}
+
+
+
+
+.val-landing{display:flex;flex-direction:column;gap:10px}
+.val-land-btn{
+  display:flex;align-items:center;gap:14px;padding:16px;border-radius:12px;
+  border:1px solid var(--line);background:var(--surface);text-align:left;cursor:pointer;color:var(--text);
+}
+.val-land-btn.primary{border-color:var(--frost-dim);background:linear-gradient(135deg,rgba(61,184,217,.12),transparent)}
+.val-land-btn svg{width:28px;height:28px;color:var(--frost);flex:0 0 auto}
+.val-land-btn b{display:block;font-family:'Archivo';font-weight:800;font-size:14px;text-transform:uppercase;letter-spacing:.04em}
+.val-land-btn span{display:block;font-size:12px;color:var(--muted);margin-top:4px}
+
+
+
+
+.sum-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.sum-item{padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+.sum-item .lbl{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-family:'Archivo';font-weight:700;margin-bottom:4px}
+.sum-item b{font-size:14px;word-break:break-word}
+.sum-item b.mono{font-family:'JetBrains Mono';font-size:13px}
 
 </style>
 </head>
@@ -1031,6 +1523,10 @@ body[data-accent="violet"]{--frost:#9B7AED}
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
         Design review
       </button>
+      <button class="side-item" data-v="valutazioni">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 11l-2 2-2-2M19 13V7"/></svg>
+        Valutazioni
+      </button>
     </nav>
     <div class="side-foot">Krio · v1</div>
   </aside>
@@ -1063,6 +1559,7 @@ body[data-accent="violet"]{--frost:#9B7AED}
     <div id="weekHost" style="display:none"></div>
     <div id="designHost" style="display:none"></div>
     <div id="settingsViewHost" style="display:none"></div>
+    <div id="valHost" style="display:none"></div>
     <div id="updateBannerSlot"></div>
   </div>
 
@@ -1080,9 +1577,6 @@ body[data-accent="violet"]{--frost:#9B7AED}
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg>
     </button>
     <div class="barcode"></div>
-    <button class="icon-btn" id="btnExport" title="Esporta / Stampa scheda">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v8H6z"/></svg>
-    </button>
     <button class="icon-btn" id="btnDupe" title="Duplica">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
     </button>
@@ -1183,6 +1677,67 @@ body[data-accent="violet"]{--frost:#9B7AED}
 <div class="toast" id="toast"><span id="toastIcon"></span><span id="toastMsg"></span></div>
 
 <script>
+/* Storage sicuro: evita SecurityError in iframe sandbox senza allow-same-origin */
+(function(){
+  function makeMemory(){
+    var mem = {};
+    return {
+      getItem: function(k){ return Object.prototype.hasOwnProperty.call(mem,k) ? mem[k] : null; },
+      setItem: function(k,v){ mem[k] = String(v); },
+      removeItem: function(k){ delete mem[k]; },
+      clear: function(){ mem = {}; },
+      key: function(i){ return Object.keys(mem)[i] || null; },
+      get length(){ return Object.keys(mem).length; }
+    };
+  }
+  function canUse(store){
+    try{
+      var t = "__krio_t__";
+      store.setItem(t, "1");
+      store.removeItem(t);
+      return true;
+    }catch(e){ return false; }
+  }
+  try{
+    if(typeof localStorage === "undefined" || !canUse(localStorage)){
+      Object.defineProperty(window, "localStorage", { value: makeMemory(), configurable: true });
+    }
+  }catch(e){
+    try{ Object.defineProperty(window, "localStorage", { value: makeMemory(), configurable: true }); }catch(_){}
+  }
+  try{
+    if(typeof sessionStorage === "undefined" || !canUse(sessionStorage)){
+      Object.defineProperty(window, "sessionStorage", { value: makeMemory(), configurable: true });
+    }
+  }catch(e){
+    try{ Object.defineProperty(window, "sessionStorage", { value: makeMemory(), configurable: true }); }catch(_){}
+  }
+})();
+
+function safeJsonParse(raw, fallback){
+  try{ return raw ? JSON.parse(raw) : fallback; }catch(_){ return fallback; }
+}
+function lsGet(key, fallback){
+  try{
+    var v = localStorage.getItem(key);
+    return v == null ? fallback : v;
+  }catch(_){ return fallback; }
+}
+function lsSet(key, val){
+  try{ localStorage.setItem(key, val); return true; }catch(_){ return false; }
+}
+function lsDel(key){
+  try{ localStorage.removeItem(key); }catch(_){}
+}
+/** serviceWorker non disponibile in iframe sandbox */
+function getSW(){
+  try{
+    if(typeof navigator === "undefined") return null;
+    return navigator.serviceWorker || null;
+  }catch(_){ return null; }
+}
+function hasSW(){ return !!getSW(); }
+
 /* ===================================================================
    CELLE FRIGO · CONTROLLO ORDINI
    Config: incolla qui l'URL del Web App (o usalo dalle impostazioni).
@@ -1252,7 +1807,7 @@ if(localStorage.getItem("cf_url_default") !== DEFAULT_SCRIPT_URL){
 const S = {
   url: localStorage.getItem("cf_url") || DEFAULT_SCRIPT_URL || "",
   pin: sessionStorage.getItem("cf_pin") || "",
-  orders: JSON.parse(localStorage.getItem("cf_cache")||"[]"),
+  orders: safeJsonParse(lsGet("cf_cache","[]"),[]),
   current: null,
   filter: "all",
   noteFilter: "all",
@@ -1261,33 +1816,36 @@ const S = {
   statCode: "all",
   capMonth: new Date().toISOString().slice(0,7),
   pv: {home:"home", sub:"prev", step:1, veicolo:null, tipo:null, accSel:new Set(), codice:"", cliente:"", note:"", detailId:null},
-  preventivi: JSON.parse(localStorage.getItem("cf_preventivi")||"[]"),
-  designSessions: JSON.parse(localStorage.getItem("cf_design")||"[]"),
+  preventivi: safeJsonParse(lsGet("cf_preventivi","[]"),[]),
+  designSessions: safeJsonParse(lsGet("cf_design","[]"),[]),
   designId: null,
-  settings: JSON.parse(localStorage.getItem("cf_settings")||"{}"),
+  settings: safeJsonParse(lsGet("cf_settings","{}"),{}),
   query: "",
-  role: sessionStorage.getItem("cf_role") || "edit",
-  canEdit: (sessionStorage.getItem("cf_role")||"edit")==="edit",
+  pin: (function(){ try{ return sessionStorage.getItem("cf_pin")||""; }catch(_){ return ""; } })(),
+  role: (function(){ try{ return sessionStorage.getItem("cf_role")||""; }catch(_){ return ""; } })(),
+  canEdit: false,
   view: "ordini",
   archOpenClients: new Set(),
   archOpenOrders: new Set(),
   filesCache: {},
-  folders: JSON.parse(localStorage.getItem("cf_folders")||"[]"),
+  folders: safeJsonParse(lsGet("cf_folders","[]"),[]),
   folderId: localStorage.getItem("cf_last_folder") || null,
   clipboard: null,
-  pins: JSON.parse(localStorage.getItem("cf_pins")||"[]"),
-  offlineQueue: JSON.parse(localStorage.getItem("cf_queue")||"[]"),
+  pins: safeJsonParse(lsGet("cf_pins","[]"),[]),
+  offlineQueue: safeJsonParse(lsGet("cf_queue","[]"),[]),
   timer: null,
   mediaList: [],
   mediaIdx: 0,
   lastActivity: Date.now(),
   logoTaps: 0,
   operatorName: localStorage.getItem("cf_operator")||"",
-  templates: JSON.parse(localStorage.getItem("cf_templates")||"null") || null,
+  templates: safeJsonParse(lsGet("cf_templates","null"),null),
   selectMode: false,
   selectedOrders: new Set(),
   selectedFolders: new Set()
 };
+// ruolo effettivo solo con PIN valido in sessione
+try{ S.canEdit = (S.role==="edit" && !!S.pin); }catch(_){ S.canEdit=false; }
 const $ = s=>document.querySelector(s);
 const $$ = s=>[...document.querySelectorAll(s)];
 
@@ -1320,16 +1878,19 @@ function ensureFasi(o){
 
 /* ---------- folders helpers ---------- */
 function persistFolders(){
-  localStorage.setItem("cf_folders", JSON.stringify(S.folders));
+  try{ localStorage.setItem("cf_folders", JSON.stringify(S.folders)); }catch(_){}
   S.settings = S.settings || {};
   S.settings.folders = S.folders;
   try{ localStorage.setItem("cf_settings", JSON.stringify(S.settings)); }catch(_){}
-  // Sync immediata cartelle → server (tutti gli utenti)
-  try{ syncFoldersToServer(); }catch(_){}
+  // Sync server solo se autenticati
+  if(S.pin && S.canEdit && S.url){
+    try{ syncFoldersToServer(); }catch(_){}
+  }
 }
 /** Pubblica l'albero cartelle su Apps Script (settings.folders). */
 function syncFoldersToServer(){
-  if(!S.url || !S.canEdit) return Promise.resolve();
+  // Solo dopo login (PIN presente) e ruolo edit — evita "Codice errato" a boot
+  if(!S.url || !S.pin || !S.canEdit) return Promise.resolve();
   S.settings = S.settings || {};
   S.settings.folders = S.folders || [];
   return Promise.resolve(api("setSettings",{settings:S.settings})).then(function(d){
@@ -1340,6 +1901,12 @@ function syncFoldersToServer(){
       try{ localStorage.setItem("cf_folders", JSON.stringify(S.folders)); }catch(_){}
     }
   }).catch(function(e){
+    const msg = String((e && e.message) || e || "");
+    // Non accodare errori di autenticazione (PIN assente/errato)
+    if(/codice errato|pin|auth|non autorizzato/i.test(msg)){
+      console.warn("syncFoldersToServer auth skip:", msg);
+      return;
+    }
     S.offlineQueue = S.offlineQueue || [];
     S.offlineQueue.push({t:Date.now(), action:"setSettings", payload:{settings:Object.assign({}, S.settings, {folders:S.folders})}});
     try{ persistQueue(); }catch(_){}
@@ -1348,7 +1915,7 @@ function syncFoldersToServer(){
 }
 /** Salva ordine sul server con appFolderId esplicito (anche vuoto). */
 function syncOrderFolder(order){
-  if(!S.url || !S.canEdit || !order) return Promise.resolve();
+  if(!S.url || !S.pin || !S.canEdit || !order) return Promise.resolve();
   const payload = Object.assign({}, order);
   // chiave sempre presente così GAS non riusa il vecchio valore
   payload.appFolderId = (order.appFolderId == null || order.appFolderId === "") ? "" : String(order.appFolderId);
@@ -1421,26 +1988,36 @@ function ensureFolder2026(){
   if(!f2026){
     f2026 = {id:fuid(), name:"2026", parentId:null};
     S.folders.push(f2026);
-    persistFolders();
+    try{ persistFolders(); }catch(_){}
   }
-  // NON riassegnare ordini con appFolderId "sconosciuto":
-  // potrebbe mancare solo il tree cartelle (settings non ancora sync).
-  // Solo ordini SENZA cartella → 2026.
-  let moved=0;
-  S.orders.forEach(o=>{
-    const fid = o.appFolderId;
-    if(fid==null || fid===""){
+  const valid = new Set((S.folders||[]).map(f=>String(f.id)));
+  const moved=[];
+  (S.orders||[]).forEach(o=>{
+    if(!o) return;
+    // normalizza
+    let fid = o.appFolderId;
+    if(fid!=null && fid!=="") fid = String(fid).trim();
+    else fid = "";
+    // senza cartella O cartella inesistente → recupera in 2026 (visibili a tutti aprendo 2026)
+    if(!fid || !valid.has(fid)){
       o.appFolderId = f2026.id;
-      moved++;
+      moved.push(o);
+    } else {
+      o.appFolderId = fid;
     }
   });
-  const valid = new Set(S.folders.map(f=>String(f.id)));
   if(S.folderId && !valid.has(String(S.folderId))){
     S.folderId = null;
     try{ rememberFolder(); }catch(_){}
   }
-  if(moved){
+  if(moved.length){
     try{ localStorage.setItem("cf_cache", JSON.stringify(S.orders)); }catch(_){}
+    // propaga recupero cartella al server (multi-utente)
+    if(S.url && S.canEdit){
+      moved.forEach(function(o){
+        try{ syncOrderFolder(o); }catch(_){}
+      });
+    }
   }
   return f2026;
 }
@@ -1448,6 +2025,11 @@ function reconcileOrders(){
   const n = (S.orders||[]).length;
   ensureFolder2026();
   return n;
+}
+/** Conta ordini orfani (non dovrebbe restarne dopo ensureFolder2026). */
+function countOrdersInFolder(fid){
+  const id = fid==null||fid==="" ? "" : String(fid);
+  return (S.orders||[]).filter(o=>String(o.appFolderId??"")===id).length;
 }
 
 /* ---------- haptic + toast ---------- */
@@ -1516,8 +2098,11 @@ async function api(action, payload={}){
   try{ data = await res.json(); }
   catch(e){ setLed("err","errore"); throw new Error("Risposta non valida dal server"); }
   if(!data.ok){
-    if(data.code==="AUTH"){ setLed("err","non autorizzato"); logout(true); }
-    else if(data.code==="READONLY"){ setLed("ok","sola lettura"); }
+    if(data.code==="AUTH"){
+      setLed("err","non autorizzato");
+      // logout solo se c'era un PIN in sessione (sessione scaduta/errata)
+      if(S.pin){ try{ logout(true); }catch(_){ } }
+    } else if(data.code==="READONLY"){ setLed("ok","sola lettura"); }
     else setLed("err","errore");
     throw new Error(data.error||"Errore server");
   }
@@ -1654,6 +2239,8 @@ function applyRole(){
   if(!S.canEdit && (S.view==="stats"||S.view==="cap")) setView("ordini");
 }
 function enterApp(){
+  try{ S.canEdit = (S.role==="edit"); }catch(_){}
+  try{wireChromeUI();}catch(_){}
   try{ensureFolderNavDelegate();}catch(_){}
   try{applyChromeI18n();}catch(_){}
   try{applyAppearance();}catch(_){}
@@ -1754,12 +2341,20 @@ async function loadOrders(){
 /* ===================================================================
    RENDER — filtri + griglia
    =================================================================== */
+function normTipo(v){
+  return String(v||"").trim().toLowerCase();
+}
+function matchLav(o, lav){
+  if(!lav || lav==="all") return true;
+  return normTipo(o.tipoCella)===normTipo(lav);
+}
 function buildFilters(){
-  const host=$("#filters");
-  // stesso ambito della lista: radice = tutti; cartella = solo quella
+  const host=$("#filters"); if(!host) return;
+  // Contatori avanzamento: stessa cartella + stesso filtro tipologia veicolo
   let base=[...S.orders];
   if(!S.folderId) base=[]; // root: non contare ordini
   else base=base.filter(o=>String(o.appFolderId??"")===String(S.folderId));
+  if(S.lav && S.lav!=="all") base=base.filter(o=>matchLav(o, S.lav));
   const counts={all:base.length};
   STATI.forEach(s=>counts[s.id]=base.filter(o=>o.stato===s.id).length);
   const chips=[{id:"all",label:"Tutti",color:"var(--frost)"},...STATI];
@@ -1789,7 +2384,7 @@ function filtered(){
     }
   }
   if(S.filter!=="all") list=list.filter(o=>o.stato===S.filter);
-  if(S.lav!=="all") list=list.filter(o=>o.tipoCella===S.lav);
+  if(S.lav!=="all") list=list.filter(o=>matchLav(o, S.lav));
   if(S.noteFilter==="si") list=list.filter(o=>o.note&&o.note.trim());
   else if(S.noteFilter==="no") list=list.filter(o=>!(o.note&&o.note.trim()));
   if(S.query){
@@ -1857,13 +2452,15 @@ function render(){
       ${curF?`<button type="button" class="folder-root-btn on" id="btnFolderUp" style="height:34px;padding:0 12px;border-radius:8px;border:1px solid var(--frost-dim);background:var(--surface);color:var(--text);font-family:Archivo;font-weight:700;font-size:11px">${esc(curF.name)}</button>`:""}
     </div>
     ${S.canEdit?`<button type="button" class="fab-inline" id="btnNewFolder"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Nuova cartella</button>`:""}
-  </div>${renderSelBar()}${renderPasteBar()}`;
+  </div>
+  ${(!S.folderId && !S.query)?`<div class="archive-hint" style="margin:0 0 12px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--surface);font-size:12px;color:var(--muted)">Archivio: <b style="color:var(--text)">${(S.orders||[]).length}</b> ordini · apri una cartella (es. <b style="color:var(--frost)">2026</b>) per visualizzarli</div>`:""}
+  ${renderSelBar()}${renderPasteBar()}`;
 
   if(!folders.length && !list.length){
     const filtering = S.query||S.filter!=="all"||S.lav!=="all"||S.noteFilter!=="all";
     const emptyMsg = !hasFolders
       ? "Crea una cartella sotto ICE, poi aggiungi i lavori al suo interno."
-      : (S.folderId ? "Cartella vuota. Tocca «Nuovo ordine» per aggiungere un ordine." : "Gli ordini si vedono solo dentro le cartelle. Apri o crea una cartella.");
+      : (S.folderId ? "Cartella vuota. Tocca «Nuovo ordine» per aggiungere un ordine." : "Gli ordini si vedono solo dentro le cartelle. Apri «2026» o un'altra cartella per elencarli.");
     host.innerHTML=top+`<div class="empty">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-8l-2-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2z"/></svg>
       <h3>${filtering?"Nessun lavoro trovato":(!hasFolders?"Archivio ICE vuoto":"Cartella vuota")}</h3>
@@ -1885,14 +2482,18 @@ function render(){
       t.insertBefore(sc, t.firstChild);
     }
     t.onclick=function(e){
+      if(e.target.closest(".sel-check")){
+        e.preventDefault(); e.stopPropagation();
+        enterSelectMode(); toggleSelectOrder(t.dataset.id); render(); return;
+      }
       if(S.selectMode){ e.preventDefault(); e.stopPropagation(); toggleSelectOrder(t.dataset.id); render(); return; }
-      openOrder(t.dataset.id);
+      // tap semplice → solo riepilogo
+      openOrderSummary(t.dataset.id);
     };
     bindLongPress(t, function(){
-      enterSelectMode();
-      S.selectedOrders.add(t.dataset.id);
       try{ haptic(40); }catch(_){}
-      render();
+      // long-press → menu contestuale (Modifica, taglia, copia…)
+      showCtxMenu(t, "order", t.dataset.id);
     });
   });
   updateFabVisibility();
@@ -2059,14 +2660,20 @@ const IC={
   ext:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14 21 3"/></svg>'
 };
 
-function renderCurrent(){ buildLavFilters(); if(S.view==="stats") renderStats(); else if(S.view==="cap") renderCap(); else if(S.view==="prev") renderPrev(); else if(S.view==="archivio") renderArchive(); else if(S.view==="settimana") renderWeek(); else if(S.view==="design") renderDesign(); else if(S.view==="impostazioni") renderSettingsView(); else render(); }
+function renderCurrent(){ buildLavFilters(); if(S.view==="stats") renderStats(); else if(S.view==="cap") renderCap(); else if(S.view==="prev") renderPrev(); else if(S.view==="archivio") renderArchive(); else if(S.view==="settimana") renderWeek(); else if(S.view==="design") renderDesign(); else if(S.view==="impostazioni") renderSettingsView(); else if(S.view==="valutazioni"){ if(!S.valHome) S.valHome="home"; renderValutazioni(); } else render(); }
 function buildLavFilters(){
   const host=$("#lavFilters"); if(!host) return;
+  // Contatori tipologia: stessa cartella + stesso filtro avanzamento
   let base=[...S.orders];
   if(!S.folderId) base=[]; // root: non contare ordini
   else base=base.filter(o=>String(o.appFolderId??"")===String(S.folderId));
+  if(S.filter && S.filter!=="all") base=base.filter(o=>o.stato===S.filter);
+  if(S.noteFilter==="si") base=base.filter(o=>o.note&&o.note.trim());
+  else if(S.noteFilter==="no") base=base.filter(o=>!(o.note&&o.note.trim()));
   const counts={all:base.length};
-  LAVORAZIONI.forEach(l=>counts[l]=base.filter(o=>o.tipoCella===l).length);
+  LAVORAZIONI.forEach(l=>{
+    counts[l]=base.filter(o=>matchLav(o, l)).length;
+  });
   const chips=[{id:"all",label:"Tutte"},...LAVORAZIONI.map(l=>({id:l,label:l}))];
   host.innerHTML=chips.map(c=>`
     <button class="chip ${S.lav===c.id?'active':''}" data-l="${esc(c.id)}">
@@ -2078,10 +2685,11 @@ function buildLavFilters(){
 
 function setView(v){
   S.view=v;
+  if(v==="valutazioni"){ S.valHome="home"; S.valFolderId=null; }
   $$("#sideNav .side-item").forEach(b=>b.classList.toggle("active", b.dataset.v===v));
   const ord=v==="ordini", arch=v==="archivio", stats=v==="stats", cap=v==="cap", prev=v==="prev";
-  const week=v==="settimana", design=v==="design", imp=v==="impostazioni";
-  const noFilters = stats||cap||prev||week||design||imp;
+  const week=v==="settimana", design=v==="design", imp=v==="impostazioni", val=v==="valutazioni";
+  const noFilters = stats||cap||prev||week||design||imp||val;
   $("#lavFilters").style.display  = (ord||arch) ? "" : "none";
   $("#filters").style.display     = ord ? "" : "none";
   $("#ordersHost").style.display  = ord ? "" : "none";
@@ -2092,6 +2700,7 @@ function setView(v){
   const wh=$("#weekHost"); if(wh) wh.style.display = week ? "" : "none";
   const dh=$("#designHost"); if(dh) dh.style.display = design ? "" : "none";
   const sh=$("#settingsViewHost"); if(sh) sh.style.display = (typeof imp!=="undefined"&&imp) ? "" : "none";
+  const vh=$("#valHost"); if(vh) vh.style.display = val ? "" : "none";
   $("#btnScan").style.display = ord ? "flex" : "none";
   const vs=$("#btnVoiceSearch"); if(vs) vs.style.display = (ord||arch) ? "grid" : "none";
   const sb=document.querySelector(".search"); if(sb) sb.style.display = noFilters ? "none" : "flex";
@@ -2105,7 +2714,7 @@ function renderArchive(){
   const host=$("#archiveHost");
   const q=S.query.toLowerCase();
   const groups={};
-  S.orders.filter(o=> S.lav==="all" || o.tipoCella===S.lav).forEach(o=>{
+  S.orders.filter(o=> S.lav==="all" || matchLav(o, S.lav)).forEach(o=>{
     const c=(o.cliente&&o.cliente.trim())||"Senza cliente";
     (groups[c]=groups[c]||[]).push(o);
   });
@@ -2701,6 +3310,7 @@ function resetPvConfig(){
   S.pv.codice=""; S.pv.cliente=""; S.pv.note=""; S.pv.detailId=null;
 }
 
+
 function renderPrev(){
   const host=$("#prevHost"); if(!host) return;
   if(!Array.isArray(S.preventivi)) S.preventivi=[];
@@ -2736,6 +3346,8 @@ function wirePvLanding(){
 }
 
 function pvEseguitiHTML(){
+  // export toolbar prepended in template via marker
+
   let h=`<button type="button" class="pv-back" id="pvBackHome"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg>Indietro</button>`;
   h+=`<div class="section-title" style="margin-top:0"><span class="n">✓</span> Preventivi eseguiti</div>`;
   if(S.pv.detailId){
@@ -2778,6 +3390,7 @@ function pvEseguitiHTML(){
   return h;
 }
 function wirePvEseguiti(){
+
   const bh=$("#pvBackHome"); if(bh) bh.onclick=()=>{ S.pv.home="home"; S.pv.detailId=null; renderPrev(); };
   const db=$("#pvDetBack"); if(db) db.onclick=()=>{ S.pv.detailId=null; renderPrev(); };
   const ord=$("#pvDetOrder"); if(ord) ord.onclick=()=>pvOrderFromSaved(S.pv.detailId);
@@ -3128,17 +3741,32 @@ function blankOrder(codice){
   const today=new Date().toISOString().slice(0,10);
   return {id:uid(),codice:codice||"",cliente:"",targa:"",tipoCella:"",dataOrdine:today,scadenza:"",stato:"bozza",optional:[],note:"",budget:{},actual:{},readyAt:"",mediaCount:0,appFolderId:S.folderId||null,fasi:FASI_DEFAULT.map(f=>({...f})),operatore:S.operatorName||"",updatedBy:S.operatorName||"",clientUpdatedAt:new Date().toISOString(),_new:true};
 }
-function openOrder(id){
+function openOrder(id, mode){
+  // mode: "view" (riepilogo) | "edit" (modifica completa)
+  // Nuovo ordine → sempre edit. Ordine esistente → default view.
   if(!id && !S.canEdit){ toast("Sola lettura: non puoi creare lavori","err"); return; }
   if(!id && !S.folderId){ toast("Entra in una cartella per creare un nuovo lavoro","err"); return; }
-  S.current = id ? structuredClone(S.orders.find(o=>o.id===id)) : blankOrder();
+  if(id){
+    const found=S.orders.find(o=>String(o.id)===String(id));
+    if(!found){ toast("Ordine non trovato","err"); return; }
+    S.current=structuredClone(found);
+    S.sheetMode = (mode==="edit") ? "edit" : "view";
+  } else {
+    S.current=blankOrder();
+    S.sheetMode="edit";
+  }
   if(!S.current) return;
   renderSheet();
-  $("#sheetScrim").classList.add("open");
-  $("#sheet").classList.add("open");
-  if(!id) setTimeout(()=>{const el=$("#f_codice"); el&&el.focus();},300);
-  loadMedia();
+  const sc=$("#sheetScrim"); if(sc) sc.classList.add("open");
+  const sh=$("#sheet"); if(sh) sh.classList.add("open");
+  // ri-collega chiusura (in caso di re-render DOM)
+  try{ wireChromeUI(); }catch(_){}
+  if(S.sheetMode==="edit" && !id) setTimeout(()=>{const el=$("#f_codice"); el&&el.focus();},300);
+  if(S.sheetMode==="edit") loadMedia();
 }
+function openOrderSummary(id){ openOrder(id, "view"); }
+function openOrderEdit(id){ openOrder(id, "edit"); }
+
 function openWithCode(code){
   const found=S.orders.find(o=>(o.codice||"").toLowerCase()===code.toLowerCase());
   if(found){
@@ -3153,16 +3781,61 @@ function openWithCode(code){
   if(!S.folderId){ toast("Entra in una cartella sotto ICE per creare un lavoro","err"); return; }
   const b=blankOrder(code); S.current=b; renderSheet(); loadMedia(); $("#sheetScrim").classList.add("open"); $("#sheet").classList.add("open"); toast("Nuovo ordine per "+code); setTimeout(()=>{$("#f_cliente")&&$("#f_cliente").focus();},300);
 }
-function closeSheet(){ $("#sheetScrim").classList.remove("open"); $("#sheet").classList.remove("open"); S.current=null; }
+function closeSheet(){
+  try{
+    const sc=$("#sheetScrim"); if(sc) sc.classList.remove("open");
+    const sh=$("#sheet"); if(sh) sh.classList.remove("open");
+  }catch(_){}
+  S.current=null;
+  S.sheetMode=null;
+  try{ closeCtxMenu(); }catch(_){}
+}
+
 
 function renderSheet(){
-  const o=S.current;
-  $("#btnDelete").style.display=o._new?"none":"flex";
-  $("#btnDupe").style.display=o._new?"none":"grid";
+  const o=S.current; if(!o) return;
+  const isView = S.sheetMode==="view" && !o._new;
+  // footer: in riepilogo solo chiusura implicita; nascondi salva/elimina
+  const foot=$(".sheet-foot");
+  if(foot) foot.style.display = isView ? "none" : "flex";
+  const bdel=$("#btnDelete"); if(bdel) bdel.style.display=(isView||o._new)?"none":"flex";
+  const bdupe=$("#btnDupe"); if(bdupe) bdupe.style.display=(isView||o._new)?"none":"grid";
+  if(isView){
+    const st=statoObj(o.stato);
+    const di=typeof deadlineInfo==="function"?deadlineInfo(o):{};
+    const opts=(o.optional||[]).filter(x=>x&&x.nome);
+    const optHtml=opts.length?opts.map(x=>`<span class="orow-tag">${x.fatto?"✓ ":""}${esc(x.nome)}</span>`).join(" "):"<span class=\"muted\">—</span>";
+    $("#sheetBody").innerHTML=`
+      <div class="detail-head">
+        <span class="eyebrow">Riepilogo ordine</span>
+        <div class="code-row" style="margin-top:6px"><h2>${esc(o.codice||"—")}</h2></div>
+      </div>
+      <div class="sum-grid">
+        <div class="sum-item"><span class="lbl">Cliente</span><b>${esc(o.cliente||"—")}</b></div>
+        <div class="sum-item"><span class="lbl">Stato</span><b style="color:${st.color||"var(--text)"}">${esc(st.label)}</b></div>
+        <div class="sum-item"><span class="lbl">Telaio</span><b class="mono">${esc(o.targa||"—")}</b></div>
+        <div class="sum-item"><span class="lbl">Lavorazione</span><b>${esc(o.tipoCella||"—")}</b></div>
+        <div class="sum-item"><span class="lbl">Data ordine</span><b>${esc(fmtDate(o.dataOrdine))}</b></div>
+        <div class="sum-item"><span class="lbl">Scadenza</span><b>${esc(fmtDate(o.scadenza))}</b></div>
+        <div class="sum-item"><span class="lbl">Operatore</span><b>${esc(o.operatore||"—")}</b></div>
+        <div class="sum-item"><span class="lbl">Cartella</span><b>${esc(folderNameOf(o.appFolderId))}</b></div>
+        <div class="sum-item"><span class="lbl">Media</span><b>${o.mediaCount||0} file</b></div>
+      </div>
+      <div class="section-title" style="margin-top:16px"><span class="n">OPT</span> Optional</div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px">${optHtml}</div>
+      <div class="section-title" style="margin-top:16px"><span class="n">NOTE</span></div>
+      <div class="p-note" style="padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--surface)">${esc(o.note||"Nessuna nota")}</div>
+      ${S.canEdit?`<button type="button" class="btn btn-primary" id="btnSumEdit" style="width:100%;margin-top:18px;height:46px">Modifica ordine</button>`:""}
+      <p class="hint" style="margin-top:12px">Per modificare: long-press sull'ordine in lista → <b>Modifica</b>, oppure usa il pulsante sopra.</p>
+    `;
+    const be=$("#btnSumEdit");
+    if(be) be.onclick=function(){ openOrderEdit(o.id); };
+    return;
+  }
   const statoOptions=STATI.map(s=>`<option value="${s.id}" ${o.stato===s.id?"selected":""}>${s.label}</option>`).join("");
   $("#sheetBody").innerHTML=`
     <div class="detail-head">
-      <span class="eyebrow">${o._new?"Nuovo ordine":"Scheda lavoro"}</span>
+      <span class="eyebrow">${o._new?"Nuovo ordine":"Modifica ordine"}</span>
       <div class="code-row" style="margin-top:6px">
         <h2 id="codeHead">${esc(o.codice||"—")}</h2>
       </div>
@@ -3431,6 +4104,9 @@ async function saveOrder(){
     const payload={id:o.id,codice:o.codice,cliente:o.cliente,targa:o.targa,tipoCella:o.tipoCella,
       dataOrdine:o.dataOrdine,scadenza:o.scadenza,stato:o.stato,optional:o.optional||[],note:o.note,
       budget:o.budget||{},actual:o.actual||{},readyAt:o.readyAt||"",appFolderId:o.appFolderId||null,fasi:o.fasi||[],operatore:o.operatore||"",updatedBy:o.updatedBy||"",clientUpdatedAt:o.clientUpdatedAt||""};
+    // garantisci appFolderId esplicito + sync cartelle
+    payload.appFolderId = (o.appFolderId==null||o.appFolderId==="") ? "" : String(o.appFolderId);
+    try{ await syncFoldersToServer(); }catch(_){}
     const d=await api("save",{order:payload});
     o._new=false; if(d.order&&d.order.mediaCount!=null) o.mediaCount=d.order.mediaCount;
     // update local list
@@ -3803,8 +4479,8 @@ function saveSettings(){
 
 
 
-function getAppearance(){ try{return JSON.parse(localStorage.getItem("cf_appear")||"{}");}catch(_){return {};} }
-function setAppearance(patch){ const a=Object.assign(getAppearance(),patch||{}); localStorage.setItem("cf_appear",JSON.stringify(a)); applyAppearance(); return a; }
+function getAppearance(){ return safeJsonParse(lsGet("cf_appear","{}"),{}); }
+function setAppearance(patch){ const a=Object.assign(getAppearance(),patch||{}); lsSet("cf_appear",JSON.stringify(a)); applyAppearance(); return a; }
 function applyAppearance(){
   const a=getAppearance();
   if(!a.theme||a.theme==="industrial") document.body.removeAttribute("data-theme"); else document.body.dataset.theme=a.theme;
@@ -3832,6 +4508,9 @@ function renderSettingsView(){
     <div class="settings-block"><h3>Tema</h3>
       <div class="appear-grid">
         <button type="button" class="appear-swatch ${theme==="industrial"?"on":""}" data-theme="industrial">Industriale</button>
+        <button type="button" class="appear-swatch ${theme==="ice"?"on":""}" data-theme="ice">Ice / Glaciale</button>
+        <button type="button" class="appear-swatch ${theme==="ice-white"?"on":""}" data-theme="ice-white">Bianco glaciale</button>
+        <button type="button" class="appear-swatch ${theme==="material-ice"?"on":""}" data-theme="material-ice">Material Ice</button>
         <button type="button" class="appear-swatch ${theme==="midnight"?"on":""}" data-theme="midnight">Midnight</button>
         <button type="button" class="appear-swatch ${theme==="slate"?"on":""}" data-theme="slate">Ardesia</button>
         <button type="button" class="appear-swatch ${theme==="contrast"?"on":""}" data-theme="contrast">Contrasto</button>
@@ -4130,11 +4809,319 @@ function wireSelBar(){
 }
 
 
+
 /* ===================================================================
-   SIDEBAR
+   VALUTAZIONI OPERATORI — modello produzione (5 assi Likert 1–5)
+   Assi: Qualità, Produttività, Sicurezza, Collaborazione, Affidabilità
+   Score medio 1–5 + storico per operatore (settings.valutazioni)
    =================================================================== */
-function openSidebar(){ $("#sideScrim").classList.add("open"); $("#sidebar").classList.add("open"); }
-function closeSidebar(){ $("#sideScrim").classList.remove("open"); $("#sidebar").classList.remove("open"); }
+
+/* ===================================================================
+   VALUTAZIONI OPERATORI
+   Landing: Valutazioni passate | Nuova valutazione
+   Archivio a cartelle per anno → file "Nome Operatore"
+   Path logico: valutazioni/ANNO/Nome Operatore
+   =================================================================== */
+const VAL_CRITERI = [
+  {id:"qualita", label:"Qualità", desc:"Precisione, scarti, rifacimenti"},
+  {id:"produttivita", label:"Produttività", desc:"Ritmo, rispetto tempi"},
+  {id:"sicurezza", label:"Sicurezza", desc:"DPI, procedure, near-miss"},
+  {id:"collaborazione", label:"Collaborazione", desc:"Team, comunicazione"},
+  {id:"affidabilita", label:"Affidabilità", desc:"Presenza, puntualità, autonomia"}
+];
+
+function getValFolders(){
+  S.settings = S.settings || {};
+  if(!Array.isArray(S.settings.valFolders)) S.settings.valFolders = [];
+  return S.settings.valFolders;
+}
+function getValutazioni(){
+  S.settings = S.settings || {};
+  if(!Array.isArray(S.settings.valutazioni)) S.settings.valutazioni = [];
+  return S.settings.valutazioni;
+}
+function saveValutazioni(){
+  S.settings = S.settings || {};
+  try{ localStorage.setItem("cf_settings", JSON.stringify(S.settings)); }catch(_){}
+  if(S.url && S.canEdit){
+    Promise.resolve(api("setSettings",{settings:S.settings})).catch(function(e){
+      S.offlineQueue=S.offlineQueue||[];
+      S.offlineQueue.push({t:Date.now(), action:"setSettings", payload:{settings:S.settings}});
+      try{ persistQueue(); }catch(_){}
+    });
+  }
+}
+function ensureValYearFolder(year){
+  const y = String(year || new Date().getFullYear());
+  let f = getValFolders().find(x=>String(x.name)===y && (x.parentId==null||x.parentId===""));
+  if(!f){
+    f = {id:"VF"+Date.now().toString(36).toUpperCase()+Math.random().toString(36).slice(2,5).toUpperCase(), name:y, parentId:null};
+    getValFolders().push(f);
+  }
+  return f;
+}
+function valChildFolders(parentId){
+  const p = parentId==null||parentId==="" ? "" : String(parentId);
+  return getValFolders().filter(f=>{
+    const fp = f.parentId==null||f.parentId==="" ? "" : String(f.parentId);
+    return fp===p;
+  }).sort((a,b)=>String(a.name).localeCompare(String(b.name),"it"));
+}
+function valFilesInFolder(fid){
+  const id = fid==null||fid==="" ? "" : String(fid);
+  return getValutazioni().filter(v=>String(v.folderId||"")===id)
+    .sort((a,b)=>String(b.data||"").localeCompare(String(a.data||"")));
+}
+function avgScores(scores){
+  if(!scores) return 0;
+  const vals = VAL_CRITERI.map(c=>parseFloat(scores[c.id])).filter(n=>!isNaN(n)&&n>0);
+  if(!vals.length) return 0;
+  return vals.reduce((a,b)=>a+b,0)/vals.length;
+}
+function scoreColor(avg){
+  if(avg>=4.2) return "var(--green,#3dd68c)";
+  if(avg>=3.2) return "var(--frost)";
+  if(avg>=2.2) return "var(--amber,#e6b84d)";
+  return "var(--red,#f0553d)";
+}
+
+function renderValutazioni(){
+  const host=$("#valHost"); if(!host) return;
+  if(!S.valHome) S.valHome = "home";
+  if(S.valHome==="passate") return renderValPassate();
+  if(S.valHome==="nuova") return renderValNuova();
+  if(S.valHome==="detail") return renderValDetail();
+  // landing
+  host.innerHTML = `
+    <div class="section-title"><span class="n">★</span> Valutazioni operatori</div>
+    <p class="hint" style="margin-bottom:16px">Archivio schede produzione (5 assi Likert). Scegli un'azione.</p>
+    <div class="val-landing">
+      <button type="button" class="val-land-btn" id="valGoPassate">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-8l-2-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2z"/></svg>
+        <div><b>Valutazioni passate</b><span>Cartelle per anno · schede salvate</span></div>
+      </button>
+      <button type="button" class="val-land-btn primary" id="valGoNuova">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg>
+        <div><b>Nuova valutazione</b><span>Crea scheda operatore produzione</span></div>
+      </button>
+    </div>
+`;
+  $("#valGoPassate").onclick=()=>{ S.valHome="passate"; S.valFolderId=null; renderValutazioni(); };
+  $("#valGoNuova").onclick=()=>{ S.valHome="nuova"; S.valDraft={}; S.valName=""; renderValutazioni(); };
+}
+
+function renderValPassate(){
+  const host=$("#valHost"); if(!host) return;
+  const fid = S.valFolderId || null;
+  const folders = valChildFolders(fid);
+  const files = valFilesInFolder(fid);
+  const cur = fid ? getValFolders().find(f=>String(f.id)===String(fid)) : null;
+  const pathLabel = cur ? ("valutazioni / "+cur.name) : "valutazioni";
+
+  host.innerHTML = `
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+      <button type="button" class="btn btn-ghost" id="valBackHome" style="height:36px">← Indietro</button>
+      <div class="section-title" style="margin:0;flex:1"><span class="n">★</span> ${esc(pathLabel)}</div>
+      ${S.canEdit?`<button type="button" class="fab-inline" id="valNewFolder"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Nuova cartella</button>`:""}
+    </div>
+    <div id="valPassateList"></div>`;
+
+  const list = $("#valPassateList");
+  if(!folders.length && !files.length){
+    list.innerHTML = `<div class="empty"><h3>Cartella vuota</h3><p>Crea una cartella anno (es. 2026) o salva una nuova valutazione.</p></div>`;
+  } else {
+    let html = "";
+    folders.forEach(f=>{
+      const n = valFilesInFolder(f.id).length + valChildFolders(f.id).length;
+      html += `<div class="folder-row val-folder" data-vfid="${esc(f.id)}">
+        <div class="fic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-8l-2-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2z"/></svg></div>
+        <div style="flex:1;min-width:0"><div class="fname">${esc(f.name)}</div><div class="fmeta">${n} elementi</div></div>
+        <span class="fchev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 6l6 6-6 6"/></svg></span>
+      </div>`;
+    });
+    files.forEach(v=>{
+      const a = avgScores(v.scores);
+      html += `<div class="orow val-file" data-vid="${esc(v.id)}">
+        <div class="orow-main">
+          <div class="orow-code">${esc(v.name||v.operatore||"—")}</div>
+          <div class="orow-sub">${esc((v.data||"").slice(0,10))} · media <span style="color:${scoreColor(a)}">${a?a.toFixed(1):"—"}</span></div>
+        </div>
+      </div>`;
+    });
+    list.innerHTML = html;
+  }
+
+  $("#valBackHome").onclick=()=>{
+    if(fid){ S.valFolderId=null; renderValutazioni(); }
+    else { S.valHome="home"; renderValutazioni(); }
+  };
+  const nf=$("#valNewFolder");
+  if(nf) nf.onclick=()=>{
+    const name=prompt("Nome cartella (es. anno 2027):");
+    if(!name||!name.trim()) return;
+    getValFolders().push({id:"VF"+Date.now().toString(36).toUpperCase(), name:name.trim(), parentId:fid||null});
+    saveValutazioni();
+    toast("Cartella creata","ok");
+    renderValutazioni();
+  };
+  $$(".val-folder").forEach(r=>{
+    r.onclick=()=>{ S.valFolderId=r.getAttribute("data-vfid"); renderValutazioni(); };
+  });
+  $$(".val-file").forEach(r=>{
+    r.onclick=()=>{ S.valViewId=r.getAttribute("data-vid"); S.valHome="detail"; renderValutazioni(); };
+  });
+}
+
+function renderValNuova(){
+  const host=$("#valHost"); if(!host) return;
+  if(!S.valDraft) S.valDraft={};
+  const name = S.valName || "";
+  const criteriHtml = VAL_CRITERI.map(c=>{
+    const val = S.valDraft[c.id] || 3;
+    return `<div class="val-crit">
+      <div class="val-crit-h"><b>${esc(c.label)}</b><span>${esc(c.desc)}</span></div>
+      <div class="val-stars" data-crit="${c.id}">
+        ${[1,2,3,4,5].map(n=>`<button type="button" class="val-star ${n<=val?"on":""}" data-n="${n}">${n}</button>`).join("")}
+      </div>
+    </div>`;
+  }).join("");
+  const year = new Date().getFullYear();
+  host.innerHTML = `
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+      <button type="button" class="btn btn-ghost" id="valBackHome2" style="height:36px">← Indietro</button>
+      <div class="section-title" style="margin:0"><span class="n">★</span> Nuova valutazione</div>
+    </div>
+    <p class="hint">Salvando, la scheda va in <b>valutazioni/${year}/[Nome operatore]</b></p>
+    <label class="field"><span class="lbl">Nome operatore (obbligatorio)</span>
+      <input id="valNameInput" type="text" placeholder="es. Fabio Rossi" value="${esc(name)}" autocomplete="off">
+    </label>
+    <div class="val-form" style="margin-top:12px">${criteriHtml}
+      <label class="field"><span class="lbl">Note / azioni di miglioramento</span>
+        <textarea id="valNote" rows="3" placeholder="Punti di forza, gap, piano d'azione…"></textarea>
+      </label>
+      <button type="button" class="btn btn-primary" id="valSave" style="width:100%;margin-top:10px;height:46px">Salva scheda</button>
+    </div>`;
+  $("#valBackHome2").onclick=()=>{ S.valHome="home"; renderValutazioni(); };
+  const ni=$("#valNameInput");
+  if(ni) ni.oninput=()=>{ S.valName=ni.value; };
+  $$(".val-star").forEach(btn=>{
+    btn.onclick=()=>{
+      const crit=btn.parentElement.getAttribute("data-crit");
+      const n=parseInt(btn.getAttribute("data-n"),10);
+      S.valDraft=S.valDraft||{};
+      S.valDraft[crit]=n;
+      // update UI without full re-render to keep name/note
+      btn.parentElement.querySelectorAll(".val-star").forEach(s=>{
+        s.classList.toggle("on", parseInt(s.getAttribute("data-n"),10)<=n);
+      });
+    };
+  });
+  $("#valSave").onclick=()=>saveValutazioneForm();
+}
+
+function renderValDetail(){
+  const host=$("#valHost"); if(!host) return;
+  const v = getValutazioni().find(x=>String(x.id)===String(S.valViewId));
+  if(!v){ S.valHome="passate"; renderValutazioni(); return; }
+  const a = avgScores(v.scores);
+  const rows = VAL_CRITERI.map(c=>{
+    const n = (v.scores&&v.scores[c.id])||"—";
+    return `<div class="val-hist-row"><div class="val-hist-note"><b>${esc(c.label)}</b></div><div class="val-hist-score" style="color:${scoreColor(parseFloat(n)||0)}">${n}</div></div>`;
+  }).join("");
+  host.innerHTML = `
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+      <button type="button" class="btn btn-ghost" id="valBackDet" style="height:36px">← Indietro</button>
+      <div class="section-title" style="margin:0;flex:1"><span class="n">★</span> ${esc(v.name||v.operatore)}</div>
+    </div>
+    <div class="val-summary">
+      <div class="val-avg" style="color:${scoreColor(a)}">${a?a.toFixed(1):"—"}</div>
+      <div><div class="val-avg-lbl">${esc(v.path||("valutazioni/"+(v.year||"")+"/"+(v.name||"")))}</div>
+      <div class="val-avg-sub">${esc((v.data||"").slice(0,10))} · da ${esc(v.by||"—")}</div></div>
+    </div>
+    ${rows}
+    <div class="p-note" style="margin-top:12px;padding:12px;border:1px solid var(--line);border-radius:10px">${esc(v.note||"Nessuna nota")}</div>
+    <div style="display:flex;gap:8px;margin-top:14px">
+      ${S.canEdit?`<button type="button" class="btn btn-ghost" id="valDetDel" style="flex:1;height:40px;color:var(--red)">Elimina</button>`:""}
+    </div>`;
+  $("#valBackDet").onclick=()=>{ S.valHome="passate"; renderValutazioni(); };
+  const d=$("#valDetDel");
+  if(d) d.onclick=()=>{
+    if(!confirm("Eliminare questa scheda?")) return;
+    S.settings.valutazioni = getValutazioni().filter(x=>String(x.id)!==String(v.id));
+    saveValutazioni();
+    S.valHome="passate";
+    toast("Eliminata","ok");
+    renderValutazioni();
+  };
+}
+
+function saveValutazioneForm(){
+  if(!S.canEdit){ toast("Sola lettura","err"); return; }
+  const op = (S.valName || ($("#valNameInput")&&$("#valNameInput").value) || "").trim();
+  if(!op){ toast("Inserisci il nome dell'operatore","err"); return; }
+  const scores={};
+  VAL_CRITERI.forEach(c=>{ scores[c.id] = (S.valDraft && S.valDraft[c.id]) || 3; });
+  const note = ($("#valNote")&&$("#valNote").value||"").trim();
+  const year = String(new Date().getFullYear());
+  const folder = ensureValYearFolder(year);
+  const row = {
+    id: "V"+Date.now().toString(36).toUpperCase()+Math.random().toString(36).slice(2,4).toUpperCase(),
+    name: op,
+    operatore: op,
+    folderId: folder.id,
+    year: year,
+    path: "valutazioni/"+year+"/"+op,
+    data: new Date().toISOString(),
+    scores: scores,
+    note: note,
+    by: S.operatorName || ""
+  };
+  getValutazioni().unshift(row);
+  saveValutazioni();
+  S.valDraft=null; S.valName="";
+  S.valFolderId = folder.id;
+  S.valHome = "passate";
+  toast("Salvata in "+row.path,"ok");
+  renderValutazioni();
+}
+
+/* ---- Export helpers (CSV / PDF via stampa) ---- */
+
+function wireChromeUI(){
+  const menu=$("#btnMenu");
+  if(menu) menu.onclick=function(e){ e.preventDefault(); e.stopPropagation(); openSidebar(); };
+  const scrim=$("#sideScrim");
+  if(scrim) scrim.onclick=function(e){ e.preventDefault(); closeSidebar(); };
+  const gear=$("#btnSettings");
+  if(gear) gear.onclick=function(e){ e.preventDefault(); e.stopPropagation(); setView("impostazioni"); };
+  // chiusura scheda ordine (pulsante indietro + scrim)
+  const closeBtn=$("#btnCloseSheet");
+  if(closeBtn) closeBtn.onclick=function(e){ e.preventDefault(); e.stopPropagation(); closeSheet(); };
+  const sheetScrim=$("#sheetScrim");
+  if(sheetScrim) sheetScrim.onclick=function(e){ e.preventDefault(); closeSheet(); };
+  $$("#sideNav .side-item[data-v]").forEach(function(b){
+    b.onclick=function(e){
+      e.preventDefault();
+      const v=b.getAttribute("data-v");
+      if(v) setView(v);
+    };
+  });
+  // salva / elimina / duplica (sempre ri-bind)
+  const bs=$("#btnSave"); if(bs) bs.onclick=function(e){ e.preventDefault(); saveOrder(); };
+  const bd=$("#btnDelete"); if(bd) bd.onclick=function(e){ e.preventDefault(); deleteOrder(); };
+  const bdu=$("#btnDupe"); if(bdu) bdu.onclick=function(e){ e.preventDefault(); duplicateOrder(); };
+}
+
+function openSidebar(){
+  const s=$("#sideScrim"), b=$("#sidebar");
+  if(s) s.classList.add("open");
+  if(b) b.classList.add("open");
+}
+function closeSidebar(){
+  const s=$("#sideScrim"), b=$("#sidebar");
+  if(s) s.classList.remove("open");
+  if(b) b.classList.remove("open");
+}
 
 /* ===================================================================
    LONG-PRESS · COPY / CUT / PASTE
@@ -4184,6 +5171,7 @@ function showCtxMenu(el, type, id){
   if(type==="order"){
     const pinned=isPinned(id);
     items=`
+      <button class="ctx-item" data-act="edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>Modifica</button>
       <button class="ctx-item" data-act="pin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 17v5M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1z"/></svg>${pinned?"Togli pin":"Fissa in alto"}</button>
       <button class="ctx-item" data-act="cut"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M6 18 18 6"/><circle cx="6" cy="6" r="2.5"/><circle cx="6" cy="18" r="2.5"/></svg>Taglia</button>
       <button class="ctx-item" data-act="copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copia</button>
@@ -4212,7 +5200,8 @@ function showCtxMenu(el, type, id){
 function handleCtxAction(act, type, id){
   if(type==="order"){
     const o=S.orders.find(x=>x.id===id); if(!o) return;
-    if(act==="pin"){ togglePin(id); }
+    if(act==="edit"){ openOrderEdit(id); }
+    else if(act==="pin"){ togglePin(id); }
     else if(act==="cut"){ S.clipboard={type:"order", mode:"cut", data:structuredClone(o)}; toast("Ordine tagliato — incolla in una cartella"); render(); }
     else if(act==="copy"){ S.clipboard={type:"order", mode:"copy", data:structuredClone(o)}; toast("Ordine copiato — incolla in una cartella"); render(); }
     else if(act==="paste"){ pasteInto(S.folderId); }
@@ -4491,40 +5480,9 @@ function loadScript(src){
     s.onload=res; s.onerror=rej; document.head.appendChild(s);
   });
 }
-async function exportOrder(){
-  const o=collectForm();
-  if(!o.codice){ toast("Inserisci il codice lavoro","err"); return; }
-  const st=statoObj(o.stato);
-  const opts=(o.optional||[]);
-  const optRows = opts.length
-    ? opts.map(x=>`<tr><td>${x.fatto?"☑":"☐"}</td><td>${esc(x.nome)}</td></tr>`).join("")
-    : `<tr><td></td><td style="color:#888">Nessun optional</td></tr>`;
-  $("#printArea").innerHTML=`
-    <div class="p-head">
-      <div class="p-logo"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:26px;height:26px"><path d="M12 2v20M3.34 7l17.32 10M20.66 7L3.34 17"/><path d="M12 6.2l2.4-1.4M12 6.2L9.6 4.8M12 17.8l2.4 1.4M12 17.8l-2.4 1.4"/></svg></div>
-      <div><div class="p-t">SCHEDA COMMESSA</div><div class="p-s">FRIGOBOX · reparto costruzione</div></div>
-      <div class="p-date">${new Date().toLocaleDateString("it-IT")}</div>
-    </div>
-    <div class="p-codebox">
-      <div class="p-code">${esc(o.codice||"—")}</div>
-      <svg id="printBarcode"></svg>
-    </div>
-    <table class="p-info">
-      <tr><th>Cliente</th><td>${esc(o.cliente||"—")}</td><th>Stato</th><td>${st.label}</td></tr>
-      <tr><th>Telaio</th><td>${esc(o.targa||"—")}</td><th>Lavorazione</th><td>${esc(o.tipoCella||"—")}</td></tr>
-      <tr><th>Data ordine</th><td>${fmtDate(o.dataOrdine)}</td><th>Scadenza</th><td>${fmtDate(o.scadenza)}</td></tr>
-    </table>
-    <div class="p-sec">Optional del mezzo</div>
-    <table class="p-opt">${optRows}</table>
-    <div class="p-sec">Note</div>
-    <div class="p-note">${esc(o.note||"—")}</div>
-    <div class="p-foot">Krio — scheda generata il ${new Date().toLocaleString("it-IT")}</div>`;
-  try{
-    await loadScript("https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js");
-    if(window.JsBarcode && o.codice) JsBarcode("#printBarcode", o.codice, {format:"CODE128", height:48, fontSize:14, margin:0});
-  }catch(_){ const el=$("#printBarcode"); if(el) el.remove(); }
-  setTimeout(()=>window.print(),120);
-}
+
+
+
 
 /* ===================================================================
    PROMEMORIA SCADENZE — notifiche locali
@@ -4543,8 +5501,9 @@ async function toggleNotif(){
 }
 function notify(title, body){
   const opts={ body, icon:"icon-192.png", badge:"icon-192.png", tag:"scadenze-celle", renotify:true };
-  if(navigator.serviceWorker && navigator.serviceWorker.ready){
-    navigator.serviceWorker.ready.then(reg=>reg.showNotification(title,opts)).catch(()=>{ try{ new Notification(title,opts); }catch(_){} });
+  const swN = getSW();
+  if(swN && swN.ready){
+    swN.ready.then(reg=>reg.showNotification(title,opts)).catch(()=>{ try{ new Notification(title,opts); }catch(_){} });
   }else{ try{ new Notification(title,opts); }catch(_){} }
 }
 function checkDeadlines(){
@@ -4582,7 +5541,11 @@ function updateInstallUI(){
   if(isStandalone()) return;
   if(isIOS() && !deferredPrompt){ const h=$("#iosInstallHint"); if(h) h.style.display="block"; }
 }
-function registerSW(){ if("serviceWorker" in navigator){ navigator.serviceWorker.register("sw.js").catch(()=>{}); } }
+function registerSW(){
+  const sw = getSW();
+  if(!sw) return;
+  try{ sw.register("sw.js").catch(function(){}); }catch(_){}
+}
 
 try{ ensureFolder2026(); }catch(_){}
 // ultima cartella visitata (se ancora esiste)
@@ -4699,7 +5662,7 @@ function openHealth(){
     view: S.view,
     folderId: S.folderId,
     role: S.role,
-    sw: !!(navigator.serviceWorker&&navigator.serviceWorker.controller),
+    sw: (function(){ try{ const s=getSW(); return !!(s&&s.controller); }catch(_){ return false; } })(),
     lastActivity: new Date(S.lastActivity||Date.now()).toISOString(),
     ua: navigator.userAgent.slice(0,120)
   };
@@ -4729,6 +5692,7 @@ try{applyAppearance();}catch(_){}
 try{applyChromeI18n();}catch(_){}
 buildKeypad(); renderPin();
 try{ensureFolderNavDelegate();}catch(_){}
+try{ wireChromeUI(); }catch(_){}
 registerSW(); updateInstallUI();
 setupBackButton();
 setupVoiceSearch();
@@ -4742,9 +5706,11 @@ const sn=$("#btnSnapshot"); if(sn) sn.onclick=downloadSnapshot;
 
 window.addEventListener("online", ()=>{ flushQueue(); toast("Rete disponibile","ok"); });
 // banner aggiornamento SW
-if("serviceWorker" in navigator){
-  navigator.serviceWorker.addEventListener("controllerchange", ()=>{ /* reload handled by user */ });
-  navigator.serviceWorker.getRegistration().then(reg=>{
+(function(){
+  const sw = getSW();
+  if(!sw) return;
+  try{ sw.addEventListener("controllerchange", ()=>{ /* reload handled by user */ }); }catch(_){}
+  try{ sw.getRegistration().then(reg=>{
     if(!reg) return;
     reg.addEventListener("updatefound", ()=>{
       const nw=reg.installing; if(!nw) return;
@@ -4763,8 +5729,8 @@ if("serviceWorker" in navigator){
     });
     // check periodico
     setInterval(()=>{ try{ reg.update(); }catch(_){} }, 15*60*1000);
-  });
-}
+  }); }catch(_){ }
+})();
 // timeout sessione 45 min inattività
 const SESSION_MS=45*60*1000;
 ["pointerdown","keydown","touchstart"].forEach(ev=>document.addEventListener(ev,()=>{ S.lastActivity=Date.now(); },{passive:true}));
@@ -4777,9 +5743,20 @@ setInterval(()=>{
 }, 60000);
 
 if(S.pin && S.url){
-  // sessione attiva: prova a entrare (verifica silenziosa)
-  enterApp();
-  setTimeout(flushQueue, 1500);
+  // sessione attiva: verifica PIN in silenzio poi entra
+  S.canEdit = (S.role==="edit");
+  api("auth").then(function(d){
+    S.role = d.role || S.role || "edit";
+    S.canEdit = (S.role==="edit");
+    try{ sessionStorage.setItem("cf_role", S.role); }catch(_){}
+    enterApp();
+    setTimeout(function(){ try{ flushQueue(); }catch(_){} }, 1500);
+  }).catch(function(){
+    // PIN non più valido → login
+    S.pin=""; S.role=""; S.canEdit=false;
+    try{ sessionStorage.removeItem("cf_pin"); sessionStorage.removeItem("cf_role"); }catch(_){}
+    document.addEventListener("keydown",keyListener);
+  });
 }else{
   document.addEventListener("keydown",keyListener);
   if(!S.url){ setTimeout(()=>{ $("#pinMsg").textContent="Prima configura l'URL script (⚙︎)"; },400); }
