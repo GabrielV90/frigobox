@@ -210,12 +210,6 @@ input,select,textarea{font-family:inherit;font-size:15px}
 .fab svg{width:20px;height:20px}
 .fab:active{transform:scale(.96)}
 
-/* view switch */
-.viewswitch{display:flex;gap:4px;background:var(--surface);border:1px solid var(--line);border-radius:100px;padding:4px;margin-bottom:14px}
-.viewswitch button{flex:1;height:38px;border-radius:100px;font-family:'Archivo';font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);display:flex;align-items:center;justify-content:center;gap:8px;transition:.14s}
-.viewswitch button svg{width:16px;height:16px}
-.viewswitch button.active{background:linear-gradient(145deg,var(--frost),#2b9cba);color:#04141a}
-
 /* archive: cliente > ordine > foto */
 .arch-client{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);margin-bottom:12px;overflow:hidden}
 .arch-client-head{display:flex;align-items:center;gap:12px;padding:14px;cursor:pointer}
@@ -287,13 +281,6 @@ body.viewonly .opt-add,
 body.viewonly .opt-suggest,
 body.viewonly .opt-item .del{display:none !important}
 body.viewonly .sheet-foot{justify-content:flex-end}
-body.viewonly #viewswitch [data-v="stats"],
-body.viewonly #viewswitch [data-v="cap"],
-body.viewonly #viewswitch [data-v="prev"]{display:none !important}
-.viewswitch{overflow-x:auto}
-.viewswitch::-webkit-scrollbar{display:none}
-.viewswitch button{flex:0 0 auto;padding:0 15px;white-space:nowrap}
-
 /* card compatte (ordini) */
 .orders{grid-template-columns:repeat(auto-fill,minmax(158px,1fr));gap:10px}
 .ticket{padding:12px 12px 10px}
@@ -375,10 +362,6 @@ body.viewonly #viewswitch [data-v="prev"]{display:none !important}
 .stat-select{width:100%;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:11px 12px;color:var(--text);outline:none;font-family:'JetBrains Mono';font-size:13px;margin-bottom:12px}
 .stat-select:focus{border-color:var(--frost-dim);box-shadow:0 0 0 3px var(--frost-glow)}
 
-/* switch a 4 tab */
-.viewswitch button{font-size:11px;letter-spacing:.04em}
-@media(max-width:440px){ .viewswitch button svg{display:none} .viewswitch button{gap:0} }
-
 /* organico / capacità */
 .cap-nav{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
 .cap-nav button{width:40px;height:40px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--text);display:grid;place-items:center}
@@ -437,6 +420,58 @@ body.viewonly #viewswitch [data-v="prev"]{display:none !important}
 .note-box{background:var(--bg-deep);border:1px solid var(--line);border-left:3px solid var(--amber);border-radius:var(--r);padding:12px 14px;font-size:14px;line-height:1.55;color:var(--text);white-space:pre-wrap;max-height:42vh;overflow:auto}
 
 /* ---- Preventivi ---- */
+
+/* preventivi landing */
+
+/* Design Review */
+.dr-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+.dr-head h2{font-family:'Archivo';font-weight:800;font-size:17px}
+.dr-sess{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:14px;margin-bottom:10px;cursor:pointer}
+.dr-sess:active{background:var(--surface-2)}
+.dr-sess .d{font-family:'JetBrains Mono';font-size:11px;color:var(--muted)}
+.dr-sess .t{font-family:'Archivo';font-weight:800;font-size:15px;margin-top:4px}
+.dr-sess .meta{font-size:12px;color:var(--muted);margin-top:6px}
+.dr-chips{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 12px}
+.dr-chip{padding:7px 12px;border-radius:100px;border:1px dashed var(--line-strong);font-size:11px;font-family:'Archivo';font-weight:700;color:var(--muted);background:var(--surface)}
+.dr-chip:active{border-color:var(--frost);color:var(--frost)}
+.dr-sec{margin-bottom:16px}
+.dr-sec .lab{font-family:'Archivo';font-weight:800;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.dr-check{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);margin-bottom:6px}
+.dr-check .box{width:22px;height:22px;border-radius:6px;border:1.5px solid var(--line-strong);flex:0 0 auto;display:grid;place-items:center;margin-top:1px}
+.dr-check.on .box{background:var(--frost);border-color:var(--frost);color:#04141a}
+.dr-check .box svg{width:14px;height:14px}
+.dr-check .body{flex:1;min-width:0}
+.dr-check .body input{width:100%;background:none;border:none;outline:none;color:var(--text);font-size:13px}
+.dr-check .rm{color:var(--muted-2);padding:4px;flex:0 0 auto}
+.dr-ta{width:100%;min-height:88px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px;color:var(--text);outline:none;resize:vertical;line-height:1.45}
+.dr-ta:focus{border-color:var(--frost-dim);box-shadow:0 0 0 3px var(--frost-glow)}
+.dr-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.dr-actions button{height:36px;padding:0 12px;border-radius:8px;border:1px solid var(--line);background:var(--surface-2);font-family:'Archivo';font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+.dr-actions button:active{color:var(--frost);border-color:var(--frost-dim)}
+.pv-home{display:flex;flex-direction:column;gap:12px;padding:8px 0 24px}
+.pv-home-title{font-family:'Archivo';font-weight:800;font-size:18px;margin-bottom:4px}
+.pv-home-sub{font-size:13px;color:var(--muted);margin-bottom:8px}
+.pv-home-btn{display:flex;align-items:center;gap:14px;padding:18px 16px;border-radius:var(--r-lg);border:1px solid var(--line);background:var(--surface);cursor:pointer;text-align:left;width:100%}
+.pv-home-btn:active{background:var(--surface-2);border-color:var(--line-strong)}
+.pv-home-btn .ic{width:48px;height:48px;border-radius:12px;display:grid;place-items:center;flex:0 0 auto;background:linear-gradient(145deg,var(--frost-dim),#153a45);color:var(--frost);border:1px solid var(--frost-dim)}
+.pv-home-btn .ic svg{width:24px;height:24px}
+.pv-home-btn .tx{flex:1;min-width:0}
+.pv-home-btn .tx .t{font-family:'Archivo';font-weight:800;font-size:15px}
+.pv-home-btn .tx .s{font-size:12px;color:var(--muted);margin-top:3px}
+.pv-home-btn .chev{color:var(--muted-2)}
+.pv-home-btn .chev svg{width:18px;height:18px}
+.pv-home-btn .badge{font-family:'JetBrains Mono';font-size:11px;background:var(--surface-2);border:1px solid var(--line);color:var(--frost);padding:3px 8px;border-radius:100px;margin-top:6px;display:inline-block}
+.pv-back{display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 12px;border-radius:var(--r);border:1px solid var(--line);background:var(--surface);color:var(--muted);font-family:'Archivo';font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.05em;margin-bottom:14px}
+.pv-back svg{width:16px;height:16px}
+.pv-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:14px;margin-bottom:10px;cursor:pointer;position:relative}
+.pv-card:active{background:var(--surface-2)}
+.pv-card .pc-code{font-family:'JetBrains Mono';font-weight:700;font-size:15px}
+.pv-card .pc-cli{font-size:13px;color:var(--muted);margin-top:2px}
+.pv-card .pc-meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px;font-family:'JetBrains Mono';font-size:11px;color:var(--muted-2)}
+.pv-card .pc-ore{color:var(--frost);font-weight:700}
+.pv-card .pc-del{position:absolute;top:10px;right:10px;width:34px;height:34px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--muted);display:grid;place-items:center}
+.pv-card .pc-del svg{width:15px;height:15px}
+.pv-detail{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:16px;margin-bottom:12px}
 .pv-sub{display:flex;gap:4px;background:var(--surface);border:1px solid var(--line);border-radius:100px;padding:4px;margin-bottom:16px}
 .pv-sub button{flex:1;height:36px;border-radius:100px;font-family:'Archivo';font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
 .pv-sub button.active{background:var(--surface-2);color:var(--frost)}
@@ -681,7 +716,6 @@ body.viewonly #viewswitch [data-v="prev"]{display:none !important}
 .side-item.active svg{color:var(--frost)}
 .side-item:active{background:var(--surface-2)}
 .side-foot{padding:12px 16px calc(14px + var(--safe-b));border-top:1px solid var(--line);font-size:11px;color:var(--muted-2);font-family:'JetBrains Mono'}
-.viewswitch{display:none !important}
 
 /* ======= FOLDERS ======= */
 .folder-bar{display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap}
@@ -765,21 +799,6 @@ body.viewonly .btn-folder{display:none !important}
 .fase-item.done{opacity:.7}
 .fase-item.done .txt{text-decoration:line-through;color:var(--muted)}
 .fase-num{font-family:'JetBrains Mono';font-size:11px;color:var(--frost);width:20px}
-/* kanban */
-.kanban{display:flex;gap:10px;overflow-x:auto;padding-bottom:12px;min-height:50vh;-webkit-overflow-scrolling:touch}
-.kanban-col{flex:0 0 min(260px,78vw);background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);display:flex;flex-direction:column;max-height:70vh}
-.kanban-head{padding:12px 14px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:8px}
-.kanban-head .t{font-family:'Archivo';font-weight:800;font-size:12px;text-transform:uppercase;letter-spacing:.06em}
-.kanban-head .n{font-family:'JetBrains Mono';font-size:11px;color:var(--muted)}
-.kanban-body{flex:1;overflow-y:auto;padding:8px}
-.kcard{background:var(--bg);border:1px solid var(--line);border-radius:var(--r);padding:10px 12px;margin-bottom:8px;cursor:pointer;border-left:3px solid var(--line-strong)}
-.kcard:active{background:var(--surface-2)}
-.kcard .kc{font-family:'JetBrains Mono';font-weight:700;font-size:13px}
-.kcard .ks{font-size:11px;color:var(--muted);margin-top:2px}
-.kcard.b-bozza{border-left-color:var(--muted-2)}
-.kcard.b-lav{border-left-color:var(--frost)}
-.kcard.b-pronto{border-left-color:var(--amber)}
-.kcard.b-cons{border-left-color:var(--green)}
 /* week load */
 .week-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:14px}
 .week-day{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:8px 4px;text-align:center;min-height:72px}
@@ -819,6 +838,7 @@ body.krio-lock-nav #app{overscroll-behavior-x:none}
 .sel-bar .info{flex:1;font-family:'JetBrains Mono';font-size:12px;color:var(--frost);min-width:120px}
 .sel-bar button{height:34px;padding:0 12px;border-radius:8px;font-family:'Archivo';font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.04em;border:1px solid var(--line);background:var(--surface);color:var(--text)}
 .sel-bar button.primary{background:var(--frost);color:#04141a;border-color:transparent}
+.sel-bar button#selDelete{color:var(--red)}
 .orow.selected,.folder-row.selected{border-color:var(--frost)!important;box-shadow:0 0 0 3px var(--frost-glow);background:var(--surface-2)}
 .orow .sel-check,.folder-row .sel-check{
   width:22px;height:22px;border-radius:6px;border:2px solid var(--line-strong);flex:0 0 auto;
@@ -870,22 +890,61 @@ body.select-mode .orow .sel-check,body.select-mode .folder-row .sel-check{displa
 
 
 
+.brand-sub{font-family:'Archivo',sans-serif;font-weight:800;letter-spacing:.06em;font-size:11px;line-height:1.2}
+.brand-sub .frigo{
+  background:linear-gradient(145deg,#7AE0F5 0%,var(--frost) 45%,#2A9BB8 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  -webkit-text-fill-color:transparent;
+}
+.brand-sub .box{color:#FFFFFF;-webkit-text-fill-color:#fff}
+.topbar .brand-sub{font-size:10px;letter-spacing:.1em}
+.keypad-head .brand-sub{font-size:12px;margin-top:3px}
+.fab-inline,button.fab-inline{
+  height:44px;padding:0 16px;border-radius:100px;
+  background:linear-gradient(145deg,var(--frost),#2b9cba);color:#04141a;
+  font-family:'Archivo';font-weight:800;font-size:12px;letter-spacing:.04em;
+  text-transform:uppercase;display:inline-flex;align-items:center;gap:8px;
+  box-shadow:0 4px 14px rgba(70,198,230,.35);border:none;cursor:pointer;
+}
+.fab-inline svg{width:18px;height:18px}
+.fab-inline:active{transform:scale(.96)}
 .settings-block{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:12px}
 .settings-block h3{font-family:'Archivo';font-weight:800;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted-2);margin-bottom:10px}
 .appear-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.appear-swatch{border:1px solid var(--line);border-radius:8px;padding:12px;text-align:left;background:var(--bg);font-family:'Archivo';font-weight:700;font-size:12px;color:var(--muted)}
+.appear-swatch{border:1px solid var(--line);border-radius:8px;padding:12px;text-align:left;background:var(--bg);font-family:'Archivo';font-weight:700;font-size:12px;color:var(--muted);cursor:pointer}
 .appear-swatch.on{border-color:var(--frost);color:var(--text);box-shadow:inset 3px 0 0 var(--frost)}
-#settingsViewHost{min-height:40vh;padding-bottom:24px}
-body[data-theme="midnight"]{--bg:#06080C;--bg-deep:#040506;--surface:#121820;--surface-2:#182028;--line:#243040;--frost:#4EC8E8}
-body[data-theme="slate"]{--bg:#14181E;--surface:#1E252E;--surface-2:#262E38;--line:#343E4C;--frost:#5B9FD4}
-body[data-theme="contrast"]{--bg:#000;--surface:#111;--surface-2:#1A1A1A;--line:#444;--text:#FFF;--muted:#CCC;--frost:#5CF}
+#settingsViewHost{min-height:40vh;padding-bottom:28px}
+body[data-theme="midnight"]{--bg:#06080C;--surface:#121820;--surface-2:#182028;--line:#243040;--frost:#4EC8E8}
+body[data-theme="slate"]{--bg:#14181E;--surface:#1E252E;--frost:#5B9FD4}
+body[data-theme="contrast"]{--bg:#000;--surface:#111;--text:#FFF;--muted:#CCC;--frost:#5CF}
 body[data-density="compact"] .orow{padding:7px 8px!important}
-body[data-accent="amber"]{--frost:#E8A317;--frost-dim:#5C4010}
-body[data-accent="green"]{--frost:#3FA86A;--frost-dim:#1A4A30}
-body[data-accent="violet"]{--frost:#9B7AED;--frost-dim:#3A2A6A}
-.folder-nav-simple{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
-.folder-root-btn{height:34px;padding:0 12px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--muted);font-family:'Archivo';font-weight:700;font-size:11px;text-transform:uppercase}
-.folder-root-btn.on{border-color:var(--frost-dim);color:var(--text);box-shadow:inset 3px 0 0 var(--frost)}
+body[data-accent="amber"]{--frost:#E8A317}
+body[data-accent="green"]{--frost:#3FA86A}
+body[data-accent="violet"]{--frost:#9B7AED}
+
+
+/* Windows-like file manager */
+.folder-row{display:flex;align-items:center;gap:8px}
+.folder-open{
+  flex:1;min-width:0;display:flex;align-items:center;gap:12px;
+  cursor:pointer;padding:2px 0;border-radius:8px;
+}
+.folder-open:active{opacity:.85}
+.cmd-bar{
+  display:flex;flex-wrap:wrap;align-items:center;gap:8px;
+  background:var(--surface-2);border:1px solid var(--line-strong);
+  border-radius:var(--r);padding:10px 12px;margin-bottom:12px;
+}
+.cmd-bar .info{flex:1;min-width:100px;font-family:'JetBrains Mono';font-size:12px;color:var(--frost)}
+.cmd-bar button{
+  height:36px;padding:0 12px;border-radius:8px;border:1px solid var(--line);
+  background:var(--surface);color:var(--text);font-family:'Archivo';font-weight:700;
+  font-size:11px;text-transform:uppercase;letter-spacing:.04em;cursor:pointer;
+}
+.cmd-bar button.primary{background:var(--frost);color:#04141a;border-color:transparent}
+.cmd-bar button.danger{color:var(--red);border-color:rgba(240,85,61,.45)}
+.cmd-bar button:disabled{opacity:.35;pointer-events:none}
+.paste-bar.on{display:flex;flex-wrap:wrap}
 
 </style>
 </head>
@@ -899,7 +958,7 @@ body[data-accent="violet"]{--frost:#9B7AED;--frost-dim:#3A2A6A}
         <div class="logo"><svg class="snow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M3.34 7l17.32 10M20.66 7L3.34 17"/><path d="M12 6.2l2.4-1.4M12 6.2L9.6 4.8M12 17.8l2.4 1.4M12 17.8l-2.4 1.4"/><path d="M5.7 8.6l.2-2.8M5.7 8.6l-2.7-.7M18.3 15.4l-.2 2.8M18.3 15.4l2.7.7M18.3 8.6l.2-2.8M18.3 8.6l2.7-.7M5.7 15.4l-.2 2.8M5.7 15.4l-2.7.7"/></svg></div>
         <div>
           <h1>KRIO</h1>
-          <p>FRIGOBOX</p>
+          <p class="brand-sub"><span class="frigo">FRIGO</span><span class="box">BOX</span></p>
         </div>
       </div>
     </div>
@@ -918,7 +977,7 @@ body[data-accent="violet"]{--frost:#9B7AED;--frost-dim:#3A2A6A}
     <div class="logo"><svg class="snow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M3.34 7l17.32 10M20.66 7L3.34 17"/><path d="M12 6.2l2.4-1.4M12 6.2L9.6 4.8M12 17.8l2.4 1.4M12 17.8l-2.4 1.4"/><path d="M5.7 8.6l.2-2.8M5.7 8.6l-2.7-.7M18.3 15.4l-.2 2.8M18.3 15.4l2.7.7M18.3 8.6l.2-2.8M18.3 8.6l2.7-.7M5.7 15.4l-.2 2.8M5.7 15.4l-2.7.7"/></svg></div>
     <div class="titles">
       <h1>KR<span>IO</span></h1>
-      <small>FRIGOBOX</small>
+      <small class="brand-sub"><span class="frigo">FRIGO</span><span class="box">BOX</span></small>
       <span class="ro-badge" id="roleBadge">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" style="width:10px;height:10px"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="2.5"/></svg>
         sola lettura
@@ -968,6 +1027,10 @@ body[data-accent="violet"]{--frost:#9B7AED;--frost-dim:#3A2A6A}
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
         Settimana
       </button>
+      <button class="side-item" data-v="design">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+        Design review
+      </button>
     </nav>
     <div class="side-foot">Krio · v1</div>
   </aside>
@@ -987,6 +1050,7 @@ body[data-accent="violet"]{--frost:#9B7AED;--frost-dim:#3A2A6A}
       </button>
     </div>
 
+
     <div class="filters" id="lavFilters"></div>
     <div class="filters" id="filters"></div>
     <div id="ordersHost">
@@ -996,15 +1060,15 @@ body[data-accent="violet"]{--frost:#9B7AED;--frost-dim:#3A2A6A}
     <div id="statsHost" style="display:none"></div>
     <div id="capHost" style="display:none"></div>
     <div id="prevHost" style="display:none"></div>
-    
     <div id="weekHost" style="display:none"></div>
+    <div id="designHost" style="display:none"></div>
     <div id="settingsViewHost" style="display:none"></div>
     <div id="updateBannerSlot"></div>
   </div>
 
   <button class="fab" id="btnNew">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
-    Nuovo lavoro
+    Nuovo ordine
   </button>
 </section>
 
@@ -1148,12 +1212,7 @@ const MANSIONI = [
 
 /* ---- Configuratore preventivi ---- */
 const PV_VEICOLI = ["MOTRICE ULTIMO MIGLIO 3.5 t","MOTRICE 2 ASSI – 7.5 t – 11.5 t","MOTRICE 3 ASSI - fino a 26 t","SEMIRIMORCHIO","AUTOTRENO","KIT"];
-const PV_ALLEST_DEFAULT = ["Standard","Allestimento carne con guidovie","Allestimento carne con tubovie","Fiori","Doppio piano di carico","Multitemperatura"];
-const PV_ALLEST_BY = {
-  "MOTRICE 2 ASSI – 7.5 t – 11.5 t":["Standard","Allestimento carne con guidovie","Fiori","Multitemperatura"],
-  "SEMIRIMORCHIO":["Standard","Allestimento carne con guidovie","Allestimento carne con tubovie","Fiori","Doppio piano di carico","Multitemperatura"]
-};
-const PV_TIPI = ["Cassa assemblata","Kit"];
+const PV_TIPI = ["Box","Completo","Kit"];
 const _M = (p,mo,i,f,e)=>({portalista:p,montatore:mo,interni:i,finizione:f,elettrauto:e});
 const PV_LIST_DEFAULT = {
   veicoli:{
@@ -1164,8 +1223,7 @@ const PV_LIST_DEFAULT = {
     "AUTOTRENO":_M(24,92,50,44,10),
     "KIT":_M(4,16,10,8,2)
   },
-  tipo:{"Cassa assemblata":_M(0,0,0,0,0),"Kit":_M(0,0,0,0,0)},
-  allest:{"Standard":_M(0,0,0,0,0),"Allestimento carne con guidovie":_M(2,8,6,8,6),"Allestimento carne con tubovie":_M(2,10,7,9,7),"Fiori":_M(2,6,5,5,2),"Doppio piano di carico":_M(3,18,12,10,2),"Multitemperatura":_M(2,10,6,8,14)},
+  tipo:{"Box":_M(0,0,0,0,0),"Completo":_M(0,0,0,0,0),"Kit":_M(0,0,0,0,0)},
   accessori:[
     {nome:"Sponda idraulica",ore:_M(1,5,1,1,4)},{nome:"Pedana di carico",ore:_M(0,3,1,1,1)},
     {nome:"Bandelle paracolpi",ore:_M(0,1,1,1,0)},{nome:"Faro di lavoro LED",ore:_M(0,0,0,0,2)},
@@ -1202,7 +1260,10 @@ const S = {
   statGran: "mese",
   statCode: "all",
   capMonth: new Date().toISOString().slice(0,7),
-  pv: {sub:"prev", step:1, veicolo:null, tipo:null, allest:null, accSel:new Set(), codice:"", cliente:"", note:""},
+  pv: {home:"home", sub:"prev", step:1, veicolo:null, tipo:null, accSel:new Set(), codice:"", cliente:"", note:"", detailId:null},
+  preventivi: JSON.parse(localStorage.getItem("cf_preventivi")||"[]"),
+  designSessions: JSON.parse(localStorage.getItem("cf_design")||"[]"),
+  designId: null,
   settings: JSON.parse(localStorage.getItem("cf_settings")||"{}"),
   query: "",
   role: sessionStorage.getItem("cf_role") || "edit",
@@ -1270,9 +1331,16 @@ function ensureFoldersFromSettings(){
     localStorage.setItem("cf_folders", JSON.stringify(S.folders));
   }
 }
-function getFolder(id){ return S.folders.find(f=>f.id===id); }
+function getFolder(id){
+  if(id==null || id==="") return null;
+  return S.folders.find(f=>String(f.id)===String(id)) || null;
+}
 function childFolders(parentId){
-  return S.folders.filter(f=>(f.parentId||null)===(parentId||null)).sort((a,b)=>a.name.localeCompare(b.name,"it"));
+  const p = (parentId==null || parentId==="") ? "" : String(parentId);
+  return S.folders.filter(f=>{
+    const fp = (f.parentId==null || f.parentId==="") ? "" : String(f.parentId);
+    return fp === p;
+  }).sort((a,b)=>(a.name||"").localeCompare(b.name||"","it"));
 }
 function folderPath(id){
   const path=[]; let cur=id;
@@ -1280,29 +1348,56 @@ function folderPath(id){
   return path;
 }
 function countInFolder(fid){
-  const orders=S.orders.filter(o=>(o.appFolderId||null)===(fid||null)).length;
+  const fidS = (fid==null || fid==="") ? "" : String(fid);
+  const orders=S.orders.filter(o=>String(o.appFolderId??"")===fidS).length;
   const subs=childFolders(fid).length;
   return {orders, subs};
 }
 function isDescendantFolder(folderId, possibleAncestorId){
   let cur=folderId;
-  while(cur){ if(cur===possibleAncestorId) return true; const f=getFolder(cur); if(!f) break; cur=f.parentId||null; }
+  while(cur){
+    if(String(cur)===String(possibleAncestorId)) return true;
+    const f=getFolder(cur); if(!f) break;
+    cur=f.parentId||null;
+  }
   return false;
 }
-/** Crea cartella 2026 se manca e sposta tutti gli ordini senza cartella dentro */
+/**
+ * Garantisce cartella 2026 e RIAGGANCIA ordini "scomparsi":
+ * - senza appFolderId
+ * - con appFolderId che non corrisponde a nessuna cartella esistente
+ * Non cancella ordini. Root resta senza lista ordini (solo cartelle).
+ */
 function ensureFolder2026(){
-  let f2026 = S.folders.find(f=>f.name==="2026" && !f.parentId);
+  let f2026 = S.folders.find(f=>f.name==="2026" && (f.parentId==null || f.parentId===""));
   if(!f2026){
     f2026 = {id:fuid(), name:"2026", parentId:null};
     S.folders.push(f2026);
     persistFolders();
   }
+  const valid = new Set(S.folders.map(f=>String(f.id)));
   let moved=0;
   S.orders.forEach(o=>{
-    if(!o.appFolderId){ o.appFolderId=f2026.id; moved++; }
+    const fid = o.appFolderId;
+    if(fid==null || fid==="" || !valid.has(String(fid))){
+      o.appFolderId = f2026.id;
+      moved++;
+    }
   });
-  if(moved) localStorage.setItem("cf_cache", JSON.stringify(S.orders));
+  // folderId corrente invalido → radice
+  if(S.folderId && !valid.has(String(S.folderId))){
+    S.folderId = null;
+    try{ rememberFolder(); }catch(_){}
+  }
+  if(moved){
+    try{ localStorage.setItem("cf_cache", JSON.stringify(S.orders)); }catch(_){}
+  }
   return f2026;
+}
+function reconcileOrders(){
+  const n = (S.orders||[]).length;
+  ensureFolder2026();
+  return n;
 }
 
 /* ---------- haptic + toast ---------- */
@@ -1409,6 +1504,76 @@ function renderPin(){
     dots.forEach(d=>d.classList.add("on"));
   }
 }
+
+/* ===================================================================
+   I18N — applica davvero le stringhe UI
+   =================================================================== */
+const I18N={
+it:{all:"Tutti",orders:"Ordini",archive:"Archivio",stats:"Statistiche",capacity:"Capacità",quotes:"Preventivi",week:"Settimana",design:"Design review",
+settings:"Impostazioni",new_order:"Nuovo ordine",new_folder:"Nuova cartella",paste_here:"Incolla qui",cancel:"Annulla",cut:"Taglia",copy:"Copia",
+order_one:"ordine",order_many:"ordini",folders_short:"cart.",pin_msg:"Inserisci il PIN di accesso",pin_wrong:"PIN errato",search_ph:"Cerca codice, cliente, telaio…",
+clip_empty:"Appunti vuoti",readonly:"Sola lettura",pasted:"Incollati {n} elementi",lang_ok:"Lingua aggiornata",
+welcome:"Benvenuto, {name}!",empty_folder:"Cartella vuota.",empty_root:"Crea una cartella, poi aggiungi gli ordini."},
+en:{all:"All",orders:"Orders",archive:"Archive",stats:"Stats",capacity:"Capacity",quotes:"Quotes",week:"Week",design:"Design review",
+settings:"Settings",new_order:"New order",new_folder:"New folder",paste_here:"Paste here",cancel:"Cancel",cut:"Cut",copy:"Copy",
+order_one:"order",order_many:"orders",folders_short:"fld.",pin_msg:"Enter access PIN",pin_wrong:"Wrong PIN",search_ph:"Search code, client, VIN…",
+clip_empty:"Clipboard empty",readonly:"Read only",pasted:"Pasted {n} items",lang_ok:"Language updated",
+welcome:"Welcome, {name}!",empty_folder:"Empty folder.",empty_root:"Create a folder, then add orders."},
+fr:{all:"Tous",orders:"Commandes",archive:"Archives",stats:"Stats",capacity:"Capacité",quotes:"Devis",week:"Semaine",design:"Design review",
+settings:"Paramètres",new_order:"Nouvelle commande",new_folder:"Nouveau dossier",paste_here:"Coller ici",cancel:"Annuler",cut:"Couper",copy:"Copier",
+order_one:"commande",order_many:"commandes",folders_short:"dos.",pin_msg:"Entrez le code PIN",pin_wrong:"PIN incorrect",search_ph:"Rechercher code, client…",
+clip_empty:"Presse-papiers vide",readonly:"Lecture seule",pasted:"{n} éléments collés",lang_ok:"Langue mise à jour",
+welcome:"Bienvenue, {name} !",empty_folder:"Dossier vide.",empty_root:"Créez un dossier, puis ajoutez des commandes."},
+ro:{all:"Toate",orders:"Comenzi",archive:"Arhivă",stats:"Statistici",capacity:"Capacitate",quotes:"Oferte",week:"Săptămână",design:"Design review",
+settings:"Setări",new_order:"Comandă nouă",new_folder:"Folder nou",paste_here:"Lipește aici",cancel:"Anulează",cut:"Taie",copy:"Copiază",
+order_one:"comandă",order_many:"comenzi",folders_short:"fld.",pin_msg:"Introduceți PIN-ul",pin_wrong:"PIN greșit",search_ph:"Caută cod, client…",
+clip_empty:"Clipboard gol",readonly:"Doar citire",pasted:"Lipite {n} elemente",lang_ok:"Limbă actualizată",
+welcome:"Bine ați venit, {name}!",empty_folder:"Folder gol.",empty_root:"Creează un folder, apoi adaugă comenzi."},
+sq:{all:"Të gjitha",orders:"Porosi",archive:"Arkivi",stats:"Statistika",capacity:"Kapaciteti",quotes:"Preventiva",week:"Java",design:"Design review",
+settings:"Cilësimet",new_order:"Porosi e re",new_folder:"Dosje e re",paste_here:"Ngjit këtu",cancel:"Anulo",cut:"Pri",copy:"Kopjo",
+order_one:"porosi",order_many:"porosi",folders_short:"dos.",pin_msg:"Vendos PIN-in",pin_wrong:"PIN i gabuar",search_ph:"Kërko kod, klient…",
+clip_empty:"Clipboard bosh",readonly:"Vetëm lexim",pasted:"U ngjitën {n} elemente",lang_ok:"Gjuha u përditësua",
+welcome:"Mirë se vini, {name}!",empty_folder:"Dosje bosh.",empty_root:"Krijo një dosje, pastaj shto porosi."},
+pms:{all:"Tuti",orders:"Òrdin",archive:"Archivi",stats:"Statìstiche",capacity:"Capacità",quotes:"Preventiv",week:"Sman-a",design:"Design review",
+settings:"Ampostassion",new_order:"Òrdin neuv",new_folder:"Cartëla neuva",paste_here:"Ancolé sì",cancel:"Anulé",cut:"Tajé",copy:"Copié",
+order_one:"òrdin",order_many:"òrdin",folders_short:"cart.",pin_msg:"Buta ël PIN d'acess",pin_wrong:"PIN sbalià",search_ph:"Sërché còdes, client, telaj…",
+clip_empty:"Memòria veujda",readonly:"Mach letura",pasted:"Ancolà {n} element",lang_ok:"Lenga agiornà",
+welcome:"Bin ëvnù, {name}!",empty_folder:"Cartëla veujda.",empty_root:"Crea na cartëla, peui gionta j'òrdin."},
+nap:{all:"Tutte",orders:"Ordene",archive:"Archivio",stats:"Statistiche",capacity:"Capacità",quotes:"Preventive",week:"Semmana",design:"Design review",
+settings:"Mpustazioni",new_order:"Ordene nuovo",new_folder:"Cartella nova",paste_here:"Ncolla ccà",cancel:"Annulla",cut:"Taglia",copy:"Copia",
+order_one:"ordene",order_many:"ordene",folders_short:"cart.",pin_msg:"Mette 'o PIN d'accesso",pin_wrong:"PIN sbagliato",search_ph:"Cerca codice, cliente, telaio…",
+clip_empty:"Appunti vacante",readonly:"Sulo lettura",pasted:"Ncollate {n} cose",lang_ok:"Lengua agiornata",
+welcome:"Bemmenuto, {name}!",empty_folder:"Cartella vacante.",empty_root:"Crea na cartella, po' mette l'ordene."}
+};
+function getLang(){ try{ return localStorage.getItem("cf_lang")||"it"; }catch(_){ return "it"; } }
+function setLang(code){
+  try{ localStorage.setItem("cf_lang", code||"it"); document.documentElement.lang=code||"it"; }catch(_){}
+  applyChromeI18n();
+  try{ if(typeof renderCurrent==="function") renderCurrent(); }catch(_){}
+}
+function t(key, vars){
+  const pack=I18N[getLang()]||I18N.it;
+  let s=pack[key]!=null?pack[key]:(I18N.it[key]!=null?I18N.it[key]:key);
+  if(vars) Object.keys(vars).forEach(k=>{ s=String(s).replace(new RegExp("\\{"+k+"\\}","g"), vars[k]); });
+  return s;
+}
+function applyChromeI18n(){
+  try{
+    const map={ordini:"orders",archivio:"archive",stats:"stats",cap:"capacity",prev:"quotes",settimana:"week",design:"design"};
+    $$("#sideNav .side-item[data-v]").forEach(b=>{
+      const k=map[b.dataset.v]; if(!k) return;
+      const svg=b.querySelector("svg");
+      b.textContent="";
+      if(svg) b.appendChild(svg);
+      b.appendChild(document.createTextNode(" "+t(k)));
+    });
+    const fab=$("#btnNew");
+    if(fab){ const svg=fab.querySelector("svg"); fab.textContent=""; if(svg) fab.appendChild(svg); fab.appendChild(document.createTextNode(" "+t("new_order"))); }
+    const si=$("#searchInput"); if(si) si.placeholder=t("search_ph");
+    const pm=$("#pinMsg"); if(pm && !pm.classList.contains("err")) pm.textContent=t("pin_msg");
+  }catch(_){}
+}
+
 async function submitPin(){
   if(pinBuf.length<4){ $("#pinMsg").textContent="Il PIN è di almeno 4 cifre"; return; }
   if(!S.url){ openSettings(true); toast("Configura prima l'URL dello script","err"); return; }
@@ -1439,6 +1604,8 @@ function applyRole(){
   if(!S.canEdit && (S.view==="stats"||S.view==="cap")) setView("ordini");
 }
 function enterApp(){
+  try{ensureFolderNavDelegate();}catch(_){}
+  try{applyChromeI18n();}catch(_){}
   try{applyAppearance();}catch(_){}
   $("#login").classList.remove("active");
   $("#app").classList.add("active");
@@ -1448,6 +1615,7 @@ function enterApp(){
   applyRole();
   updateBell();
   if(!S._notifTimer) S._notifTimer=setInterval(checkDeadlines, 30*60*1000);
+  try{ reconcileOrders(); }catch(_){}
   render(); // show cache instantly
   loadOrders();
 }
@@ -1472,12 +1640,12 @@ async function loadOrders(){
   try{
     const d=await api("list");
     S.orders=d.orders||[];
-    if(d.settings){ S.settings=d.settings; localStorage.setItem("cf_settings",JSON.stringify(S.settings)); ensureFoldersFromSettings(); }
+    if(d.settings){ S.settings=d.settings; localStorage.setItem("cf_settings",JSON.stringify(S.settings)); ensureFoldersFromSettings(); if(Array.isArray(S.settings.preventivi)){ S.preventivi=S.settings.preventivi; localStorage.setItem("cf_preventivi",JSON.stringify(S.preventivi)); } if(Array.isArray(S.settings.designSessions)){ S.designSessions=S.settings.designSessions; localStorage.setItem("cf_design",JSON.stringify(S.designSessions)); } }
     localStorage.setItem("cf_cache",JSON.stringify(S.orders));
-    ensureFolder2026();
+    reconcileOrders();
     renderCurrent();
     checkDeadlines();
-  }catch(e){ toast(e.message,"err"); ensureFolder2026(); renderCurrent(); }
+  }catch(e){ toast(e.message,"err"); reconcileOrders(); renderCurrent(); }
 }
 
 /* ===================================================================
@@ -1485,10 +1653,10 @@ async function loadOrders(){
    =================================================================== */
 function buildFilters(){
   const host=$("#filters");
+  // stesso ambito della lista: radice = tutti; cartella = solo quella
   let base=[...S.orders];
-  if(S.folderId && typeof getFolder==="function" && getFolder(S.folderId)){
-    base=base.filter(o=>String(o.appFolderId||"")===String(S.folderId));
-  }
+  if(!S.folderId) base=[]; // root: non contare ordini
+  else base=base.filter(o=>String(o.appFolderId??"")===String(S.folderId));
   const counts={all:base.length};
   STATI.forEach(s=>counts[s.id]=base.filter(o=>o.stato===s.id).length);
   const chips=[{id:"all",label:"Tutti",color:"var(--frost)"},...STATI];
@@ -1508,11 +1676,14 @@ function buildFilters(){
 }
 function filtered(){
   let list=[...S.orders];
-  // Cartella inesistente → radice
-  if(S.folderId && typeof getFolder==="function" && !getFolder(S.folderId)){ S.folderId=null; try{rememberFolder();}catch(_){} }
-  // In cartella: solo quella. In radice (folderId null): TUTTI gli ordini
-  if(!S.query && S.folderId){
-    list=list.filter(o=>String(o.appFolderId||"")===String(S.folderId));
+  // Radice: nessun ordine in lista (solo cartelle). Cartella: solo i suoi.
+  // Ricerca attiva: cerca ovunque.
+  if(!S.query){
+    if(!S.folderId){
+      list = []; // root: ordini nascosti
+    } else {
+      list = list.filter(o=>String(o.appFolderId??"")===String(S.folderId));
+    }
   }
   if(S.filter!=="all") list=list.filter(o=>o.stato===S.filter);
   if(S.lav!=="all") list=list.filter(o=>o.tipoCella===S.lav);
@@ -1544,13 +1715,17 @@ function deadlineInfo(o){
 function folderRowHTML(f){
   const c=countInFolder(f.id);
   const folderSvg='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-8l-2-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2z"/></svg>';
+  const meta=(c.subs?c.subs+" cart. · ":"")+c.orders+" "+(c.orders===1?"ordine":"ordini");
   return `<div class="folder-row" data-fid="${f.id}">
-    <div class="fic">${folderSvg}</div>
-    <div style="flex:1;min-width:0">
-      <div class="fname">${esc(f.name)}</div>
-      <div class="fmeta">${c.subs?c.subs+" cart. · ":""}${c.orders} ${c.orders===1?"ordine":"ordini"}</div>
+    <div class="sel-check" data-sel-folder="${f.id}" title="Seleziona"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg></div>
+    <div class="folder-open" data-open-folder="${f.id}" title="Apri cartella">
+      <div class="fic">${folderSvg}</div>
+      <div style="flex:1;min-width:0">
+        <div class="fname">${esc(f.name)}</div>
+        <div class="fmeta">${meta}</div>
+      </div>
+      <span class="fchev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg></span>
     </div>
-    <span class="fchev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg></span>
   </div>`;
 }
 function renderBreadcrumb(){
@@ -1563,22 +1738,8 @@ function renderBreadcrumb(){
   return html;
 }
 function renderPasteBar(){
-  if(!S.clipboard) return "";
-  const items = S.clipboard.items || (S.clipboard.data ? [{type:S.clipboard.type, data:S.clipboard.data}] : []);
-  if(!items.length) return "";
-  const mode = S.clipboard.mode==="cut" ? "Tagliati" : "Copiati";
-  let label;
-  if(items.length===1){
-    const it=items[0];
-    label = it.type==="folder" ? ("cartella «"+((it.data&&it.data.name)||"")+"»") : ("ordine "+((it.data&&it.data.codice)||""));
-  } else {
-    label = items.length + " elementi";
-  }
-  return `<div class="paste-bar on">
-    <div class="info">${mode}: <b>${esc(label)}</b></div>
-    <button type="button" class="do-paste" id="btnPasteHere">Incolla qui</button>
-    <button type="button" class="do-cancel" id="btnClipCancel">Annulla</button>
-  </div>`;
+  // Gestito da renderSelBar (barra comandi unificata)
+  return "";
 }
 function render(){
   buildFilters();
@@ -1588,18 +1749,18 @@ function render(){
   const hasFolders=S.folders.length>0;
   const curF=S.folderId?getFolder(S.folderId):null;
   let top=`<div class="folder-bar" style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between">
-    <div class="folder-nav-simple">
-      <button type="button" class="folder-root-btn ${!S.folderId?"on":""}" id="btnRootOrders">Tutti</button>
-      ${curF?`<button type="button" class="folder-root-btn on" id="btnFolderUp">${esc(curF.name)}</button>`:""}
+    <div class="folder-nav-simple" style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+      <button type="button" class="folder-root-btn ${!S.folderId?"on":""}" id="btnRootOrders" style="height:34px;padding:0 12px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--muted);font-family:Archivo;font-weight:700;font-size:11px;text-transform:uppercase">Tutti</button>
+      ${curF?`<button type="button" class="folder-root-btn on" id="btnFolderUp" style="height:34px;padding:0 12px;border-radius:8px;border:1px solid var(--frost-dim);background:var(--surface);color:var(--text);font-family:Archivo;font-weight:700;font-size:11px">${esc(curF.name)}</button>`:""}
     </div>
-    ${S.canEdit?`<button class="btn-folder" id="btnNewFolder"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-8l-2-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2z"/><path d="M12 11v6M9 14h6"/></svg>Nuova cartella</button>`:""}
+    ${S.canEdit?`<button type="button" class="fab-inline" id="btnNewFolder"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Nuova cartella</button>`:""}
   </div>${renderSelBar()}${renderPasteBar()}`;
 
   if(!folders.length && !list.length){
     const filtering = S.query||S.filter!=="all"||S.lav!=="all"||S.noteFilter!=="all";
     const emptyMsg = !hasFolders
       ? "Crea una cartella sotto ICE, poi aggiungi i lavori al suo interno."
-      : (S.folderId ? "Cartella vuota. Tocca «Nuovo lavoro» per aggiungere un ordine." : "Entra in una cartella sotto ICE o creane una nuova.");
+      : (S.folderId ? "Cartella vuota. Tocca «Nuovo ordine» per aggiungere un ordine." : "Gli ordini si vedono solo dentro le cartelle. Apri o crea una cartella.");
     host.innerHTML=top+`<div class="empty">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-8l-2-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2z"/></svg>
       <h3>${filtering?"Nessun lavoro trovato":(!hasFolders?"Archivio ICE vuoto":"Cartella vuota")}</h3>
@@ -1626,58 +1787,100 @@ function render(){
     };
     bindLongPress(t, function(){
       enterSelectMode();
-      if(!S.selectedOrders.has(t.dataset.id)) S.selectedOrders.add(t.dataset.id);
-      haptic(40);
+      S.selectedOrders.add(t.dataset.id);
+      try{ haptic(40); }catch(_){}
       render();
     });
   });
   updateFabVisibility();
 }
+function openFolderById(fid){
+  // Navigazione SEMPRE consentita (stile Esplora file Windows)
+  S.folderId = (fid === "" || fid == null) ? null : fid;
+  rememberFolder();
+  // Non toccare clipboard. Deseleziona solo cartelle (gli ordini restano se in multi-select).
+  if(S.selectedFolders && S.selectedFolders.size) S.selectedFolders = new Set();
+  render();
+}
 function wireFolderUI(){
-  const root=$("#btnRootOrders");
-  if(root) root.onclick=()=>{ S.folderId=null; rememberFolder(); render(); };
+  // Breadcrumb / root / up
+  $$("#breadcrumb [data-goto]").forEach(b=>{
+    b.onclick=function(e){
+      e.preventDefault(); e.stopPropagation();
+      const g=b.dataset.goto;
+      openFolderById(g===""||g==null?null:g);
+    };
+  });
+  const nf=$("#btnNewFolder"); if(nf) nf.onclick=function(e){ e.preventDefault(); createFolder(); };
+  const root=$("#btnRootOrders"); if(root) root.onclick=function(e){ e.preventDefault(); openFolderById(null); };
   const up=$("#btnFolderUp");
-  if(up) up.onclick=()=>{ if(typeof goUpFolder==="function") goUpFolder(); else { const f=getFolder(S.folderId); S.folderId=f&&f.parentId?f.parentId:null; rememberFolder(); render(); } };
-  const nf=$("#btnNewFolder"); if(nf) nf.onclick=createFolder;
+  if(up) up.onclick=function(e){
+    e.preventDefault();
+    const f=getFolder(S.folderId);
+    openFolderById(f && f.parentId ? f.parentId : null);
+  };
+
+  // Highlight selected folders
   $$(".folder-row").forEach(r=>{
     r.classList.toggle("selected", S.selectedFolders.has(r.dataset.fid));
-    if(!r.querySelector(".sel-check")){
-      const sc=document.createElement("div"); sc.className="sel-check";
-      sc.innerHTML='<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg>';
-      r.insertBefore(sc, r.firstChild);
-    }
-    r.onclick=function(e){
-      if(e.target.closest(".sel-check")){
-        e.preventDefault(); e.stopPropagation();
-        toggleSelectFolder(r.dataset.fid); render(); return;
-      }
-      // Tap cartella = entra (anche con selezione attiva, per poter incollare)
-      S.folderId=r.dataset.fid; rememberFolder(); render();
-    };
+  });
+
+  // Long-press on folder = select (not open)
+  $$(".folder-row").forEach(r=>{
+    const fid=r.dataset.fid;
     bindLongPress(r, function(){
       enterSelectMode();
-      if(!S.selectedFolders.has(r.dataset.fid)) S.selectedFolders.add(r.dataset.fid);
-      haptic(40);
+      S.selectedFolders.add(fid);
+      try{ haptic(40); }catch(_){}
       render();
     });
   });
+
+  // Paste bar buttons
   const pb=$("#btnPasteHere");
-  if(pb){
-    pb.onclick=function(e){ e.preventDefault(); e.stopPropagation(); doPaste(); };
-  }
+  if(pb) pb.onclick=function(e){
+    e.preventDefault(); e.stopPropagation();
+    if(S.clipboard&&(S.clipboard.items||S.clipboard.data)) pasteSelectionLocal();
+    else pasteHere();
+  };
   const cc=$("#btnClipCancel");
-  if(cc) cc.onclick=function(e){ e.preventDefault(); S.clipboard=null; try{sessionStorage.removeItem("cf_clipboard");}catch(_){} render(); };
+  if(cc) cc.onclick=function(e){
+    e.preventDefault();
+    S.clipboard=null;
+    try{ sessionStorage.removeItem("cf_clipboard"); }catch(_){}
+    render();
+  };
   wireSelBar();
 }
-function doPaste(){
-  if(!S.canEdit){ toast("Sola lettura","err"); return; }
-  if(!S.clipboard){ toast("Appunti vuoti","err"); return; }
-  const items = S.clipboard.items || (S.clipboard.data ? [{type:S.clipboard.type||"order", data:S.clipboard.data}] : []);
-  if(!items.length){ toast("Appunti vuoti","err"); return; }
-  // normalizza formato multi
-  S.clipboard.items = items;
-  pasteSelectionLocal();
+
+/** Event delegation: apri cartella SEMPRE (capture), indipendente da selectMode */
+function ensureFolderNavDelegate(){
+  if(window.__krio_folder_nav) return;
+  window.__krio_folder_nav=true;
+  document.addEventListener("click", function(ev){
+    // Seleziona cartella via checkbox
+    const sel = ev.target.closest && ev.target.closest("[data-sel-folder]");
+    if(sel){
+      ev.preventDefault();
+      ev.stopPropagation();
+      const fid = sel.getAttribute("data-sel-folder");
+      enterSelectMode();
+      toggleSelectFolder(fid);
+      render();
+      return;
+    }
+    // Apri cartella — priorità massima
+    const open = ev.target.closest && ev.target.closest("[data-open-folder]");
+    if(open){
+      ev.preventDefault();
+      ev.stopPropagation();
+      const fid = open.getAttribute("data-open-folder");
+      openFolderById(fid === "" ? null : fid);
+      return;
+    }
+  }, true);
 }
+
 function updateFabVisibility(){
   const btn=$("#btnNew");
   if(!btn) return;
@@ -1753,13 +1956,12 @@ const IC={
   ext:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14 21 3"/></svg>'
 };
 
-function renderCurrent(){ buildLavFilters(); if(S.view==="stats") renderStats(); else if(S.view==="cap") renderCap(); else if(S.view==="prev") renderPrev(); else if(S.view==="archivio") renderArchive(); else if(S.view==="settimana") renderWeek(); else if(S.view==="impostazioni") renderSettingsView(); else render(); }
+function renderCurrent(){ buildLavFilters(); if(S.view==="stats") renderStats(); else if(S.view==="cap") renderCap(); else if(S.view==="prev") renderPrev(); else if(S.view==="archivio") renderArchive(); else if(S.view==="settimana") renderWeek(); else if(S.view==="design") renderDesign(); else if(S.view==="impostazioni") renderSettingsView(); else render(); }
 function buildLavFilters(){
   const host=$("#lavFilters"); if(!host) return;
   let base=[...S.orders];
-  if(S.folderId && typeof getFolder==="function" && getFolder(S.folderId)){
-    base=base.filter(o=>String(o.appFolderId||"")===String(S.folderId));
-  }
+  if(!S.folderId) base=[]; // root: non contare ordini
+  else base=base.filter(o=>String(o.appFolderId??"")===String(S.folderId));
   const counts={all:base.length};
   LAVORAZIONI.forEach(l=>counts[l]=base.filter(o=>o.tipoCella===l).length);
   const chips=[{id:"all",label:"Tutte"},...LAVORAZIONI.map(l=>({id:l,label:l}))];
@@ -1775,8 +1977,8 @@ function setView(v){
   S.view=v;
   $$("#sideNav .side-item").forEach(b=>b.classList.toggle("active", b.dataset.v===v));
   const ord=v==="ordini", arch=v==="archivio", stats=v==="stats", cap=v==="cap", prev=v==="prev";
-  const week=v==="settimana", imp=v==="impostazioni";
-  const noFilters = stats||cap||prev||week||imp;
+  const week=v==="settimana", design=v==="design", imp=v==="impostazioni";
+  const noFilters = stats||cap||prev||week||design||imp;
   $("#lavFilters").style.display  = (ord||arch) ? "" : "none";
   $("#filters").style.display     = ord ? "" : "none";
   $("#ordersHost").style.display  = ord ? "" : "none";
@@ -1785,7 +1987,8 @@ function setView(v){
   $("#capHost").style.display     = cap ? "" : "none";
   $("#prevHost").style.display    = prev ? "" : "none";
   const wh=$("#weekHost"); if(wh) wh.style.display = week ? "" : "none";
-  const sh=$("#settingsViewHost"); if(sh) sh.style.display = (typeof imp!=="undefined" && imp) ? "" : "none";
+  const dh=$("#designHost"); if(dh) dh.style.display = design ? "" : "none";
+  const sh=$("#settingsViewHost"); if(sh) sh.style.display = (typeof imp!=="undefined"&&imp) ? "" : "none";
   $("#btnScan").style.display = ord ? "flex" : "none";
   const vs=$("#btnVoiceSearch"); if(vs) vs.style.display = (ord||arch) ? "grid" : "none";
   const sb=document.querySelector(".search"); if(sb) sb.style.display = noFilters ? "none" : "flex";
@@ -2146,82 +2349,415 @@ function ensureListino(){
   if(!S.settings) S.settings={};
   if(!S.settings.listino) S.settings.listino = structuredClone(PV_LIST_DEFAULT);
   const L=S.settings.listino;
-  if(!L.veicoli) L.veicoli={}; if(!L.tipo) L.tipo={}; if(!L.allest) L.allest={}; if(!Array.isArray(L.accessori)) L.accessori=[];
+  if(!L.veicoli) L.veicoli={}; if(!L.tipo) L.tipo={}; if(!Array.isArray(L.accessori)) L.accessori=[];
   PV_VEICOLI.forEach(v=>{ L.veicoli[v]=pvNormM(L.veicoli[v]||PV_LIST_DEFAULT.veicoli[v]); });
+  // migrazione vecchia voce "Cassa assemblata" -> "Box"
+  if(L.tipo["Cassa assemblata"] && !L.tipo["Box"]) L.tipo["Box"]=L.tipo["Cassa assemblata"];
+  delete L.tipo["Cassa assemblata"];
   PV_TIPI.forEach(t=>{ L.tipo[t]=pvNormM(L.tipo[t]||PV_LIST_DEFAULT.tipo[t]); });
-  PV_ALLEST_DEFAULT.forEach(a=>{ L.allest[a]=pvNormM(L.allest[a]||PV_LIST_DEFAULT.allest[a]); });
   L.accessori.forEach(a=>a.ore=pvNormM(a.ore));
   return L;
 }
-function pvObjOf(g,k){ const L=ensureListino(); if(g==="veic")return L.veicoli[k]; if(g==="tipo")return L.tipo[k]; if(g==="all")return L.allest[k]; if(g==="acc")return L.accessori[+k].ore; }
+function pvObjOf(g,k){ const L=ensureListino(); if(g==="veic")return L.veicoli[k]; if(g==="tipo")return L.tipo[k]; if(g==="acc")return L.accessori[+k].ore; }
 function pvByM(){
   const L=ensureListino(); const r=pvM0();
   const add=o=>{ if(!o)return; MANSIONI.forEach(m=>r[m.id]+=parseFloat(o[m.id])||0); };
   if(S.pv.veicolo) add(L.veicoli[S.pv.veicolo]);
   if(S.pv.tipo) add(L.tipo[S.pv.tipo]);
-  if(S.pv.allest) add(L.allest[S.pv.allest]);
   L.accessori.forEach(a=>{ if(S.pv.accSel.has(a.nome)) add(a.ore); });
   return r;
 }
 function pvTotal(){ const r=pvByM(); return MANSIONI.reduce((s,m)=>s+r[m.id],0); }
 function pvMapLavorazione(v){ if(!v)return ""; if(v.indexOf("MOTRICE")===0)return "Motrice"; if(v.indexOf("SEMIRIMORCHIO")===0)return "Semirimorchio"; if(v.indexOf("KIT")===0)return "KIT"; return ""; }
 
+
+/* ===================================================================
+   DESIGN REVIEW — riunioni analisi lavori / cartellini / disegni
+   =================================================================== */
+const DR_TEMPLATES = {
+  allest: ["Guidovie carne","Tubovie carne","Doppio piano","Multitemperatura","Porta laterale","Sponda idraulica","Pedana","Tendina termica","Inox interni","ATP"],
+  mod: ["Spessore isolante","Altezza interna","Lunghezza cassa","Posizione gruppo frigo","Soglia posteriore","Parete divisoria","Illuminazione LED","Passacavi extra"],
+  check: ["Cartellino presente","Quote cartellino ok","Disegno 2D completo","Disegno 3D / assieme","Distinta materiali","Quote critiche verificate","Interferenze controllate","Note cliente riportate"]
+};
+function persistDesign(){
+  if(!Array.isArray(S.designSessions)) S.designSessions=[];
+  localStorage.setItem("cf_design", JSON.stringify(S.designSessions));
+  S.settings = S.settings || {};
+  S.settings.designSessions = S.designSessions;
+  try{ persistSettings(); }catch(_){}
+}
+function blankDesignSession(){
+  const today=new Date().toISOString().slice(0,10);
+  return {
+    id: uid(),
+    title: "Design review "+today,
+    date: today,
+    partecipanti: S.operatorName||"",
+    lavori: "",
+    checklist: DR_TEMPLATES.check.map(t=>({testo:t, ok:false})),
+    allestimenti: "",
+    modifiche: "",
+    decisioni: "",
+    noteLibere: "",
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  };
+}
+function renderDesign(){
+  const host=$("#designHost"); if(!host) return;
+  if(!Array.isArray(S.designSessions)) S.designSessions=[];
+  if(S.designId){
+    const s=S.designSessions.find(x=>x.id===S.designId);
+    if(!s){ S.designId=null; }
+    else { host.innerHTML=drDetailHTML(s); wireDrDetail(s); return; }
+  }
+  host.innerHTML=drListHTML();
+  wireDrList();
+}
+function drListHTML(){
+  const list=[...S.designSessions].sort((a,b)=>(b.date||b.createdAt||"").localeCompare(a.date||a.createdAt||""));
+  let h=`<div class="dr-head"><h2>Design review</h2>
+    ${S.canEdit?`<button type="button" class="btn btn-primary" id="drNew" style="flex:0 0 auto;height:40px;padding:0 16px;width:auto">+ Nuova</button>`:""}
+  </div>
+  <p style="font-size:13px;color:var(--muted);margin-bottom:14px">Riunioni per analizzare nuovi lavori, cartellini, disegni, allestimenti particolari e modifiche cliente.</p>`;
+  if(!list.length){
+    h+=`<div class="empty"><h3>Nessuna review</h3><p>Crea una sessione per prendere note strutturate in riunione.</p></div>`;
+    return h;
+  }
+  h+=list.map(s=>{
+    const nOk=(s.checklist||[]).filter(c=>c.ok).length, nTot=(s.checklist||[]).length;
+    return `<div class="dr-sess" data-dr="${esc(s.id)}">
+      <div class="d">${esc(s.date||"")} ${s.partecipanti?"· "+esc(s.partecipanti):""}</div>
+      <div class="t">${esc(s.title||"Senza titolo")}</div>
+      <div class="meta">${nTot?`Checklist ${nOk}/${nTot}`:""}${(s.lavori||"").trim()?" · "+esc(String(s.lavori).slice(0,60)):""}</div>
+    </div>`;
+  }).join("");
+  return h;
+}
+function wireDrList(){
+  const n=$("#drNew"); if(n) n.onclick=()=>{
+    if(!S.canEdit){ toast("Sola lettura","err"); return; }
+    const s=blankDesignSession();
+    S.designSessions.unshift(s);
+    persistDesign();
+    S.designId=s.id;
+    renderDesign();
+  };
+  $$("#designHost .dr-sess[data-dr]").forEach(el=>{
+    el.onclick=()=>{ S.designId=el.dataset.dr; renderDesign(); };
+  });
+}
+function drDetailHTML(s){
+  const ro=!S.canEdit;
+  const checks=(s.checklist||[]).map((c,i)=>`
+    <div class="dr-check ${c.ok?"on":""}" data-ci="${i}">
+      <div class="box">${c.ok?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg>':""}</div>
+      <div class="body"><input type="text" value="${esc(c.testo||"")}" data-ct="${i}" ${ro?"readonly":""} placeholder="Voce checklist…"></div>
+      ${ro?"":`<button type="button" class="rm" data-crm="${i}"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button>`}
+    </div>`).join("");
+  return `<button type="button" class="pv-back" id="drBack"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg>Lista review</button>
+    <div class="field"><label>Titolo sessione</label><input id="dr_title" value="${esc(s.title||"")}" ${ro?"readonly":""}></div>
+    <div style="display:flex;gap:10px">
+      <div class="field" style="flex:1"><label>Data</label><input id="dr_date" type="date" value="${esc(s.date||"")}" ${ro?"readonly":""}></div>
+      <div class="field" style="flex:1"><label>Partecipanti</label><input id="dr_part" value="${esc(s.partecipanti||"")}" placeholder="Nomi…" ${ro?"readonly":""}></div>
+    </div>
+
+    <div class="dr-sec">
+      <div class="lab">Lavori analizzati</div>
+      <textarea class="dr-ta" id="dr_lavori" placeholder="Codici lavoro, clienti, riferimenti disegni…" ${ro?"readonly":""}>${esc(s.lavori||"")}</textarea>
+      ${ro?"":`<div class="dr-actions"><button type="button" data-ins="lavori" data-txt="Codice: ">＋ Codice</button><button type="button" data-ins="lavori" data-txt="Cliente: ">＋ Cliente</button><button type="button" data-ins="lavori" data-txt="Disegno n° ">＋ Disegno</button></div>`}
+    </div>
+
+    <div class="dr-sec">
+      <div class="lab">Checklist cartellini & disegni</div>
+      <div id="drChecks">${checks||'<div class="empty" style="padding:16px"><p>Nessuna voce</p></div>'}</div>
+      ${ro?"":`<div class="dr-actions"><button type="button" id="drAddCheck">＋ Voce</button><button type="button" id="drResetCheck">Ripristina standard</button></div>`}
+    </div>
+
+    <div class="dr-sec">
+      <div class="lab">Allestimenti particolari</div>
+      <textarea class="dr-ta" id="dr_allest" placeholder="Es. guidovie carne, multitemperatura, richieste speciali…" ${ro?"readonly":""}>${esc(s.allestimenti||"")}</textarea>
+      ${ro?"":`<div class="dr-chips">${DR_TEMPLATES.allest.map(t=>`<button type="button" class="dr-chip" data-chip="allest" data-val="${esc(t)}">${esc(t)}</button>`).join("")}</div>`}
+    </div>
+
+    <div class="dr-sec">
+      <div class="lab">Modifiche a richiesta cliente</div>
+      <textarea class="dr-ta" id="dr_mod" placeholder="Cosa chiede il cliente, impatto su disegno/tempi…" ${ro?"readonly":""}>${esc(s.modifiche||"")}</textarea>
+      ${ro?"":`<div class="dr-chips">${DR_TEMPLATES.mod.map(t=>`<button type="button" class="dr-chip" data-chip="mod" data-val="${esc(t)}">${esc(t)}</button>`).join("")}</div>`}
+    </div>
+
+    <div class="dr-sec">
+      <div class="lab">Decisioni & azioni</div>
+      <textarea class="dr-ta" id="dr_dec" placeholder="Cosa fare, chi, entro quando…" ${ro?"readonly":""}>${esc(s.decisioni||"")}</textarea>
+      ${ro?"":`<div class="dr-actions"><button type="button" data-ins="dec" data-txt="→ Azione: ">＋ Azione</button><button type="button" data-ins="dec" data-txt="✓ Deciso: ">＋ Deciso</button><button type="button" data-ins="dec" data-txt="⚠ Da verificare: ">＋ Da verificare</button></div>`}
+    </div>
+
+    <div class="dr-sec">
+      <div class="lab">Note libere</div>
+      <textarea class="dr-ta" id="dr_note" placeholder="Altro…" ${ro?"readonly":""}>${esc(s.noteLibere||"")}</textarea>
+    </div>
+
+    <div class="pv-nav">
+      ${S.canEdit?`<button type="button" class="btn btn-primary" id="drSave" style="flex:1">Salva review</button>
+      <button type="button" class="btn btn-ghost" id="drDel" style="flex:0 0 auto;padding:0 14px;color:var(--red)">Elimina</button>`:""}
+    </div>`;
+}
+function wireDrDetail(s){
+  const back=$("#drBack"); if(back) back.onclick=()=>{ S.designId=null; renderDesign(); };
+  const save=()=>{
+    if(!S.canEdit) return;
+    s.title=($("#dr_title")||{}).value||s.title;
+    s.date=($("#dr_date")||{}).value||s.date;
+    s.partecipanti=($("#dr_part")||{}).value||"";
+    s.lavori=($("#dr_lavori")||{}).value||"";
+    s.allestimenti=($("#dr_allest")||{}).value||"";
+    s.modifiche=($("#dr_mod")||{}).value||"";
+    s.decisioni=($("#dr_dec")||{}).value||"";
+    s.noteLibere=($("#dr_note")||{}).value||"";
+    s.updatedAt=new Date().toISOString();
+    persistDesign();
+  };
+  ["dr_title","dr_date","dr_part","dr_lavori","dr_allest","dr_mod","dr_dec","dr_note"].forEach(id=>{
+    const el=$("#"+id); if(el) el.onchange=save;
+  });
+  $$("#designHost .dr-check .box").forEach(box=>{
+    box.onclick=()=>{
+      if(!S.canEdit) return;
+      const i=+box.parentElement.dataset.ci;
+      s.checklist[i].ok=!s.checklist[i].ok;
+      persistDesign(); renderDesign();
+    };
+  });
+  $$("#designHost input[data-ct]").forEach(inp=>{
+    inp.onchange=()=>{ s.checklist[+inp.dataset.ct].testo=inp.value; persistDesign(); };
+  });
+  $$("#designHost [data-crm]").forEach(b=>{
+    b.onclick=()=>{ s.checklist.splice(+b.dataset.crm,1); persistDesign(); renderDesign(); };
+  });
+  const ac=$("#drAddCheck"); if(ac) ac.onclick=()=>{ s.checklist.push({testo:"", ok:false}); persistDesign(); renderDesign(); };
+  const rc=$("#drResetCheck"); if(rc) rc.onclick=()=>{
+    if(!confirm("Ripristinare la checklist standard?")) return;
+    s.checklist=DR_TEMPLATES.check.map(t=>({testo:t, ok:false}));
+    persistDesign(); renderDesign();
+  };
+  $$("#designHost .dr-chip").forEach(ch=>{
+    ch.onclick=()=>{
+      if(!S.canEdit) return;
+      const key=ch.dataset.chip, val=ch.dataset.val;
+      const map={allest:"dr_allest", mod:"dr_mod"};
+      const el=$("#"+map[key]); if(!el) return;
+      const cur=(el.value||"").trim();
+      el.value = cur ? (cur + (cur.endsWith("\n")?"":"\n") + "• "+val) : ("• "+val);
+      save();
+    };
+  });
+  $$("#designHost [data-ins]").forEach(b=>{
+    b.onclick=()=>{
+      if(!S.canEdit) return;
+      const map={lavori:"dr_lavori", dec:"dr_dec"};
+      const el=$("#"+map[b.dataset.ins]); if(!el) return;
+      const cur=el.value||"";
+      el.value = cur + (cur && !cur.endsWith("\n") ? "\n" : "") + b.dataset.txt;
+      el.focus(); save();
+    };
+  });
+  const sv=$("#drSave"); if(sv) sv.onclick=()=>{ save(); toast("Review salvata","ok"); };
+  const dl=$("#drDel"); if(dl) dl.onclick=()=>{
+    if(!confirm("Eliminare questa design review?")) return;
+    S.designSessions=S.designSessions.filter(x=>x.id!==s.id);
+    S.designId=null; persistDesign(); toast("Review eliminata","ok"); renderDesign();
+  };
+}
+
+function persistPreventivi(){
+  if(!Array.isArray(S.preventivi)) S.preventivi=[];
+  localStorage.setItem("cf_preventivi", JSON.stringify(S.preventivi));
+  S.settings = S.settings || {};
+  S.settings.preventivi = S.preventivi;
+  try{ persistSettings(); }catch(_){}
+}
+function buildPreventivoRecord(){
+  const budget=pvByM();
+  const accSel=[...S.pv.accSel];
+  return {
+    id: uid(),
+    codice: (S.pv.codice||"").trim(),
+    cliente: (S.pv.cliente||"").trim(),
+    veicolo: S.pv.veicolo||"",
+    tipo: S.pv.tipo||"",
+    accessori: accSel,
+    note: (S.pv.note||"").trim(),
+    budget: budget,
+    totaleOre: pvTotal(),
+    createdAt: new Date().toISOString(),
+    updatedBy: S.operatorName||""
+  };
+}
+function resetPvConfig(){
+  S.pv.step=1; S.pv.veicolo=null; S.pv.tipo=null; S.pv.accSel=new Set();
+  S.pv.codice=""; S.pv.cliente=""; S.pv.note=""; S.pv.detailId=null;
+}
+
 function renderPrev(){
-  const host=$("#prevHost");
-  const sub=`<div class="pv-sub">
-    <button data-sub="prev" class="${S.pv.sub==='prev'?'active':''}">Preventivo</button>
-    <button data-sub="listino" class="${S.pv.sub==='listino'?'active':''}">Listino ore</button>
+  const host=$("#prevHost"); if(!host) return;
+  if(!Array.isArray(S.preventivi)) S.preventivi=[];
+  const home=S.pv.home||"home";
+  if(home==="home"){ host.innerHTML=pvLandingHTML(); wirePvLanding(); return; }
+  if(home==="eseguiti"){ host.innerHTML=pvEseguitiHTML(); wirePvEseguiti(); return; }
+  const sub=`<button type="button" class="pv-back" id="pvBackHome"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg>Indietro</button>`;
+  host.innerHTML = sub + pvConfigHTML();
+  const bh=$("#pvBackHome"); if(bh) bh.onclick=()=>{ S.pv.home="home"; renderPrev(); };
+  wirePvConfig();
+}
+
+function pvLandingHTML(){
+  const n=(S.preventivi||[]).length;
+  return `<div class="pv-home">
+    <div class="pv-home-title">Preventivi</div>
+    <div class="pv-home-sub">Scegli una sezione</div>
+    <button type="button" class="pv-home-btn" id="pvGoEseguiti">
+      <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
+      <div class="tx"><div class="t">Preventivi eseguiti</div><div class="s">Archivio dei preventivi salvati</div><span class="badge">${n} salvat${n===1?"o":"i"}</span></div>
+      <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 6l6 6-6 6"/></svg></span>
+    </button>
+    <button type="button" class="pv-home-btn" id="pvGoConfig">
+      <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div>
+      <div class="tx"><div class="t">Configuratore</div><div class="s">Calcola ore per veicolo, tipo e accessori</div></div>
+      <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 6l6 6-6 6"/></svg></span>
+    </button>
   </div>`;
-  host.innerHTML = sub + (S.pv.sub==="listino" ? pvListinoHTML() : pvConfigHTML());
-  $$("#prevHost .pv-sub button").forEach(b=>b.onclick=()=>{ S.pv.sub=b.dataset.sub; renderPrev(); });
-  if(S.pv.sub==="listino") wirePvListino(); else wirePvConfig();
+}
+function wirePvLanding(){
+  const a=$("#pvGoEseguiti"); if(a) a.onclick=()=>{ S.pv.home="eseguiti"; S.pv.detailId=null; renderPrev(); };
+  const b=$("#pvGoConfig"); if(b) b.onclick=()=>{ S.pv.home="config"; S.pv.sub="prev"; renderPrev(); };
+}
+
+function pvEseguitiHTML(){
+  let h=`<button type="button" class="pv-back" id="pvBackHome"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg>Indietro</button>`;
+  h+=`<div class="section-title" style="margin-top:0"><span class="n">✓</span> Preventivi eseguiti</div>`;
+  if(S.pv.detailId){
+    const pr=(S.preventivi||[]).find(x=>x.id===S.pv.detailId);
+    if(pr){
+      const r=pr.budget||{}, max=Math.max(1,...MANSIONI.map(m=>parseFloat(r[m.id])||0));
+      h+=`<div class="pv-detail">
+        <div style="font-family:'JetBrains Mono';font-weight:700;font-size:17px">${esc(pr.codice||"—")}</div>
+        <div style="color:var(--muted);margin-top:4px">${esc(pr.cliente||"Senza cliente")}</div>
+        <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:12px;font-family:'JetBrains Mono';font-size:12px;color:var(--muted)">
+          <span>${esc(pr.veicolo||"—")}</span><span>·</span><span>${esc(pr.tipo||"—")}</span><span>·</span>
+          <span style="color:var(--frost);font-weight:700">${fmtH(pr.totaleOre)} h</span>
+        </div>
+        ${(pr.accessori&&pr.accessori.length)?`<div style="margin-top:12px;font-size:13px;color:var(--muted)">Accessori: ${pr.accessori.map(esc).join(", ")}</div>`:""}
+        ${pr.note?`<div style="margin-top:10px;font-size:13px;white-space:pre-wrap">${esc(pr.note)}</div>`:""}
+        <div class="section-title"><span class="n">⏱</span> Ore per mansione</div>
+        ${MANSIONI.map(m=>`<div class="pv-mbk"><div class="top"><span>${m.label}</span><span class="v">${fmtH(r[m.id]||0)} h</span></div><div class="bar"><i style="width:${Math.round((parseFloat(r[m.id])||0)/max*100)}%"></i></div></div>`).join("")}
+        <div class="pv-total"><span class="k">Totale ore</span><span class="v">${fmtH(pr.totaleOre)} h</span></div>
+        <div style="font-size:11px;color:var(--muted-2);font-family:'JetBrains Mono';margin-bottom:12px">${pr.createdAt?new Date(pr.createdAt).toLocaleString("it-IT"):""}${pr.updatedBy?" · "+esc(pr.updatedBy):""}</div>
+        <div class="pv-nav">
+          <button type="button" class="btn btn-ghost" id="pvDetBack" style="flex:0 0 auto;padding:0 16px">Lista</button>
+          ${S.canEdit?`<button type="button" class="btn btn-primary" id="pvDetOrder" style="flex:1">Crea bozza ordine</button>`:""}
+        </div>
+      </div>`;
+      return h;
+    }
+    S.pv.detailId=null;
+  }
+  const list=[...(S.preventivi||[])].sort((a,b)=>(b.createdAt||"").localeCompare(a.createdAt||""));
+  if(!list.length){
+    h+=`<div class="empty"><h3>Nessun preventivo salvato</h3><p>Usa il configuratore per calcolare le ore e salvare un preventivo.</p></div>`;
+    return h;
+  }
+  h+=list.map(pr=>`<div class="pv-card" data-pid="${esc(pr.id)}">
+    ${S.canEdit?`<button type="button" class="pc-del" data-pdel="${esc(pr.id)}" title="Elimina"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg></button>`:""}
+    <div class="pc-code">${esc(pr.codice||"—")}</div>
+    <div class="pc-cli">${esc(pr.cliente||"Senza cliente")}</div>
+    <div class="pc-meta"><span>${esc(pr.tipo||"—")}</span><span class="pc-ore">${fmtH(pr.totaleOre)} h</span><span>${pr.createdAt?new Date(pr.createdAt).toLocaleDateString("it-IT"):""}</span></div>
+  </div>`).join("");
+  return h;
+}
+function wirePvEseguiti(){
+  const bh=$("#pvBackHome"); if(bh) bh.onclick=()=>{ S.pv.home="home"; S.pv.detailId=null; renderPrev(); };
+  const db=$("#pvDetBack"); if(db) db.onclick=()=>{ S.pv.detailId=null; renderPrev(); };
+  const ord=$("#pvDetOrder"); if(ord) ord.onclick=()=>pvOrderFromSaved(S.pv.detailId);
+  $$("#prevHost .pv-card[data-pid]").forEach(c=>{
+    c.onclick=e=>{ if(e.target.closest("[data-pdel]")) return; S.pv.detailId=c.dataset.pid; renderPrev(); };
+  });
+  $$("#prevHost [data-pdel]").forEach(b=>{
+    b.onclick=e=>{
+      e.stopPropagation();
+      if(!S.canEdit){ toast("Sola lettura","err"); return; }
+      if(!confirm("Eliminare questo preventivo?")) return;
+      S.preventivi=(S.preventivi||[]).filter(x=>x.id!==b.dataset.pdel);
+      if(S.pv.detailId===b.dataset.pdel) S.pv.detailId=null;
+      persistPreventivi(); toast("Preventivo eliminato","ok"); renderPrev();
+    };
+  });
 }
 
 function pvSteps(){
   const L=[["1","Veicolo"],["2","Allestimento"],["3","Preventivo"]];
-  return `<div class="pv-steps">`+L.map((l,i)=>{const n=i+1,cls=S.pv.step===n?"active":(S.pv.step>n?"done":"");return `<div class="pv-step ${cls}"><span class="n">${S.pv.step>n?"✓":l[0]}</span>${l[1]}</div>`;}).join("")+`</div>`;
+  const step=+(S.pv.step)||1;
+  return `<div class="pv-steps">`+L.map((l,i)=>{const n=i+1,cls=step===n?"active":(step>n?"done":"");return `<div class="pv-step ${cls}"><span class="n">${step>n?"✓":l[0]}</span>${l[1]}</div>`;}).join("")+`</div>`;
 }
 function pvConfigHTML(){
   const L=ensureListino();
+  const step=+(S.pv.step)||1;
+  S.pv.step=step;
   let h=pvSteps();
-  if(S.pv.step===1){
+  if(step===1){
     h+=`<div class="section-title"><span class="n">01</span> Veicolo</div>`+
       PV_VEICOLI.map(v=>`<div class="pv-opt ${S.pv.veicolo===v?'sel':''}" data-veic="${esc(v)}"><div class="mk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg></div><div class="t">${esc(v)}</div>${pvTag(L.veicoli[v])}</div>`).join("");
-  } else if(S.pv.step===2){
-    const allList=PV_ALLEST_BY[S.pv.veicolo]||PV_ALLEST_DEFAULT;
+  } else if(step===2){
     h+=`<div class="section-title"><span class="n">02</span> Tipo costruzione</div><div class="pv-seg">`+
       PV_TIPI.map(t=>`<div class="s ${S.pv.tipo===t?'sel':''}" data-tipo="${esc(t)}"><span class="t">${esc(t)}</span>${pvTag(L.tipo[t])}</div>`).join("")+`</div>
-      <div class="section-title"><span class="n">·</span> Allestimento</div>`+
-      allList.map(a=>`<div class="pv-opt ${S.pv.allest===a?'sel':''}" data-all="${esc(a)}"><div class="mk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg></div><div class="t">${esc(a)}${a==="Standard"?' <span style="color:var(--muted-2);font-size:11px">(incluso)</span>':''}</div>${pvTag(L.allest[a])}</div>`).join("")+
-      `<div class="section-title"><span class="n">·</span> Accessori</div>`+
+      <div class="section-title"><span class="n">·</span> Accessori</div>`+
       L.accessori.map(a=>`<div class="pv-opt check ${S.pv.accSel.has(a.nome)?'sel':''}" data-acc="${esc(a.nome)}"><div class="mk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg></div><div class="t">${esc(a.nome)}</div>${pvTag(a.ore)}</div>`).join("");
   } else {
-    const r=pvByM(), max=Math.max(1,...MANSIONI.map(m=>r[m.id]));
     h+=`<div class="section-title"><span class="n">03</span> Dati preventivo</div>
       <div class="field"><label>Codice lavoro</label><input id="pv_cod" value="${esc(S.pv.codice)}" placeholder="es. L-2026-0142" style="font-family:'JetBrains Mono'"></div>
       <div class="field"><label>Cliente</label><input id="pv_cli" value="${esc(S.pv.cliente)}" placeholder="Ragione sociale"></div>
-      <div class="field"><label>Note</label><textarea id="pv_note" placeholder="Richieste particolari…">${esc(S.pv.note)}</textarea></div>
-      <div class="section-title"><span class="n">⏱</span> Ripartizione per mansione</div>`+
-      MANSIONI.map(m=>`<div class="pv-mbk"><div class="top"><span>${m.label}</span><span class="v">${fmtH(r[m.id])} h</span></div><div class="bar"><i style="width:${Math.round(r[m.id]/max*100)}%"></i></div></div>`).join("");
+      <div class="field"><label>Note</label><textarea id="pv_note" placeholder="Richieste particolari…">${esc(S.pv.note)}</textarea></div>`;
   }
   h+=`<div class="pv-total"><span class="k">Totale ore</span><span class="v">${fmtH(pvTotal())} h</span></div>`;
   h+=`<div class="pv-nav">`;
-  if(S.pv.step>1) h+=`<button class="btn btn-ghost" id="pvBack" style="flex:0 0 auto;padding:0 20px">Indietro</button>`;
-  if(S.pv.step<3){ const dis=(S.pv.step===1&&!S.pv.veicolo)||(S.pv.step===2&&(!S.pv.tipo||!S.pv.allest)); h+=`<button class="btn btn-primary" id="pvNext" style="flex:1" ${dis?"disabled":""}>Avanti</button>`; }
-  else h+=`<button class="btn btn-primary" id="pvGen" style="flex:1">${S.canEdit?'Genera bozza ordine':'Sola lettura'}</button>`;
+  if(S.pv.step>1) h+=`<button type="button" class="btn btn-ghost" id="pvBack" style="flex:0 0 auto;padding:0 20px">Indietro</button>`;
+  if(S.pv.step<3){
+    const dis=(S.pv.step===1&&!S.pv.veicolo)||(S.pv.step===2&&!S.pv.tipo);
+    h+=`<button type="button" class="btn btn-primary" id="pvNext" style="flex:1${dis?";opacity:.45":""}">Avanti</button>`;
+  } else {
+    h+=`<button type="button" class="btn btn-primary" id="pvSave" style="flex:1">${S.canEdit?"Salva preventivo":"Sola lettura"}</button>`;
+    if(S.canEdit) h+=`<button type="button" class="btn btn-ghost" id="pvGen" style="flex:0 0 auto;padding:0 14px;font-size:12px">+ Ordine</button>`;
+  }
   h+=`</div>`;
   return h;
 }
 function wirePvConfig(){
-  $$('#prevHost [data-veic]').forEach(el=>el.onclick=()=>{ S.pv.veicolo=el.dataset.veic; renderPrev(); });
-  $$('#prevHost [data-tipo]').forEach(el=>el.onclick=()=>{ S.pv.tipo=el.dataset.tipo; renderPrev(); });
-  $$('#prevHost [data-all]').forEach(el=>el.onclick=()=>{ S.pv.allest=el.dataset.all; renderPrev(); });
-  $$('#prevHost [data-acc]').forEach(el=>el.onclick=()=>{ const n=el.dataset.acc; if(S.pv.accSel.has(n))S.pv.accSel.delete(n); else S.pv.accSel.add(n); renderPrev(); });
-  const b=$("#pvBack"); if(b) b.onclick=()=>{ S.pv.step--; renderPrev(); };
-  const nx=$("#pvNext"); if(nx) nx.onclick=()=>{ S.pv.step++; renderPrev(); };
+  $$('#prevHost [data-veic]').forEach(el=>el.onclick=()=>{
+    S.pv.veicolo=el.getAttribute("data-veic")||el.dataset.veic;
+    renderPrev();
+  });
+  $$('#prevHost [data-tipo]').forEach(el=>el.onclick=()=>{
+    S.pv.tipo=el.getAttribute("data-tipo")||el.dataset.tipo;
+    renderPrev();
+  });
+  $$('#prevHost [data-acc]').forEach(el=>el.onclick=()=>{
+    const n=el.getAttribute("data-acc")||el.dataset.acc;
+    if(S.pv.accSel.has(n)) S.pv.accSel.delete(n); else S.pv.accSel.add(n);
+    renderPrev();
+  });
+  const b=$("#pvBack");
+  if(b) b.onclick=()=>{ S.pv.step=Math.max(1, (+S.pv.step||1)-1); renderPrev(); };
+  const nx=$("#pvNext");
+  if(nx) nx.onclick=()=>{
+    const step=+(S.pv.step)||1;
+    if(step===1 && !S.pv.veicolo){ toast("Seleziona un veicolo","err"); return; }
+    if(step===2 && !S.pv.tipo){ toast("Seleziona il tipo di costruzione (Box, Completo o Kit)","err"); return; }
+    S.pv.step=step+1;
+    renderPrev();
+  };
   const cod=$("#pv_cod"); if(cod) cod.oninput=e=>S.pv.codice=e.target.value;
   const cli=$("#pv_cli"); if(cli) cli.oninput=e=>S.pv.cliente=e.target.value;
   const nt=$("#pv_note"); if(nt) nt.oninput=e=>S.pv.note=e.target.value;
+  const sv=$("#pvSave"); if(sv) sv.onclick=pvSalvaPreventivo;
   const gen=$("#pvGen"); if(gen) gen.onclick=pvGenera;
 }
 
@@ -2235,10 +2771,9 @@ function pvListinoHTML(){
   const L=ensureListino();
   const ro=!S.canEdit;
   return `<div class="note-listino" style="background:var(--surface);border:1px dashed var(--line-strong);border-radius:var(--r);padding:12px 14px;font-size:12px;color:var(--muted);margin-bottom:16px;line-height:1.55">Ore per mansione di ogni voce (tocca per espandere). È <b style="color:var(--frost)">condiviso</b> tra tutti i dispositivi.${ro?" Sola lettura.":""}</div>
-    <div class="section-title"><span class="n">A</span> Veicolo (allestimento standard)</div>${PV_VEICOLI.map(v=>pvLcard("veic",v,v,L.veicoli[v])).join("")}
+    <div class="section-title"><span class="n">A</span> Veicolo</div>${PV_VEICOLI.map(v=>pvLcard("veic",v,v,L.veicoli[v])).join("")}
     <div class="section-title"><span class="n">B</span> Tipo costruzione</div>${PV_TIPI.map(t=>pvLcard("tipo",t,t,L.tipo[t])).join("")}
-    <div class="section-title"><span class="n">C</span> Allestimento (ore vs standard)</div>${PV_ALLEST_DEFAULT.map(a=>pvLcard("all",a,a+(a==="Standard"?" (incluso)":""),L.allest[a])).join("")}
-    <div class="section-title"><span class="n">D</span> Accessori</div><div id="pvAccList">${L.accessori.map((a,i)=>pvLcard("acc",i,a.nome,a.ore,ro?null:i)).join("")}</div>
+    <div class="section-title"><span class="n">C</span> Accessori</div><div id="pvAccList">${L.accessori.map((a,i)=>pvLcard("acc",i,a.nome,a.ore,ro?null:i)).join("")}</div>
     ${ro?"":`<div class="opt-add" style="margin-top:8px"><input id="pvAccName" type="text" placeholder="Nuovo accessorio…"><button id="pvAccAdd">+</button></div>`}
     <div class="pv-saved" id="pvSaved">✓ listino salvato</div>`;
 }
@@ -2256,37 +2791,100 @@ function wirePvListino(){
   const add=$("#pvAccAdd"); if(add) add.onclick=()=>{ const n=$("#pvAccName").value.trim(); if(!n)return; ensureListino().accessori.push({nome:n,ore:pvM0()}); persistSettings(); renderPrev(); };
 }
 
+function pvSalvaPreventivo(){
+  if(!S.canEdit){ toast("Sola lettura","err"); return; }
+  const codice=(S.pv.codice||"").trim();
+  if(!codice){ toast("Inserisci il codice lavoro","err"); const el=$("#pv_cod"); if(el) el.focus(); return; }
+  if(!S.pv.veicolo){ toast("Seleziona un veicolo","err"); return; }
+  if(!S.pv.tipo){ toast("Seleziona il tipo di costruzione","err"); return; }
+  const rec=buildPreventivoRecord();
+  S.preventivi = S.preventivi || [];
+  S.preventivi.unshift(rec);
+  persistPreventivi();
+  resetPvConfig();
+  S.pv.home="eseguiti";
+  S.pv.detailId=rec.id;
+  toast("Preventivo salvato","ok");
+  renderPrev();
+}
+
+async function pvOrderFromSaved(id){
+  if(!S.canEdit){ toast("Sola lettura","err"); return; }
+  const pr=(S.preventivi||[]).find(x=>x.id===id); if(!pr) return;
+  if(S.orders.some(o=>(o.codice||"").toLowerCase()===(pr.codice||"").toLowerCase())){
+    if(!confirm("Esiste già un lavoro con questo codice. Crearne comunque uno nuovo in bozza?")) return;
+  }
+  const optional=[];
+  if(pr.tipo) optional.push({nome:"Tipo: "+pr.tipo, fatto:false});
+  (pr.accessori||[]).forEach(n=>optional.push({nome:n, fatto:false}));
+  const lines=["— Da preventivo —","Veicolo: "+(pr.veicolo||"—"),"Tipo: "+(pr.tipo||"—")];
+  if(pr.accessori&&pr.accessori.length) lines.push("Accessori: "+pr.accessori.join(", "));
+  lines.push("Totale preventivo: "+fmtH(pr.totaleOre)+" h");
+  if(pr.note) lines.push("", pr.note);
+  const order={
+    id:uid(), codice:pr.codice||"", cliente:pr.cliente||"", targa:"",
+    tipoCella:pvMapLavorazione(pr.veicolo),
+    dataOrdine:new Date().toISOString().slice(0,10), scadenza:"", stato:"bozza",
+    optional, note:lines.join("\n"), budget:pr.budget||{}, actual:{}, readyAt:"",
+    mediaCount:0, appFolderId:S.folderId||null,
+    fasi: (typeof FASI_DEFAULT!=="undefined" ? FASI_DEFAULT.map(function(f){return Object.assign({},f);}) : []),
+    operatore:S.operatorName||"", updatedBy:S.operatorName||"",
+    clientUpdatedAt:new Date().toISOString()
+  };
+  try{
+    await api("save",{order});
+    S.orders.unshift(structuredClone(order));
+    localStorage.setItem("cf_cache",JSON.stringify(S.orders));
+    toast("Bozza ordine creata","ok");
+    setView("ordini");
+  }catch(e){ toast(e.message,"err"); }
+}
+
 async function pvGenera(){
   if(!S.canEdit){ toast("Sola lettura","err"); return; }
   const codice=(S.pv.codice||"").trim();
   if(!codice){ toast("Inserisci il codice lavoro","err"); const el=$("#pv_cod"); if(el) el.focus(); return; }
-  if(S.orders.some(o=>(o.codice||"").toLowerCase()===codice.toLowerCase())){ if(!confirm("Esiste già un lavoro con questo codice. Crearne comunque uno nuovo in bozza?")) return; }
-  const budget=pvByM();
-  const accSel=[...S.pv.accSel];
+  if(!S.pv.veicolo){ toast("Seleziona un veicolo","err"); return; }
+  const rec=buildPreventivoRecord();
+  S.preventivi = S.preventivi || [];
+  S.preventivi.unshift(rec);
+  persistPreventivi();
+  if(S.orders.some(o=>(o.codice||"").toLowerCase()===codice.toLowerCase())){
+    if(!confirm("Esiste già un lavoro con questo codice. Crearne comunque uno nuovo in bozza?")) {
+      resetPvConfig(); S.pv.home="eseguiti"; S.pv.detailId=rec.id; renderPrev(); return;
+    }
+  }
+  const budget=rec.budget;
+  const accSel=rec.accessori||[];
   const optional=[];
-  if(S.pv.tipo) optional.push({nome:"Tipo: "+S.pv.tipo, fatto:false});
-  if(S.pv.allest) optional.push({nome:"Allestimento: "+S.pv.allest, fatto:false});
+  if(rec.tipo) optional.push({nome:"Tipo: "+rec.tipo, fatto:false});
   accSel.forEach(n=>optional.push({nome:n, fatto:false}));
-  const lines=["— Da preventivo —","Veicolo: "+(S.pv.veicolo||"—"),"Tipo: "+(S.pv.tipo||"—"),"Allestimento: "+(S.pv.allest||"—")];
+  const lines=["— Da preventivo —","Veicolo: "+(rec.veicolo||"—"),"Tipo: "+(rec.tipo||"—")];
   if(accSel.length) lines.push("Accessori: "+accSel.join(", "));
-  lines.push("Totale preventivo: "+fmtH(pvTotal())+" h");
-  if((S.pv.note||"").trim()) lines.push("", S.pv.note.trim());
+  lines.push("Totale preventivo: "+fmtH(rec.totaleOre)+" h");
+  if(rec.note) lines.push("", rec.note);
   const order={
-    id:uid(), codice, cliente:(S.pv.cliente||"").trim(), targa:"",
-    tipoCella:pvMapLavorazione(S.pv.veicolo),
+    id:uid(), codice:codice, cliente:rec.cliente||"", targa:"",
+    tipoCella:pvMapLavorazione(rec.veicolo),
     dataOrdine:new Date().toISOString().slice(0,10), scadenza:"", stato:"bozza",
-    optional, note:lines.join("\n"), budget, actual:{}, readyAt:""
+    optional, note:lines.join("\n"), budget:budget, actual:{}, readyAt:"",
+    mediaCount:0, appFolderId:S.folderId||null,
+    fasi: (typeof FASI_DEFAULT!=="undefined" ? FASI_DEFAULT.map(function(f){return Object.assign({},f);}) : []),
+    operatore:S.operatorName||"", updatedBy:S.operatorName||"",
+    clientUpdatedAt:new Date().toISOString()
   };
-  const gen=$("#pvGen"); const old=gen?gen.innerHTML:""; if(gen){ gen.innerHTML='<div class="spin"></div> Creo la bozza…'; gen.disabled=true; }
+  const gen=$("#pvGen"); const old=gen?gen.innerHTML:""; if(gen){ gen.textContent="…"; gen.disabled=true; }
   try{
     await api("save",{order});
-    const saved=structuredClone(order); saved.mediaCount=0;
-    S.orders.unshift(saved); localStorage.setItem("cf_cache",JSON.stringify(S.orders));
-    // reset configuratore (il listino resta)
-    S.pv.step=1; S.pv.veicolo=null; S.pv.tipo=null; S.pv.allest=null; S.pv.accSel=new Set(); S.pv.codice=""; S.pv.cliente=""; S.pv.note="";
-    toast("Bozza creata: completa i dettagli mancanti","ok");
+    S.orders.unshift(structuredClone(order));
+    localStorage.setItem("cf_cache",JSON.stringify(S.orders));
+    resetPvConfig();
+    toast("Preventivo salvato e bozza ordine creata","ok");
     setView("ordini");
-  }catch(e){ toast(e.message,"err"); if(gen){ gen.innerHTML=old; gen.disabled=false; } }
+  }catch(e){
+    toast(e.message,"err");
+    if(gen){ gen.innerHTML=old; gen.disabled=false; }
+  }
 }
 
 /* ===================================================================
@@ -2393,17 +2991,6 @@ function wireSignature(){
   };
 }
 
-function renderKanban(){
-  const host=$("#kanbanHost"); if(!host) return;
-  let list=[...S.orders];
-  if(S.lav!=="all") list=list.filter(o=>o.tipoCella===S.lav);
-  host.innerHTML=`<div class="kanban">`+STATI.map(st=>{
-    const items=list.filter(o=>o.stato===st.id);
-    return `<div class="kanban-col"><div class="kanban-head"><span class="t" style="color:${st.color}">${st.label}</span><span class="n">${items.length}</span></div>
-      <div class="kanban-body">${items.map(o=>`<div class="kcard b-${st.cls}" data-id="${o.id}"><div class="kc">${esc(o.codice||"—")}</div><div class="ks">${esc(o.cliente||"—")}${o.operatore?" · "+esc(o.operatore):""}</div></div>`).join("")||`<div class="empty" style="padding:24px 8px"><p>Nessun ordine</p></div>`}</div></div>`;
-  }).join("")+`</div>`;
-  $$("#kanbanHost .kcard").forEach(c=>c.onclick=()=>openOrder(c.dataset.id));
-}
 function renderWeek(){
   const host=$("#weekHost"); if(!host) return;
   const now=new Date(); now.setHours(0,0,0,0);
@@ -2461,7 +3048,7 @@ function openWithCode(code){
   }
   if(!S.canEdit){ toast("Codice non trovato (sola lettura)","err"); return; }
   if(!S.folderId){ toast("Entra in una cartella sotto ICE per creare un lavoro","err"); return; }
-  const b=blankOrder(code); S.current=b; renderSheet(); loadMedia(); $("#sheetScrim").classList.add("open"); $("#sheet").classList.add("open"); toast("Nuovo lavoro per "+code); setTimeout(()=>{$("#f_cliente")&&$("#f_cliente").focus();},300);
+  const b=blankOrder(code); S.current=b; renderSheet(); loadMedia(); $("#sheetScrim").classList.add("open"); $("#sheet").classList.add("open"); toast("Nuovo ordine per "+code); setTimeout(()=>{$("#f_cliente")&&$("#f_cliente").focus();},300);
 }
 function closeSheet(){ $("#sheetScrim").classList.remove("open"); $("#sheet").classList.remove("open"); S.current=null; }
 
@@ -2472,7 +3059,7 @@ function renderSheet(){
   const statoOptions=STATI.map(s=>`<option value="${s.id}" ${o.stato===s.id?"selected":""}>${s.label}</option>`).join("");
   $("#sheetBody").innerHTML=`
     <div class="detail-head">
-      <span class="eyebrow">${o._new?"Nuovo lavoro":"Scheda lavoro"}</span>
+      <span class="eyebrow">${o._new?"Nuovo ordine":"Scheda lavoro"}</span>
       <div class="code-row" style="margin-top:6px">
         <h2 id="codeHead">${esc(o.codice||"—")}</h2>
       </div>
@@ -2550,12 +3137,17 @@ function renderSheet(){
       Nota vocale
     </button>
     <div class="media-grid" id="mediaGrid">
-      <label class="media-add" for="fileInput">
+      <label class="media-add" for="fileInput" title="Foto, video, documenti dalla galleria">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
-        <span>Aggiungi</span>
+        <span>File / Video</span>
+      </label>
+      <label class="media-add" for="fileInputCamera" title="Scatta foto">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+        <span>Foto</span>
       </label>
     </div>
-    <input id="fileInput" type="file" accept="image/*,video/*,.pdf,.doc,.docx,.xls,.xlsx" multiple capture="environment" style="display:none">
+    <input id="fileInput" type="file" accept="image/*,video/*,video/mp4,video/quicktime,video/webm,video/3gpp,.mp4,.mov,.webm,.3gp,.pdf,.doc,.docx,.xls,.xlsx" multiple style="display:none">
+    <input id="fileInputCamera" type="file" accept="image/*" capture="environment" style="display:none">
     <div class="up-progress" id="upProg"><div class="bar" id="upBar"></div></div>
     <div class="up-label" id="upLabel"></div>
 
@@ -2579,6 +3171,7 @@ function renderSheet(){
   $("#optAdd").onclick=addOpt;
   $("#optInput").onkeydown=e=>{ if(e.key==="Enter"){e.preventDefault();addOpt();} };
   $("#fileInput").onchange=onFilesPicked;
+  const cam=$("#fileInputCamera"); if(cam) cam.onchange=onFilesPicked;
   $("#btnVoice").onclick=toggleVoice;
   updateVoiceUI(false);
   $("#f_stato").onchange=onStatoChange;
@@ -2819,7 +3412,7 @@ function dupeOrder(){
   if(!S.canEdit){ toast("Sola lettura","err"); return; }
   const o=collectForm();
   const copy=structuredClone(o);
-  copy.id=uid(); copy.codice=(o.codice||"")+"-COPIA"; copy._new=true; copy.mediaCount=0;
+  copy.id=uid(); copy.codice=o.codice||""; copy._new=true; copy.mediaCount=0;
   copy.actual={}; copy.readyAt=""; copy.stato="bozza";
   S.current=copy; renderSheet(); loadMedia(); toast("Lavoro duplicato — modifica e salva");
 }
@@ -2836,14 +3429,16 @@ async function loadMedia(){
     renderMedia(d.files||[]);
   }catch(e){ renderMedia([]); }
 }
-function iconFor(mime){
-  if(mime&&mime.startsWith("image/"))return "img";
-  if(mime&&mime.startsWith("video/"))return "vid";
-  if(mime&&mime.startsWith("audio/"))return "aud";
+function iconFor(mime, name){
+  const m=(mime||"").toLowerCase();
+  const n=(name||"").toLowerCase();
+  if(m.startsWith("image/")||/\.(jpe?g|png|gif|webp|heic|bmp)$/.test(n)) return "img";
+  if(m.startsWith("video/")||/\.(mp4|m4v|mov|webm|3gp|mkv|avi)$/.test(n)) return "vid";
+  if(m.startsWith("audio/")||/\.(mp3|m4a|wav|ogg|aac|webm)$/.test(n) && !/\.(mp4|mov)$/.test(n)) return "aud";
   return "doc";
 }
 function mediaCellHTML(f, withRemove){
-  const kind=iconFor(f.mimeType);
+  const kind=iconFor(f.mimeType, f.name);
   const thumb=f.thumb||('https://drive.google.com/thumbnail?id='+f.id+'&sz=w400');
   const viewUrl=f.url||('https://drive.google.com/uc?export=view&id='+f.id);
   const previewUrl='https://drive.google.com/file/d/'+f.id+'/preview';
@@ -2929,12 +3524,19 @@ function closeLightbox(){
 
 function renderMedia(files,loading){
   const grid=$("#mediaGrid"); if(!grid) return;
-  const add=`<label class="media-add" for="fileInput">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
-    <span>Aggiungi</span></label>`;
+  const add=`<label class="media-add" for="fileInput" title="Foto, video, documenti dalla galleria">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg>
+      <span>File / Video</span>
+    </label>
+    <label class="media-add" for="fileInputCamera" title="Scatta foto">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+      <span>Fotocamera</span>
+    </label>`;
   if(loading){ grid.innerHTML=add+`<div class="media-cell doc"><div class="spin"></div></div>`; return; }
   const cells=(files||[]).map(f=>mediaCellHTML(f,true)).join("");
   grid.innerHTML=add+cells;
+  const fi=$("#fileInput"); if(fi) fi.onchange=onFilesPicked;
+  const cam=$("#fileInputCamera"); if(cam) cam.onchange=onFilesPicked;
   $$("#mediaGrid .rm").forEach(function(b){
     b.onclick=function(e){ e.preventDefault(); e.stopPropagation(); deleteFile(b.dataset.fid); };
   });
@@ -2959,30 +3561,86 @@ async function onFilesPicked(e){
   const files=[...e.target.files]; e.target.value="";
   if(!files.length) return;
   const o=S.current;
-  if(o._new || !o.codice){ toast("Salva prima l'ordine (serve il codice)","err"); return; }
+  if(!o || o._new || !o.codice){ toast("Salva prima l'ordine (serve il codice)","err"); return; }
   const prog=$("#upProg"), bar=$("#upBar"), lbl=$("#upLabel");
-  prog.classList.add("on"); lbl.classList.add("on");
-  let done=0;
+  if(prog) prog.classList.add("on");
+  if(lbl) lbl.classList.add("on");
+  let done=0, ok=0, fail=0;
   for(const f of files){
-    lbl.textContent=`Caricamento ${done+1}/${files.length} · ${f.name}`;
-    // idempotenza soft: salta se stesso nome già presente in griglia
+    if(lbl) lbl.textContent=`Preparazione ${done+1}/${files.length} · ${f.name}`;
     const exists=[...document.querySelectorAll("#mediaGrid .media-cell .fn, #mediaGrid .media-cell")].some(el=>(el.textContent||"").includes(f.name));
-    if(exists && !confirm(`"${f.name}" sembra già caricato. Caricare di nuovo?`)){ done++; bar.style.width=(done/files.length*100)+"%"; continue; }
+    if(exists && !confirm(`"${f.name}" sembra già caricato. Caricare di nuovo?`)){
+      done++; if(bar) bar.style.width=(done/files.length*100)+"%"; continue;
+    }
     let uf=f;
-    try{ uf=await compressImage(f); }catch(_){}
-    if(uf.size>45*1024*1024){ toast(`"${uf.name}" supera 45MB, saltato`,"err"); done++; bar.style.width=(done/files.length*100)+"%"; continue; }
+    const mime = guessMime(f);
     try{
+      if(mime.startsWith("image/") && mime!=="image/gif"){
+        if(lbl) lbl.textContent=`Compressione foto ${done+1}/${files.length}`;
+        uf = await compressImage(f);
+      } else if(mime.startsWith("video/")){
+        if(lbl) lbl.textContent=`Compressione video ${done+1}/${files.length}…`;
+        uf = await compressVideo(f, function(p){
+          if(lbl) lbl.textContent=`Compressione video ${done+1}/${files.length} · ${Math.round((p||0)*100)}%`;
+          if(bar) bar.style.width = Math.min(90, Math.round((p||0)*90))+"%";
+        });
+      }
+    }catch(compErr){
+      console.warn("compress fail", compErr);
+      uf = f;
+    }
+    const outMime = guessMime(uf);
+    const isVid = outMime.startsWith("video/");
+    const maxBytes = isVid ? 28*1024*1024 : 40*1024*1024;
+    if(uf.size > maxBytes){
+      toast(`"${uf.name}" ancora troppo grande (${fmtBytes(uf.size)}). Max ${isVid?"28MB":"40MB"}.`,"err");
+      fail++; done++; if(bar) bar.style.width=(done/files.length*100)+"%"; continue;
+    }
+    try{
+      if(lbl) lbl.textContent=`Upload ${done+1}/${files.length} · ${uf.name} (${fmtBytes(uf.size)})`;
       const b64=await fileToBase64(uf);
-      await api("upload",{codice:o.codice, id:o.id, cliente:o.cliente, name:uf.name, mimeType:uf.type||"application/octet-stream", data:b64});
-      done++; bar.style.width=(done/files.length*100)+"%";
-    }catch(err){ toast("Errore su "+f.name,"err"); done++; }
+      await api("upload",{
+        codice:o.codice, id:o.id, cliente:o.cliente,
+        name:uf.name || f.name,
+        mimeType: uf.type || outMime || "application/octet-stream",
+        data:b64
+      });
+      ok++; done++; if(bar) bar.style.width=(done/files.length*100)+"%";
+    }catch(err){
+      console.error("upload fail", f.name, err);
+      toast("Upload fallito: "+f.name+" — "+((err&&err.message)||"errore"),"err");
+      fail++; done++; if(bar) bar.style.width=(done/files.length*100)+"%";
+    }
   }
-  prog.classList.remove("on"); lbl.classList.remove("on"); bar.style.width="0";
-  toast("Caricamento completato","ok");
+  if(prog) prog.classList.remove("on");
+  if(lbl) lbl.classList.remove("on");
+  if(bar) bar.style.width="0";
+  if(ok) toast(ok===1?"File caricato":(ok+" file caricati"),"ok");
   delete S.filesCache[o.id];
   await loadMedia();
-  // aggiorna contatore in lista
-  const idx=S.orders.findIndex(x=>x.id===o.id); if(idx>=0){ S.orders[idx].mediaCount=o.mediaCount; localStorage.setItem("cf_cache",JSON.stringify(S.orders)); render(); }
+  const idx=S.orders.findIndex(x=>x.id===o.id);
+  if(idx>=0){ S.orders[idx].mediaCount=o.mediaCount; localStorage.setItem("cf_cache",JSON.stringify(S.orders)); render(); }
+}
+function guessMime(file){
+  if(file && file.type) return file.type;
+  const n=((file && file.name)||"").toLowerCase();
+  if(/\.(mp4|m4v)$/.test(n)) return "video/mp4";
+  if(/\.mov$/.test(n)) return "video/quicktime";
+  if(/\.webm$/.test(n)) return "video/webm";
+  if(/\.3gp$/.test(n)) return "video/3gpp";
+  if(/\.(jpe?g)$/.test(n)) return "image/jpeg";
+  if(/\.png$/.test(n)) return "image/png";
+  if(/\.gif$/.test(n)) return "image/gif";
+  if(/\.webp$/.test(n)) return "image/webp";
+  if(/\.pdf$/.test(n)) return "application/pdf";
+  if(/\.docx?$/.test(n)) return "application/msword";
+  if(/\.xlsx?$/.test(n)) return "application/vnd.ms-excel";
+  return "application/octet-stream";
+}
+function fmtBytes(n){
+  if(n<1024) return n+" B";
+  if(n<1024*1024) return (n/1024).toFixed(1)+" KB";
+  return (n/(1024*1024)).toFixed(1)+" MB";
 }
 async function deleteFile(fid){
   if(!S.canEdit){ toast("Sola lettura","err"); return; }
@@ -3042,71 +3700,47 @@ function saveSettings(){
 
 
 
-/* ===================================================================
-   IMPOSTAZIONI · aspetto + lingua
-   =================================================================== */
-function getAppearance(){
-  try{ return JSON.parse(localStorage.getItem("cf_appear")||"{}"); }catch(_){ return {}; }
-}
-function setAppearance(patch){
-  const a=Object.assign(getAppearance(), patch||{});
-  localStorage.setItem("cf_appear", JSON.stringify(a));
-  applyAppearance();
-  return a;
-}
+function getAppearance(){ try{return JSON.parse(localStorage.getItem("cf_appear")||"{}");}catch(_){return {};} }
+function setAppearance(patch){ const a=Object.assign(getAppearance(),patch||{}); localStorage.setItem("cf_appear",JSON.stringify(a)); applyAppearance(); return a; }
 function applyAppearance(){
   const a=getAppearance();
-  const theme=a.theme||"industrial";
-  const dens=a.density||"comfortable";
-  const acc=a.accent||"frost";
-  if(theme==="industrial") document.body.removeAttribute("data-theme");
-  else document.body.dataset.theme=theme;
-  if(dens==="comfortable") document.body.removeAttribute("data-density");
-  else document.body.dataset.density=dens;
-  if(acc==="frost") document.body.removeAttribute("data-accent");
-  else document.body.dataset.accent=acc;
+  if(!a.theme||a.theme==="industrial") document.body.removeAttribute("data-theme"); else document.body.dataset.theme=a.theme;
+  if(!a.density||a.density==="comfortable") document.body.removeAttribute("data-density"); else document.body.dataset.density=a.density;
+  if(!a.accent||a.accent==="frost") document.body.removeAttribute("data-accent"); else document.body.dataset.accent=a.accent;
 }
-function getLang(){ try{ return localStorage.getItem("cf_lang")||"it"; }catch(_){ return "it"; } }
-function setLang(code){ try{ localStorage.setItem("cf_lang", code||"it"); document.documentElement.lang=code||"it"; }catch(_){} }
 function renderSettingsView(){
   const host=$("#settingsViewHost"); if(!host) return;
   const a=getAppearance();
-  const theme=a.theme||"industrial";
-  const dens=a.density||"comfortable";
-  const acc=a.accent||"frost";
-  const lang=getLang();
+  const theme=a.theme||"industrial", dens=a.density||"comfortable", acc=a.accent||"frost", lang=getLang();
   const op=S.operatorName||"";
   host.innerHTML=`
-    <div class="section-title" style="margin-top:4px"><span class="n">⚙</span> Impostazioni</div>
-    <p style="font-size:13px;color:var(--muted);margin-bottom:14px">Aspetto e preferenze su questo dispositivo.</p>
-    <div class="settings-block">
-      <h3>Lingua</h3>
+    <div class="section-title"><span class="n">⚙</span> ${esc(t("settings"))}</div>
+    <div class="settings-block"><h3>Lingua / Language</h3>
       <div class="appear-grid">
         <button type="button" class="appear-swatch ${lang==="it"?"on":""}" data-lang="it">Italiano</button>
         <button type="button" class="appear-swatch ${lang==="en"?"on":""}" data-lang="en">English</button>
         <button type="button" class="appear-swatch ${lang==="fr"?"on":""}" data-lang="fr">Français</button>
         <button type="button" class="appear-swatch ${lang==="ro"?"on":""}" data-lang="ro">Română</button>
         <button type="button" class="appear-swatch ${lang==="sq"?"on":""}" data-lang="sq">Shqip</button>
+        <button type="button" class="appear-swatch ${lang==="pms"?"on":""}" data-lang="pms">Piemontèis</button>
+        <button type="button" class="appear-swatch ${lang==="nap"?"on":""}" data-lang="nap">Napulitano</button>
       </div>
     </div>
-    <div class="settings-block">
-      <h3>Tema</h3>
+    <div class="settings-block"><h3>Tema</h3>
       <div class="appear-grid">
         <button type="button" class="appear-swatch ${theme==="industrial"?"on":""}" data-theme="industrial">Industriale</button>
         <button type="button" class="appear-swatch ${theme==="midnight"?"on":""}" data-theme="midnight">Midnight</button>
         <button type="button" class="appear-swatch ${theme==="slate"?"on":""}" data-theme="slate">Ardesia</button>
-        <button type="button" class="appear-swatch ${theme==="contrast"?"on":""}" data-theme="contrast">Alto contrasto</button>
+        <button type="button" class="appear-swatch ${theme==="contrast"?"on":""}" data-theme="contrast">Contrasto</button>
       </div>
     </div>
-    <div class="settings-block">
-      <h3>Densità</h3>
+    <div class="settings-block"><h3>Densità</h3>
       <div class="appear-grid">
         <button type="button" class="appear-swatch ${dens==="comfortable"?"on":""}" data-dens="comfortable">Comoda</button>
         <button type="button" class="appear-swatch ${dens==="compact"?"on":""}" data-dens="compact">Compatta</button>
       </div>
     </div>
-    <div class="settings-block">
-      <h3>Accento</h3>
+    <div class="settings-block"><h3>Accento</h3>
       <div class="appear-grid">
         <button type="button" class="appear-swatch ${acc==="frost"?"on":""}" data-acc="frost">Frost</button>
         <button type="button" class="appear-swatch ${acc==="amber"?"on":""}" data-acc="amber">Ambra</button>
@@ -3114,21 +3748,23 @@ function renderSettingsView(){
         <button type="button" class="appear-swatch ${acc==="violet"?"on":""}" data-acc="violet">Viola</button>
       </div>
     </div>
-    <div class="settings-block">
-      <h3>Operatore</h3>
-      <div class="field"><label>Nome</label><input id="set_operator" value="${esc(op)}" placeholder="Es. Gabriel" style="width:100%;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:11px 12px;color:var(--text)"></div>
-      <button type="button" class="btn btn-primary" id="btnSaveOp" style="width:100%;height:42px;margin-top:8px">Salva nome</button>
+    <div class="settings-block"><h3>Operatore</h3>
+      <input id="set_operator" value="${esc(op)}" placeholder="Gabriel" style="width:100%;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:11px 12px;color:var(--text);margin-bottom:8px">
+      <button type="button" class="btn btn-primary" id="btnSaveOp" style="width:100%;height:42px">Salva nome</button>
     </div>
     <div class="settings-block">
-      <h3>Connessione</h3>
       <button type="button" class="btn btn-ghost" id="btnOpenConn" style="width:100%;height:42px;margin-bottom:8px">URL script Google</button>
       <button type="button" class="btn btn-ghost" id="btnFromSettingsLogout" style="width:100%;height:42px;color:var(--red)">Esci</button>
     </div>`;
-  $$("#settingsViewHost [data-lang]").forEach(b=>b.onclick=()=>{ setLang(b.dataset.lang); renderSettingsView(); toast("Lingua: "+b.dataset.lang,"ok"); });
-  $$("#settingsViewHost [data-theme]").forEach(b=>b.onclick=()=>{ setAppearance({theme:b.dataset.theme}); renderSettingsView(); toast("Tema applicato","ok"); });
-  $$("#settingsViewHost [data-dens]").forEach(b=>b.onclick=()=>{ setAppearance({density:b.dataset.dens}); renderSettingsView(); toast("Densità aggiornata","ok"); });
-  $$("#settingsViewHost [data-acc]").forEach(b=>b.onclick=()=>{ setAppearance({accent:b.dataset.acc}); renderSettingsView(); toast("Accento aggiornato","ok"); });
-  const so=$("#btnSaveOp"); if(so) so.onclick=()=>{ S.operatorName=($("#set_operator").value||"").trim(); localStorage.setItem("cf_operator",S.operatorName); toast("Nome salvato","ok"); };
+  $$("#settingsViewHost [data-lang]").forEach(b=>b.onclick=()=>{
+    setLang(b.dataset.lang);
+    renderSettingsView();
+    toast(t("lang_ok"),"ok");
+  });
+  $$("#settingsViewHost [data-theme]").forEach(b=>b.onclick=()=>{ setAppearance({theme:b.dataset.theme}); renderSettingsView(); toast("OK","ok"); });
+  $$("#settingsViewHost [data-dens]").forEach(b=>b.onclick=()=>{ setAppearance({density:b.dataset.dens}); renderSettingsView(); toast("OK","ok"); });
+  $$("#settingsViewHost [data-acc]").forEach(b=>b.onclick=()=>{ setAppearance({accent:b.dataset.acc}); renderSettingsView(); toast("OK","ok"); });
+  const so=$("#btnSaveOp"); if(so) so.onclick=()=>{ S.operatorName=($("#set_operator").value||"").trim(); localStorage.setItem("cf_operator",S.operatorName); toast("OK","ok"); };
   const c=$("#btnOpenConn"); if(c) c.onclick=()=>openSettings(false);
   const l=$("#btnFromSettingsLogout"); if(l) l.onclick=()=>logout(false);
 }
@@ -3157,114 +3793,202 @@ function toggleSelectFolder(id){
 function selectionCount(){ return S.selectedOrders.size + S.selectedFolders.size; }
 function renderSelBar(){
   const n=selectionCount();
-  if(!n && !(S.clipboard && S.clipboard.items && S.clipboard.items.length)) return "";
-  if(!n) return "";
-  return `<div class="sel-bar on">
-    <div class="info">${n} selezionat${n===1?"o":"i"}</div>
-    <button type="button" id="selCut">Taglia</button>
-    <button type="button" id="selCopy">Copia</button>
-    <button type="button" class="primary" id="selPaste">Incolla</button>
-    <button type="button" id="selClear">Annulla</button>
+  const hasClip = !!(S.clipboard && ((S.clipboard.items&&S.clipboard.items.length) || S.clipboard.data));
+  if(!n && !hasClip) return "";
+  // Barra stile Esplora file Windows
+  if(n){
+    const canRename = n===1;
+    return `<div class="cmd-bar on">
+      <div class="info">${n} selezionat${n===1?"o":"i"}</div>
+      <button type="button" id="selCut">Taglia</button>
+      <button type="button" id="selCopy">Copia</button>
+      <button type="button" class="primary" id="selPaste" ${hasClip?"":"disabled"}>Incolla</button>
+      <button type="button" class="danger" id="selDelete">Elimina</button>
+      <button type="button" id="selRename" ${canRename?"":"disabled"}>Rinomina</button>
+      <button type="button" id="selClear">Annulla</button>
+    </div>`;
+  }
+  // Solo appunti (dopo taglia/copia): naviga liberamente e incolla
+  const mode = S.clipboard.mode==="cut" ? "Tagliati" : "Copiati";
+  const items = S.clipboard.items || [];
+  const label = items.length ? (items.length+" elementi") : "1 elemento";
+  return `<div class="cmd-bar on paste-bar">
+    <div class="info">${mode}: <b>${esc(label)}</b> — apri una cartella e Incolla</div>
+    <button type="button" class="primary" id="btnPasteHere">Incolla qui</button>
+    <button type="button" id="btnClipCancel">Annulla</button>
   </div>`;
 }
 function copySelection(mode){
+  if(!S.canEdit){ toast(typeof t==="function"?t("readonly"):"Sola lettura","err"); return; }
   if(!selectionCount()){ toast("Nessun elemento selezionato","err"); return; }
   const items=[];
   S.selectedOrders.forEach(id=>{
-    const o=S.orders.find(x=>x.id===id); if(o) items.push({type:"order", data:structuredClone(o)});
+    const o=S.orders.find(x=>String(x.id)===String(id));
+    if(o){
+      let data; try{ data=structuredClone(o); }catch(_){ data=JSON.parse(JSON.stringify(o)); }
+      items.push({type:"order", data:data});
+    }
   });
   S.selectedFolders.forEach(id=>{
-    const f=getFolder(id); if(f) items.push({type:"folder", data:structuredClone(f)});
+    const f=getFolder(id);
+    if(f){
+      let data; try{ data=structuredClone(f); }catch(_){ data=JSON.parse(JSON.stringify(f)); }
+      items.push({type:"folder", data:data});
+    }
   });
-  S.clipboard={mode:mode, items:items};
+  if(!items.length){ toast("Nessun elemento selezionato","err"); return; }
+  S.clipboard={mode: mode==="cut"?"cut":"copy", items:items};
   try{ sessionStorage.setItem("cf_clipboard", JSON.stringify(S.clipboard)); }catch(_){}
-  toast((mode==="cut"?"Tagliati":"Copiati")+" "+items.length+" · apri cartella e Incolla");
   clearSelection();
+  toast((mode==="cut"?"Tagliati":"Copiati")+" "+items.length+" · apri cartella e Incolla","ok");
   render();
 }
-function pasteSelectionLocal(){
-  if(!S.clipboard){ toast("Appunti vuoti","err"); return; }
-  const items = S.clipboard.items || (S.clipboard.data ? [{type:S.clipboard.type||"order", data:S.clipboard.data}] : []);
-  if(!items.length){ toast("Appunti vuoti","err"); return; }
-  if(!S.canEdit){ toast("Sola lettura","err"); return; }
-  const mode = S.clipboard.mode || "copy";
-  const target = S.folderId || null;
-  const toSync = [];
-  let done = 0;
+/**
+ * Elimina in batch ordini e cartelle selezionati.
+ * Ordini: rimozione locale + API delete in background.
+ * Cartelle: ordini figli restano (appFolderId → parent), sotto-cartelle riassegnate.
+ */
+function deleteSelection(){
+  if(!S.canEdit){ toast(typeof t==="function"?t("readonly"):"Sola lettura","err"); return; }
+  const nO=S.selectedOrders.size, nF=S.selectedFolders.size;
+  if(!nO && !nF){ toast("Nessun elemento selezionato","err"); return; }
+  const msg="Eliminare "+(nO?nO+" ordin"+(nO===1?"e":"i"):"")+(nO&&nF?" e ":"")+(nF?nF+" cartell"+(nF===1?"a":"e"):"")+"?\nI file su Drive restano.";
+  if(!confirm(msg)) return;
 
-  for(const it of items){
-    if(!it) continue;
-    const isOrder = it.type==="order" || (!it.type && it.data && (it.data.codice!=null || it.data.id));
-    if(isOrder){
-      const data = it.data || it;
-      if(mode==="cut"){
-        const o = S.orders.find(x => String(x.id) === String(data.id));
-        if(o){
-          o.appFolderId = target;
-          o.clientUpdatedAt = new Date().toISOString();
-          toSync.push(Object.assign({}, o));
-          done++;
-        }
-      } else {
-        let copy;
-        try { copy = structuredClone(data); } catch(_){ copy = JSON.parse(JSON.stringify(data)); }
-        copy.id = uid();
-        let base = (data.codice || "ORD").replace(/-COPIA\d*$/,"");
-        copy.codice = base + "-COPIA";
-        let n = 2;
-        while(S.orders.some(x => (x.codice||"") === copy.codice)){
-          copy.codice = base + "-COPIA" + n;
-          n++;
-        }
-        copy.appFolderId = target;
-        copy.actual = {};
-        copy.readyAt = "";
-        copy.stato = "bozza";
-        copy.mediaCount = 0;
-        copy.clientUpdatedAt = new Date().toISOString();
-        delete copy._new;
-        S.orders.unshift(copy);
-        toSync.push(Object.assign({}, copy));
-        done++;
-      }
-    } else if(it.type==="folder"){
-      const data = it.data || {};
-      if(mode==="cut"){
-        if(String(data.id)===String(target) || isDescendantFolder(target, data.id)){
-          toast("Cartella non spostabile qui","err");
-          continue;
-        }
-        const f = getFolder(data.id);
-        if(f){ f.parentId = target; done++; }
-      } else {
-        S.folders.push({id:fuid(), name:(data.name||"Cartella")+" (copia)", parentId:target});
-        done++;
-      }
-    }
-  }
+  const orderIds=[...S.selectedOrders].map(String);
+  const folderIds=[...S.selectedFolders].map(String);
+  const toDeleteApi=[];
 
-  if(!done){
-    toast("Incolla non riuscita","err");
-    return;
-  }
+  // Ordini
+  orderIds.forEach(id=>{
+    const o=S.orders.find(x=>String(x.id)===id);
+    if(o) toDeleteApi.push(o.id);
+  });
+  S.orders=S.orders.filter(o=>!orderIds.includes(String(o.id)));
 
-  persistFolders();
-  localStorage.setItem("cf_cache", JSON.stringify(S.orders));
-  S.clipboard = null;
-  try{ sessionStorage.removeItem("cf_clipboard"); }catch(_){}
+  // Cartelle (dalla più profonda non serve: riassegna parent)
+  folderIds.forEach(fid=>{
+    const f=getFolder(fid);
+    if(!f) return;
+    const parent=f.parentId||null;
+    S.orders.forEach(o=>{
+      if(String(o.appFolderId||"")===String(fid)) o.appFolderId=parent;
+    });
+    S.folders.forEach(x=>{
+      if(String(x.parentId||"")===String(fid)) x.parentId=parent;
+    });
+    if(String(S.folderId||"")===String(fid)) S.folderId=parent;
+  });
+  S.folders=S.folders.filter(f=>!folderIds.includes(String(f.id)));
+
+  try{ persistFolders(); }catch(_){}
+  try{ localStorage.setItem("cf_cache", JSON.stringify(S.orders)); }catch(_){}
   clearSelection();
-  if(S.filter && S.filter !== "all") S.filter = "all";
-  toast("Incollati "+done+" elementi","ok");
+  toast("Eliminati "+(orderIds.length+folderIds.length)+" elementi","ok");
   try{ haptic(30); }catch(_){}
   render();
 
-  // Sync remoto in background — non blocca il pulsante
-  toSync.forEach(function(order){
+  // Sync delete ordini in background
+  toDeleteApi.forEach(id=>{
     if(!S.url) return;
-    Promise.resolve(api("save",{order:order})).catch(function(){
-      S.offlineQueue = S.offlineQueue || [];
-      S.offlineQueue.push({t:Date.now(), action:"save", payload:{order:order}});
+    Promise.resolve(api("delete",{id:id})).catch(function(e){
+      S.offlineQueue=S.offlineQueue||[];
+      S.offlineQueue.push({t:Date.now(), action:"delete", payload:{id:id}});
       try{ persistQueue(); }catch(_){}
+    });
+  });
+}
+
+
+function renameSelection(){
+  if(!S.canEdit){ toast("Sola lettura","err"); return; }
+  const n=selectionCount();
+  if(n!==1){ toast("Seleziona un solo elemento da rinominare","err"); return; }
+  if(S.selectedFolders.size===1){
+    const fid=[...S.selectedFolders][0];
+    const f=getFolder(fid); if(!f) return;
+    const name=prompt("Nuovo nome cartella:", f.name||"");
+    if(name==null) return;
+    const nm=name.trim();
+    if(!nm){ toast("Nome non valido","err"); return; }
+    f.name=nm;
+    persistFolders();
+    clearSelection();
+    toast("Cartella rinominata","ok");
+    render();
+    return;
+  }
+  if(S.selectedOrders.size===1){
+    const oid=[...S.selectedOrders][0];
+    const o=S.orders.find(x=>String(x.id)===String(oid)); if(!o) return;
+    const code=prompt("Nuovo codice ordine:", o.codice||"");
+    if(code==null) return;
+    const c=code.trim();
+    if(!c){ toast("Codice non valido","err"); return; }
+    if(S.orders.some(x=>String(x.id)!==String(oid) && (x.codice||"")===c)){
+      toast("Codice già in uso","err"); return;
+    }
+    o.codice=c;
+    o.clientUpdatedAt=new Date().toISOString();
+    localStorage.setItem("cf_cache", JSON.stringify(S.orders));
+    clearSelection();
+    toast("Ordine rinominato","ok");
+    render();
+    if(S.url){
+      Promise.resolve(api("save",{order:Object.assign({},o)})).catch(function(){
+        S.offlineQueue=S.offlineQueue||[];
+        S.offlineQueue.push({t:Date.now(), action:"save", payload:{order:Object.assign({},o)}});
+        try{ persistQueue(); }catch(_){}
+      });
+    }
+  }
+}
+
+function pasteSelectionLocal(){
+  if(!S.clipboard){ toast(t("clip_empty"),"err"); return; }
+  const items = S.clipboard.items || (S.clipboard.data ? [{type:S.clipboard.type||"order", data:S.clipboard.data}] : []);
+  if(!items.length){ toast(t("clip_empty"),"err"); return; }
+  if(!S.canEdit){ toast(t("readonly"),"err"); return; }
+  const mode = S.clipboard.mode || "copy";
+  const target = S.folderId || null;
+  const toSync=[]; let done=0;
+  for(const it of items){
+    if(!it) continue;
+    if(it.type==="order" || (!it.type && it.data)){
+      const data=it.data||it;
+      if(mode==="cut"){
+        const o=S.orders.find(x=>String(x.id)===String(data.id));
+        if(o){ o.appFolderId=target; o.clientUpdatedAt=new Date().toISOString(); toSync.push(Object.assign({},o)); done++; }
+      } else {
+        let copy; try{copy=structuredClone(data);}catch(_){copy=JSON.parse(JSON.stringify(data));}
+        copy.id=uid();
+        // Mantieni il codice originale senza suffisso
+        copy.codice = (data.codice != null ? data.codice : "");
+        copy.appFolderId=target; copy.actual={}; copy.readyAt=""; copy.stato="bozza"; copy.mediaCount=0;
+        copy.clientUpdatedAt=new Date().toISOString(); delete copy._new;
+        S.orders.unshift(copy); toSync.push(Object.assign({},copy)); done++;
+      }
+    } else if(it.type==="folder"){
+      const data=it.data||{};
+      if(mode==="cut"){
+        if(String(data.id)===String(target)||isDescendantFolder(target,data.id)) continue;
+        const f=getFolder(data.id); if(f){ f.parentId=target; done++; }
+      } else {
+        S.folders.push({id:fuid(), name:(data.name||"Cartella"), parentId:target}); done++;
+      }
+    }
+  }
+  if(!done){ toast(t("clip_empty"),"err"); return; }
+  persistFolders(); localStorage.setItem("cf_cache",JSON.stringify(S.orders));
+  S.clipboard=null; clearSelection();
+  if(S.filter&&S.filter!=="all") S.filter="all";
+  toast(t("pasted",{n:done}),"ok"); render();
+  toSync.forEach(order=>{
+    if(!S.url) return;
+    Promise.resolve(api("save",{order})).catch(()=>{
+      S.offlineQueue=S.offlineQueue||[];
+      S.offlineQueue.push({t:Date.now(),action:"save",payload:{order}});
+      try{persistQueue();}catch(_){}
     });
   });
 }
@@ -3273,8 +3997,22 @@ async function pasteSelection(){ pasteSelectionLocal(); }
 function wireSelBar(){
   const c=$("#selCut"); if(c) c.onclick=function(){ copySelection("cut"); };
   const p=$("#selCopy"); if(p) p.onclick=function(){ copySelection("copy"); };
-  const v=$("#selPaste"); if(v) v.onclick=function(){ doPaste(); };
+  const v=$("#selPaste"); if(v) v.onclick=function(){
+    if(S.clipboard && (S.clipboard.items||S.clipboard.data)) pasteSelectionLocal();
+    else toast(typeof t==="function"?t("clip_empty"):"Appunti vuoti","err");
+  };
+  const d=$("#selDelete"); if(d) d.onclick=function(){ deleteSelection(); };
+  const r=$("#selRename"); if(r) r.onclick=function(){ renameSelection(); };
   const a=$("#selClear"); if(a) a.onclick=function(){ clearSelection(); render(); };
+  // paste bar buttons also wired here when only clipboard
+  const pb=$("#btnPasteHere");
+  if(pb) pb.onclick=function(e){
+    e.preventDefault(); e.stopPropagation();
+    if(S.clipboard&&(S.clipboard.items||S.clipboard.data)) pasteSelectionLocal();
+    else toast("Appunti vuoti","err");
+  };
+  const cc=$("#btnClipCancel");
+  if(cc) cc.onclick=function(){ S.clipboard=null; try{sessionStorage.removeItem("cf_clipboard");}catch(_){} render(); };
 }
 
 
@@ -3294,16 +4032,27 @@ function bindLongPress(el, onLong){
     const touch=e.touches?e.touches[0]:e;
     const sx=touch.clientX, sy=touch.clientY;
     clearTimeout(lpTimer);
+    let fired=false;
     lpTimer=setTimeout(()=>{
       if(lpMoved) return;
+      fired=true;
       if(navigator.vibrate) navigator.vibrate(40);
       onLong();
-    },2000);
+    },1000);
     const move=(ev)=>{
       const t=ev.touches?ev.touches[0]:ev;
       if(Math.abs(t.clientX-sx)>12||Math.abs(t.clientY-sy)>12){ lpMoved=true; clearTimeout(lpTimer); }
     };
-    const end=()=>{ clearTimeout(lpTimer); el.removeEventListener("touchmove",move); el.removeEventListener("touchend",end); el.removeEventListener("mousemove",move); el.removeEventListener("mouseup",end); };
+    const end=()=>{
+      clearTimeout(lpTimer);
+      el.removeEventListener("touchmove",move); el.removeEventListener("touchend",end);
+      el.removeEventListener("mousemove",move); el.removeEventListener("mouseup",end);
+      if(fired){
+        const swallow=(ev)=>{ ev.preventDefault(); ev.stopPropagation(); el.removeEventListener("click",swallow,true); };
+        el.addEventListener("click",swallow,true);
+        setTimeout(()=>el.removeEventListener("click",swallow,true),400);
+      }
+    };
     el.addEventListener("touchmove",move,{passive:true});
     el.addEventListener("touchend",end);
     el.addEventListener("mousemove",move);
@@ -3393,7 +4142,7 @@ function pasteInto(targetFolderId){
     } else {
       const src=clip.data;
       const copy=structuredClone(src);
-      copy.id=uid(); copy.codice=(src.codice||"")+"-COPIA"; copy._new=false;
+      copy.id=uid(); copy.codice=src.codice||""; copy._new=false;
       copy.appFolderId=targetFolderId||null; copy.actual={}; copy.readyAt=""; copy.stato="bozza"; copy.mediaCount=0;
       S.orders.unshift(copy);
       localStorage.setItem("cf_cache",JSON.stringify(S.orders));
@@ -3412,7 +4161,7 @@ function pasteInto(targetFolderId){
     } else {
       const cloneTree=function(srcId, newParent){
         const src=getFolder(srcId); if(!src) return;
-        const nf={id:fuid(), name:src.name+(srcId===clip.data.id?" (copia)":""), parentId:newParent};
+        const nf={id:fuid(), name:src.name, parentId:newParent};
         S.folders.push(nf);
         childFolders(srcId).forEach(function(ch){ cloneTree(ch.id, nf.id); });
       };
@@ -3434,17 +4183,6 @@ $$("#sideNav .side-item").forEach(b=>b.onclick=()=>setView(b.dataset.v));
 $("#btnRefresh").onclick=loadOrders;
 $("#btnSettings").onclick=()=>{ setView("impostazioni"); };
 $("#btnNew").onclick=()=>openOrder(null);
-if(!window.__cf_paste_delegate){
-  window.__cf_paste_delegate=true;
-  document.addEventListener("click", function(ev){
-    const btn = ev.target && ev.target.closest && ev.target.closest("#btnPasteHere, #selPaste");
-    if(!btn) return;
-    ev.preventDefault();
-    ev.stopPropagation();
-    doPaste();
-  }, true);
-}
-
 $("#btnScan").onclick=openScan;
 $("#btnCloseScan").onclick=closeScan;
 $("#btnManual").onclick=manualEntry;
@@ -3467,7 +4205,6 @@ $("#noteBack").onclick=()=>{
 $("#btnLogout").onclick=()=>logout(false);
 let searchT;
 $("#searchInput").oninput=e=>{ clearTimeout(searchT); searchT=setTimeout(()=>{S.query=e.target.value.trim();renderCurrent();},180); };
-$$("#viewswitch button").forEach(b=>b.onclick=()=>setView(b.dataset.v));
 $("#lbClose").onclick=closeLightbox;
 $("#lightbox").onclick=e=>{ if(e.target.id==="lightbox") closeLightbox(); };
 document.addEventListener("click",e=>{
@@ -3480,6 +4217,191 @@ document.addEventListener("keydown",e=>{ if(e.key==="Escape"){ if($("#lightbox")
 /* ===================================================================
    COMPRESSIONE FOTO — ridimensiona lato client prima dell'upload
    =================================================================== */
+
+/**
+ * Comprime video sul dispositivo (canvas + MediaRecorder).
+ * Target: max 1280px, ~1.2 Mbps, per restare sotto il limite Apps Script.
+ * Se già piccolo o non supportato, restituisce il file originale.
+ */
+async function compressVideo(file, onProgress){
+  const mime = guessMime(file);
+  if(!mime.startsWith("video/")) return file;
+  const SKIP_UNDER = 16 * 1024 * 1024; // già ok
+  if(file.size <= SKIP_UNDER) return file;
+  if(typeof MediaRecorder === "undefined"){
+    console.warn("MediaRecorder non disponibile");
+    return file;
+  }
+
+  let outMime = "";
+  const candidates = [
+    "video/webm;codecs=vp8,opus",
+    "video/webm;codecs=vp9,opus",
+    "video/webm",
+    "video/mp4"
+  ];
+  for(const c of candidates){
+    try{
+      if(MediaRecorder.isTypeSupported(c)){ outMime = c; break; }
+    }catch(_){}
+  }
+  if(!outMime) return file;
+
+  const url = URL.createObjectURL(file);
+  const video = document.createElement("video");
+  video.muted = true;
+  video.playsInline = true;
+  video.setAttribute("playsinline", "");
+  video.preload = "auto";
+  video.src = url;
+
+  try{
+    await new Promise(function(resolve, reject){
+      const t = setTimeout(function(){ reject(new Error("Timeout lettura video")); }, 45000);
+      video.onloadedmetadata = function(){ clearTimeout(t); resolve(); };
+      video.onerror = function(){ clearTimeout(t); reject(new Error("Video non leggibile")); };
+    });
+
+    const duration = video.duration;
+    if(!isFinite(duration) || duration <= 0 || duration > 600){
+      // oltre 10 min: non comprimere qui
+      return file;
+    }
+
+    const maxW = 1280, maxH = 720;
+    let vw = video.videoWidth || 1280, vh = video.videoHeight || 720;
+    const scale = Math.min(1, maxW / vw, maxH / vh);
+    let cw = Math.round(vw * scale);
+    let ch = Math.round(vh * scale);
+    // dimensioni pari (encoder)
+    cw = Math.max(2, cw - (cw % 2));
+    ch = Math.max(2, ch - (ch % 2));
+
+    const canvas = document.createElement("canvas");
+    canvas.width = cw;
+    canvas.height = ch;
+    const ctx = canvas.getContext("2d", { alpha: false });
+    const fps = 24;
+    let canvasStream;
+    try{
+      canvasStream = canvas.captureStream(fps);
+    }catch(e){
+      console.warn("captureStream fail", e);
+      return file;
+    }
+
+    // audio dal video se possibile
+    let stream = canvasStream;
+    try{
+      if(typeof video.captureStream === "function"){
+        const vs = video.captureStream();
+        const audioTracks = vs.getAudioTracks();
+        if(audioTracks && audioTracks.length){
+          stream = new MediaStream([
+            canvasStream.getVideoTracks()[0],
+            audioTracks[0]
+          ]);
+        }
+      }
+    }catch(_){}
+
+    const chunks = [];
+    let recorder;
+    try{
+      recorder = new MediaRecorder(stream, {
+        mimeType: outMime,
+        videoBitsPerSecond: 1200000,
+        audioBitsPerSecond: 96000
+      });
+    }catch(_){
+      try{
+        recorder = new MediaRecorder(stream, { mimeType: outMime });
+      }catch(e2){
+        return file;
+      }
+    }
+
+    recorder.ondataavailable = function(ev){
+      if(ev.data && ev.data.size) chunks.push(ev.data);
+    };
+
+    const stopped = new Promise(function(resolve, reject){
+      recorder.onstop = function(){ resolve(); };
+      recorder.onerror = function(ev){ reject((ev && ev.error) || new Error("MediaRecorder error")); };
+    });
+
+    video.currentTime = 0;
+    await new Promise(function(resolve){
+      if(video.readyState >= 2) resolve();
+      else video.onloadeddata = function(){ resolve(); };
+    });
+
+    try{
+      await video.play();
+    }catch(playErr){
+      // autoplay policies: riprova muted
+      video.muted = true;
+      await video.play();
+    }
+
+    recorder.start(250);
+
+    await new Promise(function(resolve, reject){
+      let lastT = -1;
+      function tick(){
+        if(video.ended || video.paused && video.currentTime > 0 && video.currentTime >= duration - 0.15){
+          resolve();
+          return;
+        }
+        try{
+          ctx.drawImage(video, 0, 0, cw, ch);
+        }catch(_){}
+        if(typeof onProgress === "function" && duration){
+          const p = Math.min(1, video.currentTime / duration);
+          if(p - lastT > 0.02){ lastT = p; try{ onProgress(p); }catch(_){} }
+        }
+        if(video.ended){ resolve(); return; }
+        requestAnimationFrame(tick);
+      }
+      video.onended = function(){ resolve(); };
+      video.onerror = function(){ reject(new Error("Errore riproduzione")); };
+      requestAnimationFrame(tick);
+      // safety timeout: duration + 15s
+      setTimeout(function(){ resolve(); }, Math.ceil(duration * 1000) + 15000);
+    });
+
+    try{ video.pause(); }catch(_){}
+    if(recorder.state !== "inactive"){
+      try{ recorder.stop(); }catch(_){}
+    }
+    await stopped;
+
+    // stop tracks
+    try{
+      stream.getTracks().forEach(function(tr){ tr.stop(); });
+    }catch(_){}
+
+    const blobType = (outMime.split(";")[0]) || "video/webm";
+    const blob = new Blob(chunks, { type: blobType });
+    if(!blob || blob.size < 2000) return file;
+
+    // se non abbiamo risparmiato quasi nulla, tieni originale
+    if(blob.size >= file.size * 0.92) return file;
+
+    const ext = blobType.indexOf("mp4") >= 0 ? "mp4" : "webm";
+    const base = (file.name || "video").replace(/\.[^.]+$/, "");
+    const out = new File([blob], base + "." + ext, { type: blobType, lastModified: Date.now() });
+    console.log("Video compresso:", fmtBytes(file.size), "→", fmtBytes(out.size));
+    return out;
+  }catch(err){
+    console.warn("compressVideo error", err);
+    return file;
+  }finally{
+    try{ URL.revokeObjectURL(url); }catch(_){}
+    try{ video.removeAttribute("src"); video.load(); }catch(_){}
+  }
+}
+
 async function compressImage(file, maxDim=1600, quality=0.82){
   if(!file.type || !file.type.startsWith("image/")) return file;
   if(file.type==="image/gif") return file;
@@ -3702,6 +4624,11 @@ function handleAppBack(){
   if($("#sheet") && $("#sheet").classList.contains("open")){ closeSheet(); return true; }
   if($("#sidebar") && $("#sidebar").classList.contains("open")){ closeSidebar(); return true; }
   if(S.folderId){ goUpFolder(); return true; }
+  if(S.view==="prev" && S.pv && S.pv.home && S.pv.home!=="home"){
+    if(S.pv.home==="eseguiti" && S.pv.detailId){ S.pv.detailId=null; renderPrev(); return true; }
+    S.pv.home="home"; S.pv.detailId=null; renderPrev(); return true;
+  }
+  if(S.view==="design" && S.designId){ S.designId=null; renderDesign(); return true; }
   if(S.view && S.view !== "ordini"){ setView("ordini"); return true; }
   // già su landing ICE: non uscire
   goHomeICE();
@@ -3796,7 +4723,10 @@ function downloadSnapshot(){
 /* ===================================================================
    BOOT
    =================================================================== */
+try{applyAppearance();}catch(_){}
+try{applyChromeI18n();}catch(_){}
 buildKeypad(); renderPin();
+try{ensureFolderNavDelegate();}catch(_){}
 registerSW(); updateInstallUI();
 setupBackButton();
 setupVoiceSearch();
@@ -3844,7 +4774,6 @@ setInterval(()=>{
   }
 }, 60000);
 
-try{applyAppearance();}catch(_){}
 if(S.pin && S.url){
   // sessione attiva: prova a entrare (verifica silenziosa)
   enterApp();
