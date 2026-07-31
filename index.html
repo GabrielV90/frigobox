@@ -123,6 +123,8 @@ input,select,textarea{font-family:inherit;font-size:15px}
 .icon-btn{width:38px;height:38px;border-radius:9px;border:1px solid var(--line);background:var(--surface);display:grid;place-items:center;color:var(--muted);flex:0 0 auto}
 .icon-btn:active{background:var(--surface-2)}
 .icon-btn svg{width:18px;height:18px}
+.icon-btn.spinning svg{animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
 
 .wrap{max-width:920px;margin:0 auto;padding:16px 16px calc(96px + var(--safe-b))}
 
@@ -2335,8 +2337,43 @@ async function loadOrders(){
     renderCurrent();
     try{ pushWidgetStats(); }catch(_){}
     checkDeadlines();
-  }catch(e){ toast(e.message,"err"); reconcileOrders(); renderCurrent(); }
+    S.lastSyncAt = Date.now();
+    return true;
+  }catch(e){ toast(e.message,"err"); reconcileOrders(); renderCurrent(); return false; }
 }
+
+/** Refresh manuale: bottone in topbar (#btnRefresh). Spinner + toast di conferma. */
+let refreshing=false;
+async function manualRefresh(){
+  if(refreshing) return;
+  if(!S.url){ toast("URL script non configurato","err"); return; }
+  if(!navigator.onLine){ toast("Sei offline","err"); return; }
+  refreshing=true;
+  const btn=$("#btnRefresh");
+  if(btn) btn.classList.add("spinning");
+  haptic(15);
+  const ok=await loadOrders();
+  if(btn) btn.classList.remove("spinning");
+  refreshing=false;
+  if(ok) toast("Dati aggiornati","ok");
+}
+
+/** Auto-refresh: quando l'app torna in primo piano dopo un po', e a intervalli mentre è aperta. */
+const AUTO_REFRESH_MS = 3*60*1000;      // polling ogni 3 minuti
+const STALE_ON_RESUME_MS = 30*1000;     // se torni in primo piano dopo 30s+, ricarica
+function silentAutoRefresh(){
+  if(!S.pin || !S.url || refreshing) return;
+  if(!navigator.onLine) return;
+  if(document.hidden) return;
+  loadOrders();
+}
+document.addEventListener("visibilitychange", ()=>{
+  if(document.hidden) return;
+  if(!S.pin) return;
+  const last=S.lastSyncAt||0;
+  if(Date.now()-last > STALE_ON_RESUME_MS) silentAutoRefresh();
+});
+setInterval(silentAutoRefresh, AUTO_REFRESH_MS);
 
 /* ===================================================================
    RENDER — filtri + griglia
@@ -5142,6 +5179,7 @@ function wireChromeUI(){
   const bs=$("#btnSave"); if(bs) bs.onclick=function(e){ e.preventDefault(); saveOrder(); };
   const bd=$("#btnDelete"); if(bd) bd.onclick=function(e){ e.preventDefault(); deleteOrder(); };
   const bdu=$("#btnDupe"); if(bdu) bdu.onclick=function(e){ e.preventDefault(); duplicateOrder(); };
+  const br=$("#btnRefresh"); if(br) br.onclick=function(e){ e.preventDefault(); e.stopPropagation(); manualRefresh(); };
 }
 
 function openSidebar(){
@@ -5744,7 +5782,7 @@ document.querySelectorAll(".topbar .logo, .side-head .logo").forEach(el=>el.addE
 const hc=$("#healthClose"); if(hc) hc.onclick=()=>$("#healthPanel").classList.remove("open");
 const sn=$("#btnSnapshot"); if(sn) sn.onclick=downloadSnapshot;
 
-window.addEventListener("online", ()=>{ flushQueue(); toast("Rete disponibile","ok"); });
+window.addEventListener("online", async ()=>{ await flushQueue(); if(S.pin) silentAutoRefresh(); toast("Rete disponibile","ok"); });
 // banner aggiornamento SW
 (function(){
   const sw = getSW();
