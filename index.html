@@ -2487,13 +2487,14 @@ function render(){
         enterSelectMode(); toggleSelectOrder(t.dataset.id); render(); return;
       }
       if(S.selectMode){ e.preventDefault(); e.stopPropagation(); toggleSelectOrder(t.dataset.id); render(); return; }
-      // tap semplice → solo riepilogo
       openOrderSummary(t.dataset.id);
     };
     bindLongPress(t, function(){
       try{ haptic(40); }catch(_){}
-      // long-press → menu contestuale (Modifica, taglia, copia…)
-      showCtxMenu(t, "order", t.dataset.id);
+      // long-press: entra in selezione multipla (stile file manager)
+      enterSelectMode();
+      S.selectedOrders.add(t.dataset.id);
+      render();
     });
   });
   updateFabVisibility();
@@ -4727,10 +4728,15 @@ function renameSelection(){
 }
 
 function pasteSelectionLocal(){
-  if(!S.clipboard){ toast(t("clip_empty"),"err"); return; }
+  // fire-and-forget async pipeline
+  pasteSelectionSync().catch(function(e){ console.warn(e); toast(String(e.message||e),"err"); });
+}
+async function pasteSelectionSync(){
+  if(!S.clipboard){ toast(typeof t==="function"?t("clip_empty"):"Appunti vuoti","err"); return; }
   const items = S.clipboard.items || (S.clipboard.data ? [{type:S.clipboard.type||"order", data:S.clipboard.data}] : []);
-  if(!items.length){ toast(t("clip_empty"),"err"); return; }
-  if(!S.canEdit){ toast(t("readonly"),"err"); return; }
+  if(!items.length){ toast(typeof t==="function"?t("clip_empty"):"Appunti vuoti","err"); return; }
+  if(!S.canEdit){ toast(typeof t==="function"?t("readonly"):"Sola lettura","err"); return; }
+  if(!S.pin){ toast("Effettua il login per sincronizzare","err"); return; }
   const mode = S.clipboard.mode || "copy";
   const target = S.folderId || null;
   const toSync=[]; let done=0; let foldersChanged=false;
@@ -4743,6 +4749,7 @@ function pasteSelectionLocal(){
         if(o){
           o.appFolderId = target;
           o.clientUpdatedAt = new Date().toISOString();
+          o.updatedBy = S.operatorName || o.updatedBy || "";
           toSync.push(Object.assign({}, o));
           done++;
         }
@@ -4752,7 +4759,9 @@ function pasteSelectionLocal(){
         copy.codice = (data.codice != null ? data.codice : "");
         copy.appFolderId = target;
         copy.actual={}; copy.readyAt=""; copy.stato="bozza"; copy.mediaCount=0;
-        copy.clientUpdatedAt=new Date().toISOString(); delete copy._new;
+        copy.clientUpdatedAt=new Date().toISOString();
+        copy.updatedBy = S.operatorName || "";
+        delete copy._new;
         S.orders.unshift(copy);
         toSync.push(Object.assign({}, copy));
         done++;
@@ -4768,24 +4777,47 @@ function pasteSelectionLocal(){
       }
     }
   }
-  if(!done){ toast(t("clip_empty"),"err"); return; }
+  if(!done){ toast(typeof t==="function"?t("clip_empty"):"Appunti vuoti","err"); return; }
   try{ localStorage.setItem("cf_cache",JSON.stringify(S.orders)); }catch(_){}
-  // Tree cartelle → server (tutti gli utenti)
-  if(foldersChanged || true){
-    S.settings = S.settings || {};
-    S.settings.folders = S.folders;
-    try{ persistFolders(); }catch(_){}
-  }
+  S.settings = S.settings || {};
+  S.settings.folders = S.folders;
+  try{ localStorage.setItem("cf_folders", JSON.stringify(S.folders)); }catch(_){}
+  try{ localStorage.setItem("cf_settings", JSON.stringify(S.settings)); }catch(_){}
+
   S.clipboard=null; clearSelection();
+  try{ sessionStorage.removeItem("cf_clipboard"); }catch(_){}
   if(S.filter&&S.filter!=="all") S.filter="all";
-  toast(t("pasted",{n:done}),"ok");
+  toast((typeof t==="function"?t("pasted",{n:done}):("Incollati "+done))+" · sync…","ok");
   render();
-  // Ordini spostati/copiati → save con appFolderId esplicito
-  toSync.forEach(function(order){
-    syncOrderFolder(order);
-  });
+
+  // 1) sync albero cartelle per tutti
+  try{ await syncFoldersToServer(); }catch(e){ console.warn(e); }
+
+  // 2) sync ogni ordine (appFolderId esplicito) in serie
+  let ok=0, fail=0;
+  for(const order of toSync){
+    try{
+      const payload = Object.assign({}, order);
+      payload.appFolderId = (order.appFolderId == null || order.appFolderId === "") ? "" : String(order.appFolderId);
+      payload.clientUpdatedAt = new Date().toISOString();
+      if(!S.url || !S.pin){ fail++; continue; }
+      await api("save", {order: payload});
+      ok++;
+    }catch(e){
+      fail++;
+      S.offlineQueue = S.offlineQueue || [];
+      S.offlineQueue.push({t:Date.now(), action:"save", payload:{order:Object.assign({}, order, {
+        appFolderId: (order.appFolderId==null||order.appFolderId==="")?"":String(order.appFolderId)
+      })}});
+      try{ persistQueue(); }catch(_){}
+      console.warn("paste sync order", e);
+    }
+  }
+  if(fail===0) toast("Sincronizzato per tutti gli utenti ("+ok+")","ok");
+  else toast("Incollati in locale · "+ok+" sync, "+fail+" in coda offline","err");
+  try{ localStorage.setItem("cf_cache",JSON.stringify(S.orders)); }catch(_){}
 }
-async function pasteSelection(){ pasteSelectionLocal(); }
+async function pasteSelection(){ return pasteSelectionSync(); }
 
 function wireSelBar(){
   const c=$("#selCut"); if(c) c.onclick=function(){ copySelection("cut"); };
@@ -5172,6 +5204,7 @@ function showCtxMenu(el, type, id){
     const pinned=isPinned(id);
     items=`
       <button class="ctx-item" data-act="edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>Modifica</button>
+      <button class="ctx-item" data-act="select"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>Seleziona</button>
       <button class="ctx-item" data-act="pin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 17v5M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1z"/></svg>${pinned?"Togli pin":"Fissa in alto"}</button>
       <button class="ctx-item" data-act="cut"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M6 18 18 6"/><circle cx="6" cy="6" r="2.5"/><circle cx="6" cy="18" r="2.5"/></svg>Taglia</button>
       <button class="ctx-item" data-act="copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copia</button>
@@ -5201,9 +5234,16 @@ function handleCtxAction(act, type, id){
   if(type==="order"){
     const o=S.orders.find(x=>x.id===id); if(!o) return;
     if(act==="edit"){ openOrderEdit(id); }
+    else if(act==="select"){ enterSelectMode(); S.selectedOrders.add(String(id)); render(); }
     else if(act==="pin"){ togglePin(id); }
-    else if(act==="cut"){ S.clipboard={type:"order", mode:"cut", data:structuredClone(o)}; toast("Ordine tagliato — incolla in una cartella"); render(); }
-    else if(act==="copy"){ S.clipboard={type:"order", mode:"copy", data:structuredClone(o)}; toast("Ordine copiato — incolla in una cartella"); render(); }
+    else if(act==="cut"){
+      S.clipboard={mode:"cut", items:[{type:"order", data:structuredClone(o)}]};
+      toast("Ordine tagliato — apri cartella e Incolla"); render();
+    }
+    else if(act==="copy"){
+      S.clipboard={mode:"copy", items:[{type:"order", data:structuredClone(o)}]};
+      toast("Ordine copiato — apri cartella e Incolla"); render();
+    }
     else if(act==="paste"){ pasteInto(S.folderId); }
     else if(act==="delete"){ S.current=structuredClone(o); deleteOrder(); }
   } else {

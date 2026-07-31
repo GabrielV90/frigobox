@@ -1,5 +1,5 @@
 /* Celle Frigo · service worker — guscio app offline */
-const CACHE = 'krio-v48';
+const CACHE = 'krio-v49';
 const ASSETS = [
   './',
   './index.html',
