@@ -1937,6 +1937,7 @@ function syncOrderFolder(order){
   const payload = Object.assign({}, order);
   // chiave sempre presente così GAS non riusa il vecchio valore
   payload.appFolderId = (order.appFolderId == null || order.appFolderId === "") ? "" : String(order.appFolderId);
+  setOrderFolderLocal(order.id, payload.appFolderId);
   payload.clientUpdatedAt = new Date().toISOString();
   payload.updatedBy = S.operatorName || payload.updatedBy || "";
   return Promise.resolve(api("save",{order:payload})).then(function(d){
@@ -1958,10 +1959,75 @@ function syncOrderFolder(order){
   });
 }
 
+
+/* ---------- mappa ordine→cartella (persistenza indipendente dal foglio) ---------- */
+function loadOrderFolderMap(){
+  let map={};
+  try{ map=JSON.parse(localStorage.getItem("cf_order_folders")||"{}")||{}; }catch(_){ map={}; }
+  if(S.settings && S.settings.orderFolderMap && typeof S.settings.orderFolderMap==="object"){
+    Object.keys(S.settings.orderFolderMap).forEach(function(k){
+      const v=S.settings.orderFolderMap[k];
+      if(v!=null && String(v).trim()!=="") map[String(k)]=String(v).trim();
+    });
+  }
+  return map;
+}
+function persistOrderFolderMap(map){
+  try{ localStorage.setItem("cf_order_folders", JSON.stringify(map||{})); }catch(_){}
+  S.settings = S.settings || {};
+  S.settings.orderFolderMap = map||{};
+  try{ localStorage.setItem("cf_settings", JSON.stringify(S.settings)); }catch(_){}
+}
+function setOrderFolderLocal(orderId, folderId){
+  if(!orderId) return;
+  const map=loadOrderFolderMap();
+  const id=String(orderId);
+  if(folderId!=null && String(folderId).trim()!=="") map[id]=String(folderId).trim();
+  else delete map[id];
+  persistOrderFolderMap(map);
+}
+function applyOrderFolderMap(orders){
+  const map=loadOrderFolderMap();
+  let changed=false;
+  (orders||[]).forEach(function(o){
+    if(!o||!o.id) return;
+    const id=String(o.id);
+    const mapped=map[id];
+    if(mapped){
+      if(String(o.appFolderId||"")!==mapped){ o.appFolderId=mapped; changed=true; }
+    } else if(o.appFolderId!=null && String(o.appFolderId).trim()!==""){
+      // aggiorna mappa da ordine (es. appena caricato dal server)
+      map[id]=String(o.appFolderId).trim();
+      changed=true;
+    }
+  });
+  if(changed) persistOrderFolderMap(map);
+  return orders;
+}
+function syncOrderFolderMapToServer(){
+  if(!S.url||!S.pin||!S.canEdit) return Promise.resolve();
+  const map=loadOrderFolderMap();
+  S.settings=S.settings||{};
+  S.settings.orderFolderMap=map;
+  S.settings.folders=S.folders||[];
+  return Promise.resolve(api("setSettings",{settings:S.settings})).catch(function(e){
+    console.warn("syncOrderFolderMap", e);
+  });
+}
+
+
 function ensureFoldersFromSettings(){
   if(S.settings && Array.isArray(S.settings.folders) && S.settings.folders.length){
     S.folders = S.settings.folders;
     localStorage.setItem("cf_folders", JSON.stringify(S.folders));
+  }
+  if(S.settings && S.settings.orderFolderMap && typeof S.settings.orderFolderMap==="object"){
+    const map=loadOrderFolderMap();
+    Object.keys(S.settings.orderFolderMap).forEach(function(k){
+      const v=S.settings.orderFolderMap[k];
+      if(v!=null && String(v).trim()!=="") map[String(k)]=String(v).trim();
+    });
+    persistOrderFolderMap(map);
   }
 }
 function getFolder(id){
@@ -2010,37 +2076,43 @@ function ensureFolder2026(){
   }
   const valid = new Set((S.folders||[]).map(f=>String(f.id)));
   const moved=[];
+  const fmap = loadOrderFolderMap();
   (S.orders||[]).forEach(o=>{
     if(!o) return;
-    // normalizza
+    // 1) mappa locale/server ha priorità assoluta
+    const mapped = fmap[String(o.id)];
+    if(mapped){
+      o.appFolderId = mapped;
+      if(!valid.has(mapped)){
+        // ricrea nodo cartella se manca dall'albero
+        if(!S.folders.find(f=>String(f.id)===String(mapped))){
+          S.folders.push({id:mapped, name:"Cartella", parentId:null});
+          valid.add(String(mapped));
+          try{ persistFolders(); }catch(_){}
+        }
+      }
+      return;
+    }
+    // 2) normalizza da ordine
     let fid = o.appFolderId;
     if(fid!=null && fid!=="") fid = String(fid).trim();
     else fid = "";
-    // se sembra un id Drive (lungo) scarta
     if(fid && fid.length>40 && fid.charAt(0)!=="F") fid = "";
-    // senza cartella → 2026
-    // cartella inesistente: se abbiamo ancora poche cartelle (sync settings fallito), NON spostare
-    // così non perdiamo assegnazioni fino al prossimo sync folders
     if(!fid){
       o.appFolderId = f2026.id;
+      setOrderFolderLocal(o.id, f2026.id);
       moved.push(o);
     } else if(!valid.has(fid)){
-      // se l'albero cartelle è quasi vuoto (solo 2026), probabilmente settings non sincronizzati:
-      // crea cartella fantasma "Recuperata" per non mandare tutto in root/2026
-      if((S.folders||[]).length <= 2){
-        const ghost={id:fid, name:"Recuperata", parentId:null};
-        if(!S.folders.find(f=>String(f.id)===fid)){
-          S.folders.push(ghost);
-          valid.add(fid);
-          try{ persistFolders(); }catch(_){}
-        }
-        o.appFolderId = fid;
-      } else {
-        o.appFolderId = f2026.id;
-        moved.push(o);
+      if(!S.folders.find(f=>String(f.id)===fid)){
+        S.folders.push({id:fid, name:"Recuperata", parentId:null});
+        valid.add(fid);
+        try{ persistFolders(); }catch(_){}
       }
+      o.appFolderId = fid;
+      setOrderFolderLocal(o.id, fid);
     } else {
       o.appFolderId = fid;
+      setOrderFolderLocal(o.id, fid);
     }
   });
   if(S.folderId && !valid.has(String(S.folderId))){
@@ -2289,6 +2361,7 @@ function enterApp(){
   applyRole();
   updateBell();
   if(!S._notifTimer) S._notifTimer=setInterval(checkDeadlines, 30*60*1000);
+  try{ applyOrderFolderMap(S.orders); }catch(_){}
   try{ reconcileOrders(); }catch(_){}
   try{ pushWidgetStats(); }catch(_){}
   render(); // show cache instantly
@@ -2388,8 +2461,11 @@ async function loadOrders(){
       }
     });
     if(d.settings){ S.settings=d.settings; localStorage.setItem("cf_settings",JSON.stringify(S.settings)); ensureFoldersFromSettings(); if(Array.isArray(S.settings.preventivi)){ S.preventivi=S.settings.preventivi; localStorage.setItem("cf_preventivi",JSON.stringify(S.preventivi)); } if(Array.isArray(S.settings.designSessions)){ S.designSessions=S.settings.designSessions; localStorage.setItem("cf_design",JSON.stringify(S.designSessions)); } }
+    applyOrderFolderMap(S.orders);
     localStorage.setItem("cf_cache",JSON.stringify(S.orders));
     reconcileOrders();
+    // ripubblica mappa cartelle su settings (backup server)
+    try{ syncOrderFolderMapToServer(); }catch(_){}
     // se abbiamo recuperato cartelle solo dal cache, ripubblica sul server
     if(needResync.length && S.canEdit){
       needResync.forEach(function(o){ try{ syncOrderFolder(o); }catch(_){} });
@@ -4218,6 +4294,7 @@ async function saveOrder(){
       budget:o.budget||{},actual:o.actual||{},readyAt:o.readyAt||"",appFolderId:o.appFolderId||null,fasi:o.fasi||[],operatore:o.operatore||"",updatedBy:o.updatedBy||"",clientUpdatedAt:o.clientUpdatedAt||""};
     // garantisci appFolderId esplicito + sync cartelle
     payload.appFolderId = (o.appFolderId==null||o.appFolderId==="") ? "" : String(o.appFolderId);
+    setOrderFolderLocal(o.id, payload.appFolderId);
     try{ await syncFoldersToServer(); }catch(_){}
     const d=await api("save",{order:payload});
     o._new=false; if(d.order&&d.order.mediaCount!=null) o.mediaCount=d.order.mediaCount;
@@ -4859,6 +4936,7 @@ async function pasteSelectionSync(){
         const o=S.orders.find(x=>String(x.id)===String(data.id));
         if(o){
           o.appFolderId = target;
+          setOrderFolderLocal(o.id, target);
           o.clientUpdatedAt = new Date().toISOString();
           o.updatedBy = S.operatorName || o.updatedBy || "";
           toSync.push(Object.assign({}, o));
@@ -4869,6 +4947,7 @@ async function pasteSelectionSync(){
         copy.id=uid();
         copy.codice = (data.codice != null ? data.codice : "");
         copy.appFolderId = target;
+        setOrderFolderLocal(copy.id, target);
         copy.actual={}; copy.readyAt=""; copy.stato="bozza"; copy.mediaCount=0;
         copy.clientUpdatedAt=new Date().toISOString();
         copy.updatedBy = S.operatorName || "";
@@ -4901,8 +4980,9 @@ async function pasteSelectionSync(){
   toast((typeof t==="function"?t("pasted",{n:done}):("Incollati "+done))+" · sync…","ok");
   render();
 
-  // 1) sync albero cartelle per tutti
+  // 1) sync albero cartelle + mappa ordine→cartella
   try{ await syncFoldersToServer(); }catch(e){ console.warn(e); }
+  try{ await syncOrderFolderMapToServer(); }catch(e){ console.warn(e); }
 
   // 2) sync ogni ordine (appFolderId esplicito) in serie
   let ok=0, fail=0;
