@@ -1440,6 +1440,24 @@ body[data-accent="violet"]{--frost:#9B7AED}
 .sum-item b{font-size:14px;word-break:break-word}
 .sum-item b.mono{font-family:'JetBrains Mono';font-size:13px}
 
+
+/* ---- Valutazioni: pulsanti voto 1-5 + righe dettaglio ---- */
+.val-crit{display:flex;align-items:center;justify-content:space-between;gap:10px 12px;padding:9px 0;border-top:1px solid var(--line);flex-wrap:wrap}
+.val-crit:first-child{border-top:none}
+.val-crit-h{min-width:120px;flex:1}
+.val-crit-h b{font-size:13px;font-weight:600;color:var(--text)}
+.val-stars{display:flex;gap:6px;flex:0 0 auto}
+.val-star{width:38px;height:38px;border-radius:9px;border:1px solid var(--line-strong,#3B4759);background:var(--bg-deep);color:var(--muted);font-family:'JetBrains Mono',monospace;font-weight:700;font-size:15px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform .1s,background .12s,color .12s,border-color .12s;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.val-star:hover{border-color:var(--frost)}
+.val-star:active{transform:scale(.9)}
+.val-star.on{background:var(--frost);border-color:var(--frost);color:#04141a;box-shadow:0 0 0 1px var(--frost)}
+.val-summary{display:flex;align-items:center;gap:14px;margin-bottom:12px}
+.val-avg{font-family:'Archivo';font-weight:900;font-size:34px;line-height:1}
+.val-avg-lbl{font-size:12px;color:var(--muted)}
+.val-avg-sub{font-size:11px;color:var(--muted-2,#5E6C7C)}
+.val-hist-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:7px 0;border-top:1px solid var(--line)}
+.val-hist-note{font-size:13px;color:var(--text)}
+.val-hist-score{font-family:'JetBrains Mono';font-weight:700;font-size:15px;min-width:26px;text-align:right}
 </style>
 </head>
 <body>
@@ -1628,14 +1646,6 @@ body[data-accent="violet"]{--frost:#9B7AED}
         Installa app sul dispositivo
       </button>
       <p class="hint" id="iosInstallHint" style="margin-top:10px;display:none">Su iPhone/iPad: tocca <b>Condividi</b> nella barra di Safari e poi <b>Aggiungi a Home</b>.</p>
-
-      <div style="margin-top:22px;padding-top:16px;border-top:1px solid var(--line)">
-        <p class="hint">Sposta ogni ordine nella cartella <b>Anno / Lavorazione / Cliente+Commessa</b> corretta, leggendo i dati già presenti sull'ordine (data, tipologia veicolo, cliente, codice). Le cartelle mancanti vengono create automaticamente. Gli ordini senza data, lavorazione o cliente/codice non vengono toccati.</p>
-        <button class="btn btn-ghost" id="btnAutoOrganize" style="width:100%;margin-top:6px">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px"><path d="M3 7h4l2-2h6l2 2h4v12H3z"/><path d="M12 11v6M9 14h6"/></svg>
-          Riorganizza cartelle automaticamente
-        </button>
-      </div>
     </div>
     <div class="modal-foot">
       <button class="btn btn-ghost" id="btnLogout" style="flex:1">Esci</button>
@@ -1872,8 +1882,6 @@ function orderAlerts(o){
   if((o.stato==="pronto"||o.stato==="cons") && !(o.mediaCount>0)) a.push({k:"photo",t:"Mancano foto"});
   if((o.stato==="pronto"||o.stato==="cons") && sumActual(o)<=0) a.push({k:"hours",t:"Consuntivo vuoto"});
   if(o.note && o.note.trim() && o.stato==="pronto") a.push({k:"note",t:"Controlla note"});
-  const fasi=o.fasi||[];
-  if(fasi.length && fasi.some(f=>!f.fatto) && (o.stato==="pronto"||o.stato==="cons")) a.push({k:"fase",t:"Fasi incomplete"});
   return a;
 }
 function opInitials(name){
@@ -2008,10 +2016,29 @@ function ensureFolder2026(){
     let fid = o.appFolderId;
     if(fid!=null && fid!=="") fid = String(fid).trim();
     else fid = "";
-    // senza cartella O cartella inesistente → recupera in 2026 (visibili a tutti aprendo 2026)
-    if(!fid || !valid.has(fid)){
+    // se sembra un id Drive (lungo) scarta
+    if(fid && fid.length>40 && fid.charAt(0)!=="F") fid = "";
+    // senza cartella → 2026
+    // cartella inesistente: se abbiamo ancora poche cartelle (sync settings fallito), NON spostare
+    // così non perdiamo assegnazioni fino al prossimo sync folders
+    if(!fid){
       o.appFolderId = f2026.id;
       moved.push(o);
+    } else if(!valid.has(fid)){
+      // se l'albero cartelle è quasi vuoto (solo 2026), probabilmente settings non sincronizzati:
+      // crea cartella fantasma "Recuperata" per non mandare tutto in root/2026
+      if((S.folders||[]).length <= 2){
+        const ghost={id:fid, name:"Recuperata", parentId:null};
+        if(!S.folders.find(f=>String(f.id)===fid)){
+          S.folders.push(ghost);
+          valid.add(fid);
+          try{ persistFolders(); }catch(_){}
+        }
+        o.appFolderId = fid;
+      } else {
+        o.appFolderId = f2026.id;
+        moved.push(o);
+      }
     } else {
       o.appFolderId = fid;
     }
@@ -2042,65 +2069,7 @@ function countOrdersInFolder(fid){
   return (S.orders||[]).filter(o=>String(o.appFolderId??"")===id).length;
 }
 
-/** Trova (o crea) una sottocartella con questo nome sotto parentId. */
-function findOrCreateFolder(name, parentId){
-  name = String(name||"").trim();
-  if(!name) return null;
-  const pid = parentId==null ? "" : String(parentId);
-  let f = S.folders.find(x=>x.name===name && String(x.parentId||"")===pid);
-  if(!f){
-    f = {id:fuid(), name:name, parentId: parentId==null ? null : parentId};
-    S.folders.push(f);
-  }
-  return f;
-}
-
-/** Riorganizza tutti gli ordini in Anno / Lavorazione / Cliente+Commessa,
- *  leggendo i dati già presenti su ciascun ordine (dataOrdine, tipoCella, cliente, codice).
- *  Ordini con dati insufficienti vengono lasciati dove sono. */
-async function autoOrganizeOrders(){
-  if(!S.canEdit){ toast("Sola lettura: non puoi riorganizzare","err"); return; }
-  const ok = confirm("Riorganizzare TUTTI gli ordini in cartelle Anno / Lavorazione / Cliente+Commessa, in base ai dati già inseriti? Le cartelle mancanti verranno create. L'operazione può richiedere qualche secondo.");
-  if(!ok) return;
-
-  toast("Riorganizzazione in corso…");
-  let moved=0, skipped=0;
-  const toSync=[];
-
-  (S.orders||[]).forEach(o=>{
-    if(!o) return;
-    const year = String(o.dataOrdine||"").slice(0,4);
-    const tipo = LAVORAZIONI.includes(o.tipoCella) ? o.tipoCella : "";
-    const leafName = [o.cliente, o.codice].map(v=>(v||"").trim()).filter(Boolean).join(" ").trim();
-
-    if(!/^\d{4}$/.test(year) || !tipo || !leafName){ skipped++; return; }
-
-    const yearFolder = findOrCreateFolder(year, null);
-    const tipoFolder = findOrCreateFolder(tipo, yearFolder.id);
-    const leafFolder = findOrCreateFolder(leafName, tipoFolder.id);
-
-    if(String(o.appFolderId||"") !== String(leafFolder.id)){
-      o.appFolderId = leafFolder.id;
-      moved++;
-      toSync.push(o);
-    }
-  });
-
-  try{ localStorage.setItem("cf_cache", JSON.stringify(S.orders)); }catch(_){}
-  persistFolders(); // crea/salva l'albero cartelle sul server
-
-  // sincronizza gli ordini spostati uno alla volta (evita di sommergere l'API GAS)
-  for(const o of toSync){
-    try{ await syncOrderFolder(o); }catch(_){}
-  }
-
-  render();
-  const parts=[`${moved} ordini spostati`];
-  if(skipped) parts.push(`${skipped} saltati (dati mancanti)`);
-  toast(parts.join(" · "), moved ? "ok" : "err");
-}
-
-
+/* ---------- haptic + toast ---------- */
 function haptic(ms){ try{ if(navigator.vibrate) navigator.vibrate(ms||30); }catch(_){} }
 function persistPins(){ localStorage.setItem("cf_pins", JSON.stringify(S.pins||[])); }
 function togglePin(id){
@@ -2395,11 +2364,36 @@ function pushWidgetStats(){
 
 async function loadOrders(){
   try{
+    // cache locale prima del fetch (per non perdere appFolderId se il foglio non lo restituisce)
+    let prevById = {};
+    try{
+      const prev = JSON.parse(localStorage.getItem("cf_cache")||"[]");
+      (prev||[]).forEach(function(o){ if(o&&o.id) prevById[String(o.id)]=o; });
+    }catch(_){}
     const d=await api("list");
     S.orders=d.orders||[];
+    // merge appFolderId: se server manda vuoto ma locale aveva cartella, conserva (poi sync)
+    const needResync=[];
+    S.orders.forEach(function(o){
+      if(!o||!o.id) return;
+      const sid = String(o.id);
+      const serverAf = (o.appFolderId==null||o.appFolderId==="") ? "" : String(o.appFolderId).trim();
+      const prev = prevById[sid];
+      const prevAf = prev && prev.appFolderId!=null && prev.appFolderId!=="" ? String(prev.appFolderId).trim() : "";
+      if(!serverAf && prevAf){
+        o.appFolderId = prevAf;
+        needResync.push(o);
+      } else if(serverAf){
+        o.appFolderId = serverAf;
+      }
+    });
     if(d.settings){ S.settings=d.settings; localStorage.setItem("cf_settings",JSON.stringify(S.settings)); ensureFoldersFromSettings(); if(Array.isArray(S.settings.preventivi)){ S.preventivi=S.settings.preventivi; localStorage.setItem("cf_preventivi",JSON.stringify(S.preventivi)); } if(Array.isArray(S.settings.designSessions)){ S.designSessions=S.settings.designSessions; localStorage.setItem("cf_design",JSON.stringify(S.designSessions)); } }
     localStorage.setItem("cf_cache",JSON.stringify(S.orders));
     reconcileOrders();
+    // se abbiamo recuperato cartelle solo dal cache, ripubblica sul server
+    if(needResync.length && S.canEdit){
+      needResync.forEach(function(o){ try{ syncOrderFolder(o); }catch(_){} });
+    }
     renderCurrent();
     try{ pushWidgetStats(); }catch(_){}
     checkDeadlines();
@@ -2644,6 +2638,16 @@ function wireFolderUI(){
     });
   });
 
+  // Fallback apertura cartella (oltre alla delega globale in capture):
+  // se per qualsiasi motivo la delega non gestisce il tap, apre comunque.
+  $$("[data-open-folder]").forEach(el=>{
+    el.addEventListener("click", function(e){
+      e.preventDefault();
+      const fid=el.getAttribute("data-open-folder");
+      openFolderById(fid===""?null:fid);
+    });
+  });
+
   // Paste bar buttons
   const pb=$("#btnPasteHere");
   if(pb) pb.onclick=function(e){
@@ -2694,9 +2698,6 @@ function updateFabVisibility(){
   if(!btn) return;
   const show = S.view==="ordini" && S.canEdit && !!S.folderId;
   btn.style.display = show ? "flex" : "none";
-  // Bug: il FAB non era mai stato collegato a un handler di click.
-  // Ri-assegnare ad ogni chiamata è innocuo ed evita che si "perda" dopo un re-render del DOM.
-  btn.onclick = function(e){ e.preventDefault(); openOrder(null); };
 }
 function createFolder(){
   if(!S.canEdit){ toast("Sola lettura","err"); return; }
@@ -3112,7 +3113,7 @@ async function exportXlsx(filename, sheets){
   if(!window.XLSX){ toast("Libreria Excel non caricata","err"); return; }
   const wb=XLSX.utils.book_new();
   sheets.forEach(s=>{ const ws=XLSX.utils.aoa_to_sheet(s.rows); XLSX.utils.book_append_sheet(wb, ws, s.name.slice(0,31)); });
-  XLSX.writeFile(wb, filename);
+  writeWorkbook(wb, filename);
   toast("File Excel generato","ok");
 }
 function exportOre(){
@@ -3787,6 +3788,26 @@ function applyTemplate(tid){
   renderOptList(); renderOptSuggest(); renderFasi(); computeHours();
   toast("Template «"+t.nome+"» applicato","ok");
 }
+function applyVehicleType(v){
+  if(!v || !S.current) return;
+  const L = (typeof ensureListino==="function") ? ensureListino() : null;
+  const ore = (L && L.veicoli) ? L.veicoli[v] : null;
+  // budget ore per mansione dal configuratore
+  if(ore){
+    S.current.budget = {};
+    MANSIONI.forEach(m=>{
+      const val = parseFloat(ore[m.id])||0;
+      S.current.budget[m.id] = val;
+      const bi=$("#bud_"+m.id); if(bi) bi.value = val || "";
+    });
+  }
+  // mappa alla lavorazione se corrisponde (Motrice/Semirimorchio/KIT)
+  const lav = (typeof pvMapLavorazione==="function") ? pvMapLavorazione(v) : "";
+  if(lav){ const el=$("#f_tipo"); if(el) el.value=lav; S.current.tipoCella=lav; }
+  S.current.veicolo = v;
+  computeHours();
+  toast("Tipologia «"+v+"» applicata","ok");
+}
 function wireSignature(){
   const cv=$("#sigCanvas"); if(!cv) return;
   const ctx=cv.getContext("2d");
@@ -3975,12 +3996,9 @@ function renderSheet(){
     </div>
     <div class="grid-2">
       <div class="field"><label>Operatore</label><input id="f_operatore" type="text" value="${esc(o.operatore||S.operatorName||"")}" placeholder="Nome operatore"></div>
-      <div class="field"><label>Audit</label><input type="text" disabled value="${esc((o.updatedBy||"—")+" · "+(o.clientUpdatedAt?new Date(o.clientUpdatedAt).toLocaleString("it-IT"):"—"))}"></div>
+      <div class="field"><label>Collaudo</label><input type="text" disabled value="${esc((o.updatedBy||"—")+" · "+(o.clientUpdatedAt?new Date(o.clientUpdatedAt).toLocaleString("it-IT"):"—"))}"></div>
     </div>
-    ${o._new && S.canEdit ? `<div class="section-title"><span class="n">TPL</span> Template</div><div class="tpl-row" id="tplRow"></div>`:""}
-
-    <div class="section-title"><span class="n">FASI</span> Check-list di processo</div>
-    <div class="fase-list" id="faseList"></div>
+    ${o._new && S.canEdit ? `<div class="section-title"><span class="n">VEIC</span> Tipologia veicolo</div><div class="tpl-row" id="tplRow"></div>`:""}
 
     <div class="section-title"><span class="n">OPT</span> Optional del mezzo</div>
     <div class="opt-add">
@@ -4034,14 +4052,6 @@ function renderSheet(){
     <div class="up-progress" id="upProg"><div class="bar" id="upBar"></div></div>
     <div class="up-label" id="upLabel"></div>
 
-    <div class="section-title"><span class="n">FIRMA</span> Collaudo / consegna</div>
-    <div class="sig-wrap"><canvas id="sigCanvas" width="560" height="140"></canvas>
-      <div class="sig-actions">
-        <button type="button" class="btn btn-ghost" id="sigClear" style="height:36px;flex:1">Pulisci</button>
-        <button type="button" class="btn btn-primary" id="sigSave" style="height:36px;flex:1">Salva firma su Drive</button>
-      </div>
-    </div>
-
     <div class="field" style="margin-top:22px">
       <label>Note</label>
       <textarea id="f_note" placeholder="Annotazioni, richieste particolari, riferimenti…">${esc(o.note)}</textarea>
@@ -4064,17 +4074,12 @@ function renderSheet(){
   computeHours();
   wireTimer();
 
-  // fasi
-  ensureFasi(S.current);
-  renderFasi();
-  // templates
+  // tipologia veicolo (dati dal configuratore)
   const tplHost=$("#tplRow");
   if(tplHost){
-    const tpls = S.templates || ORDER_TEMPLATES;
-    tplHost.innerHTML = tpls.map(t=>`<button type="button" class="tpl-chip" data-tpl="${esc(t.id)}">${esc(t.nome)}</button>`).join("");
-    $$("#tplRow .tpl-chip").forEach(b=>b.onclick=()=>applyTemplate(b.dataset.tpl));
+    tplHost.innerHTML = PV_VEICOLI.map(v=>`<button type="button" class="tpl-chip" data-veic="${esc(v)}">${esc(v)}</button>`).join("");
+    $$("#tplRow .tpl-chip").forEach(b=>b.onclick=()=>applyVehicleType(b.dataset.veic));
   }
-  wireSignature();
 
   if(!S.canEdit){
     $$("#sheetBody input, #sheetBody select, #sheetBody textarea").forEach(el=>el.disabled=true);
@@ -4960,13 +4965,74 @@ function wireSelBar(){
    Archivio a cartelle per anno → file "Nome Operatore"
    Path logico: valutazioni/ANNO/Nome Operatore
    =================================================================== */
-const VAL_CRITERI = [
-  {id:"qualita", label:"Qualità", desc:"Precisione, scarti, rifacimenti"},
-  {id:"produttivita", label:"Produttività", desc:"Ritmo, rispetto tempi"},
-  {id:"sicurezza", label:"Sicurezza", desc:"DPI, procedure, near-miss"},
-  {id:"collaborazione", label:"Collaborazione", desc:"Team, comunicazione"},
-  {id:"affidabilita", label:"Affidabilità", desc:"Presenza, puntualità, autonomia"}
+/* ===================================================================
+   VALUTAZIONI OPERATORI — Scorecard competenze pesata + Griglia 9-Box
+   Modello: competenze raggruppate in 5 categorie pesate (BARS 1–5),
+   punteggio Performance ponderato + asse Potenziale, mappati sulla
+   griglia 9-Box (GE/McKinsey). Export CSV + Excel (.xlsx).
+   Archivio a cartelle per anno: valutazioni/ANNO/Nome Operatore
+   =================================================================== */
+const VAL_SCALE = [
+  {n:1, label:"Insufficiente"},
+  {n:2, label:"Base"},
+  {n:3, label:"Adeguato"},
+  {n:4, label:"Buono"},
+  {n:5, label:"Eccellente"}
 ];
+const VAL_MODEL = {
+  categories: [
+    {id:"tecnica", label:"Competenza tecnica", weight:25, competencies:[
+      {id:"tec_montaggio",    label:"Montaggio / assemblaggio celle"},
+      {id:"tec_disegni",      label:"Lettura disegni e schede commessa"},
+      {id:"tec_attrezzature", label:"Uso attrezzature e macchine"},
+      {id:"tec_problem",      label:"Problem solving tecnico"}
+    ]},
+    {id:"qualita", label:"Qualità", weight:20, competencies:[
+      {id:"qua_precisione", label:"Precisione e tolleranze"},
+      {id:"qua_scarti",     label:"Scarti e rifacimenti (assenza)"},
+      {id:"qua_collaudo",   label:"Autocontrollo e collaudo"},
+      {id:"qua_finitura",   label:"Cura della finitura"}
+    ]},
+    {id:"sicurezza", label:"Sicurezza", weight:20, competencies:[
+      {id:"sic_dpi",       label:"Uso corretto dei DPI"},
+      {id:"sic_procedure", label:"Rispetto delle procedure"},
+      {id:"sic_nearmiss",  label:"Segnalazione near-miss"},
+      {id:"sic_5s",        label:"Ordine e pulizia postazione (5S)"}
+    ]},
+    {id:"produttivita", label:"Produttività", weight:20, competencies:[
+      {id:"pro_tempi",     label:"Rispetto tempi e scadenze"},
+      {id:"pro_ritmo",     label:"Ritmo costante"},
+      {id:"pro_autonomia", label:"Autonomia operativa"},
+      {id:"pro_materiali", label:"Gestione materiali e sprechi"}
+    ]},
+    {id:"comportamento", label:"Comportamento & team", weight:15, competencies:[
+      {id:"com_collab",       label:"Collaborazione"},
+      {id:"com_comunicazione",label:"Comunicazione"},
+      {id:"com_affidabilita", label:"Affidabilità e presenza"},
+      {id:"com_flessibilita", label:"Flessibilità"}
+    ]}
+  ],
+  potential: [
+    {id:"pot_apprendimento", label:"Apprendimento (learning agility)"},
+    {id:"pot_iniziativa",    label:"Iniziativa e proattività"},
+    {id:"pot_leadership",    label:"Leadership / guida del team"},
+    {id:"pot_crescita",      label:"Ambizione di crescita"}
+  ]
+};
+/* etichette 9-Box: BOX_GRID[potBand][perfBand], band 0=basso 1=medio 2=alto */
+const VAL_BOX = {
+  2: [ {l:"Enigma / diamante grezzo", c:"var(--amber,#f5a524)"}, {l:"Alto potenziale",        c:"var(--frost)"},          {l:"Stella (top talent)",         c:"var(--green,#3fb84f)"} ],
+  1: [ {l:"Incostante",               c:"var(--amber,#f5a524)"}, {l:"Elemento solido (core)", c:"var(--frost)"},          {l:"Alto performer",              c:"var(--green,#3fb84f)"} ],
+  0: [ {l:"A rischio",                c:"var(--red,#f0553d)"},   {l:"Performer efficace",     c:"var(--amber,#f5a524)"},  {l:"Professionista affidabile",   c:"var(--frost)"} ]
+};
+/* --- compatibilità schede vecchie (5 assi Likert) --- */
+const VAL_LEGACY_KEYS = ["qualita","produttivita","sicurezza","collaborazione","affidabilita"];
+function avgScoresLegacy(scores){
+  if(!scores) return 0;
+  const vals = VAL_LEGACY_KEYS.map(k=>parseFloat(scores[k])).filter(n=>!isNaN(n)&&n>0);
+  if(!vals.length) return 0;
+  return vals.reduce((a,b)=>a+b,0)/vals.length;
+}
 
 function getValFolders(){
   S.settings = S.settings || {};
@@ -5010,11 +5076,31 @@ function valFilesInFolder(fid){
   return getValutazioni().filter(v=>String(v.folderId||"")===id)
     .sort((a,b)=>String(b.data||"").localeCompare(String(a.data||"")));
 }
-function avgScores(scores){
-  if(!scores) return 0;
-  const vals = VAL_CRITERI.map(c=>parseFloat(scores[c.id])).filter(n=>!isNaN(n)&&n>0);
-  if(!vals.length) return 0;
-  return vals.reduce((a,b)=>a+b,0)/vals.length;
+
+/* --- calcolo punteggi scorecard + 9-box --- */
+function valBand(x){ return x<2.34 ? 0 : (x<3.67 ? 1 : 2); }
+function valBox(perf, pot){
+  const b = VAL_BOX[valBand(pot)][valBand(perf)];
+  return b || {l:"—", c:"var(--muted)"};
+}
+function computeVal(ratings){
+  ratings = ratings || {};
+  const val = id => { const n = parseFloat(ratings[id]); return isNaN(n)||n<=0 ? 3 : n; };
+  const cats = VAL_MODEL.categories.map(cat=>{
+    const arr = cat.competencies.map(c=>val(c.id));
+    const avg = arr.reduce((a,b)=>a+b,0)/arr.length;
+    return {id:cat.id, label:cat.label, weight:cat.weight, avg:avg};
+  });
+  const wsum = cats.reduce((s,c)=>s+c.weight,0) || 100;
+  const perf = cats.reduce((s,c)=>s + (c.weight/wsum)*c.avg, 0);
+  const potArr = VAL_MODEL.potential.map(p=>val(p.id));
+  const pot = potArr.reduce((a,b)=>a+b,0)/potArr.length;
+  const box = valBox(perf, pot);
+  return {perf:perf, pot:pot, cats:cats, box:box.l, boxColor:box.c};
+}
+function valPerf(v){
+  if(v && v.model==="scorecard9box") return typeof v.performance==="number" ? v.performance : computeVal(v.ratings).perf;
+  return avgScoresLegacy(v && v.scores);
 }
 function scoreColor(avg){
   if(avg>=4.2) return "var(--green,#3dd68c)";
@@ -5023,29 +5109,201 @@ function scoreColor(avg){
   return "var(--red,#f0553d)";
 }
 
+/* --- export CSV / Excel --- */
+function valExportRows(list){
+  const head = ["Data","Anno","Operatore","Percorso","Valutatore","Performance","Potenziale","9-Box"];
+  VAL_MODEL.categories.forEach(cat=>head.push("Cat: "+cat.label+" ("+cat.weight+"%)"));
+  VAL_MODEL.categories.forEach(cat=>cat.competencies.forEach(c=>head.push(cat.label+" · "+c.label)));
+  VAL_MODEL.potential.forEach(p=>head.push("Potenziale · "+p.label));
+  head.push("Note");
+  const rows = [head];
+  list.forEach(v=>{
+    const isNew = v.model==="scorecard9box";
+    const cv = isNew ? computeVal(v.ratings) : null;
+    const r = [];
+    r.push((v.data||"").slice(0,10), v.year||"", v.name||v.operatore||"", v.path||"", v.by||"");
+    r.push(isNew ? Number(cv.perf.toFixed(2)) : Number((avgScoresLegacy(v.scores)||0).toFixed(2)));
+    r.push(isNew ? Number(cv.pot.toFixed(2)) : "");
+    r.push(isNew ? (v.box || cv.box) : "");
+    VAL_MODEL.categories.forEach(cat=>{ r.push(isNew ? Number(cv.cats.find(x=>x.id===cat.id).avg.toFixed(2)) : ""); });
+    VAL_MODEL.categories.forEach(cat=>cat.competencies.forEach(c=>{ r.push(isNew && v.ratings && v.ratings[c.id]!=null ? v.ratings[c.id] : ""); }));
+    VAL_MODEL.potential.forEach(p=>{ r.push(isNew && v.ratings && v.ratings[p.id]!=null ? v.ratings[p.id] : ""); });
+    r.push((v.note||"").replace(/\r?\n/g," "));
+    rows.push(r);
+  });
+  return rows;
+}
+function valToCsv(rows){
+  const esc = v => { const s=(v==null?"":String(v)); return /[";\n]/.test(s) ? '"'+s.replace(/"/g,'""')+'"' : s; };
+  return "﻿" + rows.map(r=>r.map(esc).join(";")).join("\r\n");
+}
+function b64FromString(str){ try{ return btoa(unescape(encodeURIComponent(str))); }catch(_){ return ""; } }
+/* App nativa Android: passa il file al bridge che lo salva in Download (MediaStore). */
+function saveOut(filename, mime, base64){
+  try{
+    if(typeof KrioAndroid!=="undefined" && KrioAndroid && typeof KrioAndroid.saveFile==="function"){
+      KrioAndroid.saveFile(filename||"download", base64||"", mime||"application/octet-stream");
+      return true;
+    }
+  }catch(_){}
+  return false;
+}
+function writeWorkbook(wb, filename){
+  try{
+    const b64 = XLSX.write(wb, {bookType:"xlsx", type:"base64"});
+    if(saveOut(filename, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", b64)) return;
+  }catch(_){}
+  try{ XLSX.writeFile(wb, filename); }catch(e){ toast("Download non riuscito","err"); }
+}
+function valDownload(content, type, filename){
+  if(saveOut(filename, type, b64FromString(content))) return;
+  try{
+    const blob = new Blob([content], {type:type});
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = filename;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(()=>URL.revokeObjectURL(a.href), 1500);
+  }catch(e){ toast("Download non riuscito","err"); }
+}
+function exportValCsv(list, filename){
+  if(!list || !list.length){ toast("Nessuna scheda da esportare","err"); return; }
+  valDownload(valToCsv(valExportRows(list)), "text/csv;charset=utf-8", filename);
+  toast("CSV generato","ok");
+}
+/* ===================================================================
+   GENERATORE XLSX con vere Tabelle Excel (ListObject) — standalone,
+   nessuna libreria/CDN, funziona anche offline. Ogni foglio contiene
+   una tabella con intestazioni filtrabili e righe a bande.
+   =================================================================== */
+function _crcTable(){ let c,t=[]; for(let n=0;n<256;n++){ c=n; for(let k=0;k<8;k++) c=c&1?(0xEDB88320^(c>>>1)):(c>>>1); t[n]=c>>>0; } return t; }
+const _CRC=_crcTable();
+function crc32(u8){ let c=0xFFFFFFFF; for(let i=0;i<u8.length;i++) c=_CRC[(c^u8[i])&0xFF]^(c>>>8); return (c^0xFFFFFFFF)>>>0; }
+function _cat(list){ let n=0; for(const a of list) n+=a.length; const out=new Uint8Array(n); let o=0; for(const a of list){ out.set(a,o); o+=a.length; } return out; }
+function _u16(v){ return new Uint8Array([v&255,(v>>>8)&255]); }
+function _u32(v){ return new Uint8Array([v&255,(v>>>8)&255,(v>>>16)&255,(v>>>24)&255]); }
+function zipStore(files){
+  const enc=new TextEncoder(); const locals=[], central=[]; let offset=0;
+  files.forEach(f=>{
+    const name=enc.encode(f.name), data=f.data, crc=crc32(data);
+    const local=_cat([_u32(0x04034b50),_u16(20),_u16(0x0800),_u16(0),_u16(0),_u16(0),_u32(crc),_u32(data.length),_u32(data.length),_u16(name.length),_u16(0),name,data]);
+    locals.push(local);
+    central.push(_cat([_u32(0x02014b50),_u16(20),_u16(20),_u16(0x0800),_u16(0),_u16(0),_u16(0),_u32(crc),_u32(data.length),_u32(data.length),_u16(name.length),_u16(0),_u16(0),_u16(0),_u16(0),_u32(0),_u32(offset),name]));
+    offset+=local.length;
+  });
+  const cd=_cat(central), cdOff=offset;
+  const eocd=_cat([_u32(0x06054b50),_u16(0),_u16(0),_u16(files.length),_u16(files.length),_u32(cd.length),_u32(cdOff),_u16(0)]);
+  return _cat([_cat(locals),cd,eocd]);
+}
+function xesc(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+function colName(n){ let s=""; while(n>0){ const m=(n-1)%26; s=String.fromCharCode(65+m)+s; n=(n-m-1)/26; } return s; }
+function sheetXml(aoa, tableRelId){
+  const nRows=aoa.length, nCols=aoa[0].length;
+  const dim="A1:"+colName(nCols)+nRows;
+  let rows="";
+  for(let r=0;r<nRows;r++){
+    let cells="";
+    for(let c=0;c<nCols;c++){
+      const v=aoa[r][c], ref=colName(c+1)+(r+1);
+      if(v===null||v===undefined||v==="") continue;
+      if(typeof v==="number" && isFinite(v)) cells+='<c r="'+ref+'"><v>'+v+'</v></c>';
+      else cells+='<c r="'+ref+'" t="inlineStr"><is><t xml:space="preserve">'+xesc(v)+'</t></is></c>';
+    }
+    rows+='<row r="'+(r+1)+'">'+cells+'</row>';
+  }
+  return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'+
+    '<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">'+
+    '<dimension ref="'+dim+'"/><sheetData>'+rows+'</sheetData>'+
+    '<tableParts count="1"><tablePart r:id="'+tableRelId+'"/></tableParts></worksheet>';
+}
+function tableXml(id, name, headers, nRows){
+  const nCols=headers.length;
+  const ref="A1:"+colName(nCols)+Math.max(nRows,2);
+  let cols="", seen={};
+  for(let i=0;i<nCols;i++){ let h=String(headers[i]==null?"":headers[i]); if(!h) h="Col"+(i+1); if(seen[h.toLowerCase()]) h=h+" "+(i+1); seen[h.toLowerCase()]=1; cols+='<tableColumn id="'+(i+1)+'" name="'+xesc(h)+'"/>'; }
+  return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'+
+    '<table xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" id="'+id+'" name="'+name+'" displayName="'+name+'" ref="'+ref+'" totalsRowShown="0">'+
+    '<autoFilter ref="'+ref+'"/><tableColumns count="'+nCols+'">'+cols+'</tableColumns>'+
+    '<tableStyleInfo name="TableStyleMedium2" showFirstColumn="0" showLastColumn="0" showRowStripes="1" showColumnStripes="0"/></table>';
+}
+function buildXlsxWithTables(sheets){
+  const enc=new TextEncoder(); const files=[];
+  const add=(name,str)=>files.push({name, data:enc.encode(str)});
+  let ct='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>';
+  sheets.forEach((s,i)=>{ ct+='<Override PartName="/xl/worksheets/sheet'+(i+1)+'.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>'; });
+  sheets.forEach((s,i)=>{ ct+='<Override PartName="/xl/tables/table'+(i+1)+'.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.table+xml"/>'; });
+  ct+='</Types>'; add("[Content_Types].xml",ct);
+  add("_rels/.rels",'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>');
+  let wb='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets>';
+  sheets.forEach((s,i)=>{ wb+='<sheet name="'+xesc(String(s.name).slice(0,31))+'" sheetId="'+(i+1)+'" r:id="rId'+(i+1)+'"/>'; });
+  wb+='</sheets></workbook>'; add("xl/workbook.xml",wb);
+  let wr='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">';
+  sheets.forEach((s,i)=>{ wr+='<Relationship Id="rId'+(i+1)+'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet'+(i+1)+'.xml"/>'; });
+  wr+='<Relationship Id="rIdS" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>';
+  add("xl/_rels/workbook.xml.rels",wr);
+  add("xl/styles.xml",'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><fonts count="1"><font><sz val="11"/><color theme="1"/><name val="Calibri"/><family val="2"/></font></fonts><fills count="2"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>');
+  sheets.forEach((s,i)=>{
+    add("xl/worksheets/sheet"+(i+1)+".xml", sheetXml(s.aoa, "rId1"));
+    add("xl/worksheets/_rels/sheet"+(i+1)+".xml.rels",'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/table" Target="../tables/table'+(i+1)+'.xml"/></Relationships>');
+    add("xl/tables/table"+(i+1)+".xml", tableXml(i+1, "Tabella"+(i+1), s.aoa[0], s.aoa.length));
+  });
+  return zipStore(files);
+}
+function u8ToBase64(u8){
+  let bin=""; const chunk=0x8000;
+  for(let i=0;i<u8.length;i+=chunk){ bin+=String.fromCharCode.apply(null, u8.subarray(i,i+chunk)); }
+  return btoa(bin);
+}
+function exportValXlsx(list, filename){
+  if(!list || !list.length){ toast("Nessuna scheda da esportare","err"); return; }
+  // Foglio 1 — Sintesi (una riga per operatore)
+  const syn = [["Data","Operatore","Anno","Performance","Potenziale","9-Box","Valutatore"]];
+  list.forEach(v=>{
+    const isNew = v.model==="scorecard9box"; const cv = isNew?computeVal(v.ratings):null;
+    syn.push([(v.data||"").slice(0,10), v.name||v.operatore||"", v.year||"",
+      isNew?Number(cv.perf.toFixed(2)):Number((avgScoresLegacy(v.scores)||0).toFixed(2)),
+      isNew?Number(cv.pot.toFixed(2)):"", isNew?(v.box||cv.box):"", v.by||""]);
+  });
+  // Foglio 2 — Dettaglio completo (tutte le competenze)
+  const full = valExportRows(list);
+  let bytes;
+  try{ bytes = buildXlsxWithTables([{name:"Sintesi", aoa:syn}, {name:"Dettaglio", aoa:full}]); }
+  catch(e){ toast("Generazione Excel non riuscita","err"); return; }
+  const mime = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+  if(!saveOut(filename, mime, u8ToBase64(bytes))){
+    try{
+      const blob=new Blob([bytes],{type:mime});
+      const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=filename;
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(()=>URL.revokeObjectURL(a.href),1500);
+    }catch(e){ toast("Download non riuscito","err"); return; }
+  }
+  toast("Excel con tabella generato","ok");
+}
+
+/* =============================== RENDER =============================== */
 function renderValutazioni(){
   const host=$("#valHost"); if(!host) return;
   if(!S.valHome) S.valHome = "home";
   if(S.valHome==="passate") return renderValPassate();
-  if(S.valHome==="nuova") return renderValNuova();
-  if(S.valHome==="detail") return renderValDetail();
-  // landing
+  if(S.valHome==="nuova")   return renderValNuova();
+  if(S.valHome==="detail")  return renderValDetail();
   host.innerHTML = `
     <div class="section-title"><span class="n">★</span> Valutazioni operatori</div>
-    <p class="hint" style="margin-bottom:16px">Archivio schede produzione (5 assi Likert). Scegli un'azione.</p>
+    <p class="hint" style="margin-bottom:16px">Scheda competenze pesata (5 categorie, scala 1–5) con punteggio Performance, asse Potenziale e griglia 9-Box. Export CSV / Excel.</p>
     <div class="val-landing">
       <button type="button" class="val-land-btn" id="valGoPassate">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-8l-2-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2z"/></svg>
-        <div><b>Valutazioni passate</b><span>Cartelle per anno · schede salvate</span></div>
+        <div><b>Valutazioni passate</b><span>Cartelle per anno · schede salvate · export</span></div>
       </button>
       <button type="button" class="val-land-btn primary" id="valGoNuova">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg>
-        <div><b>Nuova valutazione</b><span>Crea scheda operatore produzione</span></div>
+        <div><b>Nuova valutazione</b><span>Scorecard competenze + 9-Box</span></div>
       </button>
     </div>
 `;
   $("#valGoPassate").onclick=()=>{ S.valHome="passate"; S.valFolderId=null; renderValutazioni(); };
-  $("#valGoNuova").onclick=()=>{ S.valHome="nuova"; S.valDraft={}; S.valName=""; renderValutazioni(); };
+  $("#valGoNuova").onclick=()=>{ S.valHome="nuova"; S.valDraft=null; S.valName=""; renderValutazioni(); };
 }
 
 function renderValPassate(){
@@ -5055,12 +5313,18 @@ function renderValPassate(){
   const files = valFilesInFolder(fid);
   const cur = fid ? getValFolders().find(f=>String(f.id)===String(fid)) : null;
   const pathLabel = cur ? ("valutazioni / "+cur.name) : "valutazioni";
+  const exportList = fid ? files : getValutazioni();
 
   host.innerHTML = `
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap">
       <button type="button" class="btn btn-ghost" id="valBackHome" style="height:36px">← Indietro</button>
       <div class="section-title" style="margin:0;flex:1"><span class="n">★</span> ${esc(pathLabel)}</div>
       ${S.canEdit?`<button type="button" class="fab-inline" id="valNewFolder"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Nuova cartella</button>`:""}
+    </div>
+    <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+      <button type="button" class="btn btn-ghost" id="valExpCsv" style="height:34px;font-size:12px">⤓ CSV</button>
+      <button type="button" class="btn btn-ghost" id="valExpXlsx" style="height:34px;font-size:12px">⤓ Excel</button>
+      <span class="hint" style="align-self:center">${exportList.length} schede ${fid?"in questa cartella":"in archivio"}</span>
     </div>
     <div id="valPassateList"></div>`;
 
@@ -5078,11 +5342,12 @@ function renderValPassate(){
       </div>`;
     });
     files.forEach(v=>{
-      const a = avgScores(v.scores);
+      const p = valPerf(v);
+      const box = v.model==="scorecard9box" ? (v.box||"") : "scheda 5 assi";
       html += `<div class="orow val-file" data-vid="${esc(v.id)}">
         <div class="orow-main">
           <div class="orow-code">${esc(v.name||v.operatore||"—")}</div>
-          <div class="orow-sub">${esc((v.data||"").slice(0,10))} · media <span style="color:${scoreColor(a)}">${a?a.toFixed(1):"—"}</span></div>
+          <div class="orow-sub">${esc((v.data||"").slice(0,10))} · perf <span style="color:${scoreColor(p)}">${p?p.toFixed(1):"—"}</span> · ${esc(box)}</div>
         </div>
       </div>`;
     });
@@ -5093,6 +5358,10 @@ function renderValPassate(){
     if(fid){ S.valFolderId=null; renderValutazioni(); }
     else { S.valHome="home"; renderValutazioni(); }
   };
+  const stamp = new Date().toISOString().slice(0,10);
+  const suff = (cur?cur.name:"archivio").toString().replace(/[^\w-]/g,"_");
+  $("#valExpCsv").onclick =()=>exportValCsv(exportList,  `Krio_valutazioni_${suff}_${stamp}.csv`);
+  $("#valExpXlsx").onclick=()=>exportValXlsx(exportList, `Krio_valutazioni_${suff}_${stamp}.xlsx`);
   const nf=$("#valNewFolder");
   if(nf) nf.onclick=()=>{
     const name=prompt("Nome cartella (es. anno 2027):");
@@ -5110,49 +5379,124 @@ function renderValPassate(){
   });
 }
 
+function valDefaultDraft(){
+  const d={};
+  VAL_MODEL.categories.forEach(cat=>cat.competencies.forEach(c=>{ d[c.id]=3; }));
+  VAL_MODEL.potential.forEach(p=>{ d[p.id]=3; });
+  return d;
+}
+function valSegments(id, val){
+  return `<div class="val-stars" data-crit="${id}">
+    ${[1,2,3,4,5].map(n=>`<button type="button" class="val-star ${n<=val?"on":""}" data-n="${n}" title="${esc(VAL_SCALE[n-1].label)}">${n}</button>`).join("")}
+  </div>`;
+}
+function valBoxGridHtml(perfBand, potBand){
+  let cells="";
+  for(let pot=2; pot>=0; pot--){
+    for(let perf=0; perf<=2; perf++){
+      const b=VAL_BOX[pot][perf];
+      const on = (pot===potBand && perf===perfBand);
+      cells += `<div style="padding:6px 4px;border-radius:6px;font-size:9px;line-height:1.15;text-align:center;border:1px solid ${on?b.c:"var(--line)"};background:${on?b.c:"transparent"};color:${on?"#04141a":"var(--muted)"};font-weight:${on?"700":"500"};min-height:38px;display:flex;align-items:center;justify-content:center">${esc(b.l)}</div>`;
+    }
+  }
+  return `<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-top:6px">${cells}</div>
+    <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--muted-2,#5E6C7C);margin-top:4px"><span>← Performance basso</span><span>alto →</span></div>`;
+}
+function updateValSummary(){
+  const cv = computeVal(S.valDraft);
+  VAL_MODEL.categories.forEach(cat=>{
+    const el=$("#valCatAvg-"+cat.id);
+    if(el){ const c=cv.cats.find(x=>x.id===cat.id); el.textContent=c.avg.toFixed(1); el.style.color=scoreColor(c.avg); }
+  });
+  const box=$("#valSummaryBox");
+  if(box) box.innerHTML = valSummaryHtml(cv);
+}
+function valSummaryHtml(cv){
+  return `
+    <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">
+      <div style="text-align:center">
+        <div style="font-family:'Archivo';font-weight:900;font-size:30px;line-height:1;color:${scoreColor(cv.perf)}">${cv.perf.toFixed(1)}</div>
+        <div class="eyebrow" style="margin-top:2px">Performance</div>
+      </div>
+      <div style="text-align:center">
+        <div style="font-family:'Archivo';font-weight:900;font-size:30px;line-height:1;color:${scoreColor(cv.pot)}">${cv.pot.toFixed(1)}</div>
+        <div class="eyebrow" style="margin-top:2px">Potenziale</div>
+      </div>
+      <div style="flex:1;min-width:120px">
+        <div class="eyebrow">Posizione 9-Box</div>
+        <div style="font-family:'Archivo';font-weight:800;font-size:15px;color:${cv.boxColor}">${esc(cv.box)}</div>
+      </div>
+    </div>
+    ${valBoxGridHtml(valBand(cv.perf), valBand(cv.pot))}`;
+}
+
 function renderValNuova(){
   const host=$("#valHost"); if(!host) return;
-  if(!S.valDraft) S.valDraft={};
+  if(!S.valDraft) S.valDraft = valDefaultDraft();
   const name = S.valName || "";
-  const criteriHtml = VAL_CRITERI.map(c=>{
-    const val = S.valDraft[c.id] || 3;
-    return `<div class="val-crit">
-      <div class="val-crit-h"><b>${esc(c.label)}</b><span>${esc(c.desc)}</span></div>
-      <div class="val-stars" data-crit="${c.id}">
-        ${[1,2,3,4,5].map(n=>`<button type="button" class="val-star ${n<=val?"on":""}" data-n="${n}">${n}</button>`).join("")}
+  const cv = computeVal(S.valDraft);
+
+  const catsHtml = VAL_MODEL.categories.map(cat=>{
+    const comps = cat.competencies.map(c=>`
+      <div class="val-crit">
+        <div class="val-crit-h"><b>${esc(c.label)}</b></div>
+        ${valSegments(c.id, S.valDraft[c.id]||3)}
+      </div>`).join("");
+    const cAvg = cv.cats.find(x=>x.id===cat.id).avg;
+    return `<div class="val-cat" style="border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:12px;background:var(--surface)">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <b style="font-family:'Archivo';font-size:14px;flex:1">${esc(cat.label)}</b>
+        <span class="eyebrow" style="background:var(--frost-glow);color:var(--frost);padding:2px 8px;border-radius:20px">peso ${cat.weight}%</span>
+        <span style="font-family:'Archivo';font-weight:800;font-size:16px;color:${scoreColor(cAvg)}" id="valCatAvg-${cat.id}">${cAvg.toFixed(1)}</span>
       </div>
+      ${comps}
     </div>`;
   }).join("");
+
+  const potHtml = VAL_MODEL.potential.map(p=>`
+    <div class="val-crit">
+      <div class="val-crit-h"><b>${esc(p.label)}</b></div>
+      ${valSegments(p.id, S.valDraft[p.id]||3)}
+    </div>`).join("");
+
   const year = new Date().getFullYear();
   host.innerHTML = `
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
       <button type="button" class="btn btn-ghost" id="valBackHome2" style="height:36px">← Indietro</button>
       <div class="section-title" style="margin:0"><span class="n">★</span> Nuova valutazione</div>
     </div>
-    <p class="hint">Salvando, la scheda va in <b>valutazioni/${year}/[Nome operatore]</b></p>
+    <p class="hint">Scala 1–5: 1 Insufficiente · 2 Base · 3 Adeguato · 4 Buono · 5 Eccellente. Salvando, la scheda va in <b>valutazioni/${year}/[Nome operatore]</b>.</p>
     <label class="field"><span class="lbl">Nome operatore (obbligatorio)</span>
       <input id="valNameInput" type="text" placeholder="es. Fabio Rossi" value="${esc(name)}" autocomplete="off">
     </label>
-    <div class="val-form" style="margin-top:12px">${criteriHtml}
-      <label class="field"><span class="lbl">Note / azioni di miglioramento</span>
-        <textarea id="valNote" rows="3" placeholder="Punti di forza, gap, piano d'azione…"></textarea>
-      </label>
-      <button type="button" class="btn btn-primary" id="valSave" style="width:100%;margin-top:10px;height:46px">Salva scheda</button>
-    </div>`;
-  $("#valBackHome2").onclick=()=>{ S.valHome="home"; renderValutazioni(); };
+    <div id="valSummaryBox" style="border:1px solid var(--line-strong,#3B4759);border-radius:12px;padding:14px;margin:12px 0;background:var(--bg-deep)">${valSummaryHtml(cv)}</div>
+    <div class="eyebrow" style="margin:14px 0 6px">Competenze (pesate)</div>
+    ${catsHtml}
+    <div class="eyebrow" style="margin:14px 0 6px">Potenziale (crescita)</div>
+    <div class="val-cat" style="border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:12px;background:var(--surface)">${potHtml}</div>
+    <label class="field"><span class="lbl">Note / piano d'azione</span>
+      <textarea id="valNote" rows="3" placeholder="Punti di forza, gap, azioni di miglioramento…">${esc(S.valNote||"")}</textarea>
+    </label>
+    <button type="button" class="btn btn-primary" id="valSave" style="width:100%;margin-top:10px;height:46px">Salva scheda</button>`;
+
+  $("#valBackHome2").onclick=()=>{ S.valHome="home"; S.valDraft=null; S.valNote=""; renderValutazioni(); };
   const ni=$("#valNameInput");
   if(ni) ni.oninput=()=>{ S.valName=ni.value; };
-  $$(".val-star").forEach(btn=>{
-    btn.onclick=()=>{
-      const crit=btn.parentElement.getAttribute("data-crit");
-      const n=parseInt(btn.getAttribute("data-n"),10);
-      S.valDraft=S.valDraft||{};
-      S.valDraft[crit]=n;
-      // update UI without full re-render to keep name/note
-      btn.parentElement.querySelectorAll(".val-star").forEach(s=>{
-        s.classList.toggle("on", parseInt(s.getAttribute("data-n"),10)<=n);
-      });
-    };
+  const no=$("#valNote");
+  if(no) no.oninput=()=>{ S.valNote=no.value; };
+  $$(".val-stars").forEach(group=>{
+    const crit=group.getAttribute("data-crit");
+    group.querySelectorAll(".val-star").forEach(btn=>{
+      btn.onclick=()=>{
+        const n=parseInt(btn.getAttribute("data-n"),10);
+        S.valDraft=S.valDraft||valDefaultDraft();
+        S.valDraft[crit]=n;
+        group.querySelectorAll(".val-star").forEach(s=>{
+          s.classList.toggle("on", parseInt(s.getAttribute("data-n"),10)<=n);
+        });
+        updateValSummary();
+      };
+    });
   });
   $("#valSave").onclick=()=>saveValutazioneForm();
 }
@@ -5161,27 +5505,61 @@ function renderValDetail(){
   const host=$("#valHost"); if(!host) return;
   const v = getValutazioni().find(x=>String(x.id)===String(S.valViewId));
   if(!v){ S.valHome="passate"; renderValutazioni(); return; }
-  const a = avgScores(v.scores);
-  const rows = VAL_CRITERI.map(c=>{
-    const n = (v.scores&&v.scores[c.id])||"—";
-    return `<div class="val-hist-row"><div class="val-hist-note"><b>${esc(c.label)}</b></div><div class="val-hist-score" style="color:${scoreColor(parseFloat(n)||0)}">${n}</div></div>`;
-  }).join("");
+
+  let body="";
+  if(v.model==="scorecard9box"){
+    const cv = computeVal(v.ratings);
+    const cats = VAL_MODEL.categories.map(cat=>{
+      const cAvg = cv.cats.find(x=>x.id===cat.id).avg;
+      const comps = cat.competencies.map(c=>{
+        const n = (v.ratings&&v.ratings[c.id])||"—";
+        return `<div class="val-hist-row"><div class="val-hist-note">${esc(c.label)}</div><div class="val-hist-score" style="color:${scoreColor(parseFloat(n)||0)}">${n}</div></div>`;
+      }).join("");
+      return `<div class="val-cat" style="border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:10px;background:var(--surface)">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+          <b style="font-family:'Archivo';flex:1">${esc(cat.label)}</b>
+          <span class="eyebrow" style="color:var(--muted)">peso ${cat.weight}%</span>
+          <span style="font-family:'Archivo';font-weight:800;color:${scoreColor(cAvg)}">${cAvg.toFixed(1)}</span>
+        </div>${comps}</div>`;
+    }).join("");
+    const pot = VAL_MODEL.potential.map(p=>{
+      const n=(v.ratings&&v.ratings[p.id])||"—";
+      return `<div class="val-hist-row"><div class="val-hist-note">${esc(p.label)}</div><div class="val-hist-score" style="color:${scoreColor(parseFloat(n)||0)}">${n}</div></div>`;
+    }).join("");
+    body = `
+      <div style="border:1px solid var(--line-strong,#3B4759);border-radius:12px;padding:14px;margin-bottom:12px;background:var(--bg-deep)">${valSummaryHtml(cv)}</div>
+      <div class="eyebrow" style="margin:12px 0 6px">Competenze</div>${cats}
+      <div class="eyebrow" style="margin:12px 0 6px">Potenziale</div>
+      <div class="val-cat" style="border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--surface)">${pot}</div>`;
+  } else {
+    // scheda vecchia (5 assi) — mostra i dati storici
+    const a = avgScoresLegacy(v.scores);
+    const rows = VAL_LEGACY_KEYS.map(k=>{
+      const n=(v.scores&&v.scores[k])||"—";
+      return `<div class="val-hist-row"><div class="val-hist-note"><b>${esc(k)}</b></div><div class="val-hist-score" style="color:${scoreColor(parseFloat(n)||0)}">${n}</div></div>`;
+    }).join("");
+    body = `<div class="val-summary"><div class="val-avg" style="color:${scoreColor(a)}">${a?a.toFixed(1):"—"}</div>
+      <div><div class="val-avg-lbl">scheda storica (5 assi)</div></div></div>${rows}`;
+  }
+
   host.innerHTML = `
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
       <button type="button" class="btn btn-ghost" id="valBackDet" style="height:36px">← Indietro</button>
       <div class="section-title" style="margin:0;flex:1"><span class="n">★</span> ${esc(v.name||v.operatore)}</div>
     </div>
-    <div class="val-summary">
-      <div class="val-avg" style="color:${scoreColor(a)}">${a?a.toFixed(1):"—"}</div>
-      <div><div class="val-avg-lbl">${esc(v.path||("valutazioni/"+(v.year||"")+"/"+(v.name||"")))}</div>
-      <div class="val-avg-sub">${esc((v.data||"").slice(0,10))} · da ${esc(v.by||"—")}</div></div>
-    </div>
-    ${rows}
+    <div class="val-avg-sub" style="color:var(--muted);font-size:12px;margin-bottom:10px">${esc(v.path||("valutazioni/"+(v.year||"")+"/"+(v.name||"")))} · ${esc((v.data||"").slice(0,10))} · da ${esc(v.by||"—")}</div>
+    ${body}
     <div class="p-note" style="margin-top:12px;padding:12px;border:1px solid var(--line);border-radius:10px">${esc(v.note||"Nessuna nota")}</div>
-    <div style="display:flex;gap:8px;margin-top:14px">
+    <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap">
+      <button type="button" class="btn btn-ghost" id="valDetCsv" style="flex:1;height:40px">⤓ CSV</button>
+      <button type="button" class="btn btn-ghost" id="valDetXlsx" style="flex:1;height:40px">⤓ Excel</button>
       ${S.canEdit?`<button type="button" class="btn btn-ghost" id="valDetDel" style="flex:1;height:40px;color:var(--red)">Elimina</button>`:""}
     </div>`;
+
   $("#valBackDet").onclick=()=>{ S.valHome="passate"; renderValutazioni(); };
+  const base = (v.name||v.operatore||"scheda").toString().replace(/[^\w-]/g,"_")+"_"+(v.data||"").slice(0,10);
+  $("#valDetCsv").onclick =()=>exportValCsv([v],  "Krio_val_"+base+".csv");
+  $("#valDetXlsx").onclick=()=>exportValXlsx([v], "Krio_val_"+base+".xlsx");
   const d=$("#valDetDel");
   if(d) d.onclick=()=>{
     if(!confirm("Eliminare questa scheda?")) return;
@@ -5197,9 +5575,9 @@ function saveValutazioneForm(){
   if(!S.canEdit){ toast("Sola lettura","err"); return; }
   const op = (S.valName || ($("#valNameInput")&&$("#valNameInput").value) || "").trim();
   if(!op){ toast("Inserisci il nome dell'operatore","err"); return; }
-  const scores={};
-  VAL_CRITERI.forEach(c=>{ scores[c.id] = (S.valDraft && S.valDraft[c.id]) || 3; });
-  const note = ($("#valNote")&&$("#valNote").value||"").trim();
+  const ratings = Object.assign(valDefaultDraft(), S.valDraft||{});
+  const cv = computeVal(ratings);
+  const note = (S.valNote || ($("#valNote")&&$("#valNote").value) || "").trim();
   const year = String(new Date().getFullYear());
   const folder = ensureValYearFolder(year);
   const row = {
@@ -5210,13 +5588,17 @@ function saveValutazioneForm(){
     year: year,
     path: "valutazioni/"+year+"/"+op,
     data: new Date().toISOString(),
-    scores: scores,
+    model: "scorecard9box",
+    ratings: ratings,
+    performance: Number(cv.perf.toFixed(2)),
+    potential: Number(cv.pot.toFixed(2)),
+    box: cv.box,
     note: note,
     by: S.operatorName || ""
   };
   getValutazioni().unshift(row);
   saveValutazioni();
-  S.valDraft=null; S.valName="";
+  S.valDraft=null; S.valName=""; S.valNote="";
   S.valFolderId = folder.id;
   S.valHome = "passate";
   toast("Salvata in "+row.path,"ok");
@@ -5249,11 +5631,8 @@ function wireChromeUI(){
   const bd=$("#btnDelete"); if(bd) bd.onclick=function(e){ e.preventDefault(); deleteOrder(); };
   const bdu=$("#btnDupe"); if(bdu) bdu.onclick=function(e){ e.preventDefault(); duplicateOrder(); };
   const br=$("#btnRefresh"); if(br) br.onclick=function(e){ e.preventDefault(); e.stopPropagation(); manualRefresh(); };
-  // Impostazioni: questi 3 bottoni non erano mai stati collegati a nessuna funzione
-  const bss=$("#btnSaveSettings"); if(bss) bss.onclick=function(e){ e.preventDefault(); saveSettings(); };
-  const blo=$("#btnLogout"); if(blo) blo.onclick=function(e){ e.preventDefault(); closeSettings(); logout(); };
-  const bin=$("#btnInstall"); if(bin) bin.onclick=function(e){ e.preventDefault(); doInstall(); };
-  const bao=$("#btnAutoOrganize"); if(bao) bao.onclick=function(e){ e.preventDefault(); autoOrganizeOrders(); };
+  // FAB "Nuovo ordine": apre la scheda di un nuovo ordine (era privo di handler)
+  const bn=$("#btnNew"); if(bn) bn.onclick=function(e){ e.preventDefault(); e.stopPropagation(); openOrder(null); };
 }
 
 function openSidebar(){
@@ -5828,11 +6207,13 @@ function downloadSnapshot(){
     folders: S.folders,
     settings: S.settings
   };
-  const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});
-  const a=document.createElement("a");
-  a.href=URL.createObjectURL(blob);
-  a.download="Krio_snapshot_"+new Date().toISOString().slice(0,10)+".json";
-  a.click();
+  const json=JSON.stringify(payload,null,2);
+  const fname="Krio_snapshot_"+new Date().toISOString().slice(0,10)+".json";
+  if(!saveOut(fname,"application/json",b64FromString(json))){
+    const blob=new Blob([json],{type:"application/json"});
+    const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=fname; a.click();
+    setTimeout(()=>URL.revokeObjectURL(a.href),1500);
+  }
   toast("Snapshot scaricato","ok");
 }
 
