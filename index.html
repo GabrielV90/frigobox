@@ -1628,6 +1628,14 @@ body[data-accent="violet"]{--frost:#9B7AED}
         Installa app sul dispositivo
       </button>
       <p class="hint" id="iosInstallHint" style="margin-top:10px;display:none">Su iPhone/iPad: tocca <b>Condividi</b> nella barra di Safari e poi <b>Aggiungi a Home</b>.</p>
+
+      <div style="margin-top:22px;padding-top:16px;border-top:1px solid var(--line)">
+        <p class="hint">Sposta ogni ordine nella cartella <b>Anno / Lavorazione / Cliente+Commessa</b> corretta, leggendo i dati già presenti sull'ordine (data, tipologia veicolo, cliente, codice). Le cartelle mancanti vengono create automaticamente. Gli ordini senza data, lavorazione o cliente/codice non vengono toccati.</p>
+        <button class="btn btn-ghost" id="btnAutoOrganize" style="width:100%;margin-top:6px">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px"><path d="M3 7h4l2-2h6l2 2h4v12H3z"/><path d="M12 11v6M9 14h6"/></svg>
+          Riorganizza cartelle automaticamente
+        </button>
+      </div>
     </div>
     <div class="modal-foot">
       <button class="btn btn-ghost" id="btnLogout" style="flex:1">Esci</button>
@@ -2034,7 +2042,65 @@ function countOrdersInFolder(fid){
   return (S.orders||[]).filter(o=>String(o.appFolderId??"")===id).length;
 }
 
-/* ---------- haptic + toast ---------- */
+/** Trova (o crea) una sottocartella con questo nome sotto parentId. */
+function findOrCreateFolder(name, parentId){
+  name = String(name||"").trim();
+  if(!name) return null;
+  const pid = parentId==null ? "" : String(parentId);
+  let f = S.folders.find(x=>x.name===name && String(x.parentId||"")===pid);
+  if(!f){
+    f = {id:fuid(), name:name, parentId: parentId==null ? null : parentId};
+    S.folders.push(f);
+  }
+  return f;
+}
+
+/** Riorganizza tutti gli ordini in Anno / Lavorazione / Cliente+Commessa,
+ *  leggendo i dati già presenti su ciascun ordine (dataOrdine, tipoCella, cliente, codice).
+ *  Ordini con dati insufficienti vengono lasciati dove sono. */
+async function autoOrganizeOrders(){
+  if(!S.canEdit){ toast("Sola lettura: non puoi riorganizzare","err"); return; }
+  const ok = confirm("Riorganizzare TUTTI gli ordini in cartelle Anno / Lavorazione / Cliente+Commessa, in base ai dati già inseriti? Le cartelle mancanti verranno create. L'operazione può richiedere qualche secondo.");
+  if(!ok) return;
+
+  toast("Riorganizzazione in corso…");
+  let moved=0, skipped=0;
+  const toSync=[];
+
+  (S.orders||[]).forEach(o=>{
+    if(!o) return;
+    const year = String(o.dataOrdine||"").slice(0,4);
+    const tipo = LAVORAZIONI.includes(o.tipoCella) ? o.tipoCella : "";
+    const leafName = [o.cliente, o.codice].map(v=>(v||"").trim()).filter(Boolean).join(" ").trim();
+
+    if(!/^\d{4}$/.test(year) || !tipo || !leafName){ skipped++; return; }
+
+    const yearFolder = findOrCreateFolder(year, null);
+    const tipoFolder = findOrCreateFolder(tipo, yearFolder.id);
+    const leafFolder = findOrCreateFolder(leafName, tipoFolder.id);
+
+    if(String(o.appFolderId||"") !== String(leafFolder.id)){
+      o.appFolderId = leafFolder.id;
+      moved++;
+      toSync.push(o);
+    }
+  });
+
+  try{ localStorage.setItem("cf_cache", JSON.stringify(S.orders)); }catch(_){}
+  persistFolders(); // crea/salva l'albero cartelle sul server
+
+  // sincronizza gli ordini spostati uno alla volta (evita di sommergere l'API GAS)
+  for(const o of toSync){
+    try{ await syncOrderFolder(o); }catch(_){}
+  }
+
+  render();
+  const parts=[`${moved} ordini spostati`];
+  if(skipped) parts.push(`${skipped} saltati (dati mancanti)`);
+  toast(parts.join(" · "), moved ? "ok" : "err");
+}
+
+
 function haptic(ms){ try{ if(navigator.vibrate) navigator.vibrate(ms||30); }catch(_){} }
 function persistPins(){ localStorage.setItem("cf_pins", JSON.stringify(S.pins||[])); }
 function togglePin(id){
@@ -2628,6 +2694,9 @@ function updateFabVisibility(){
   if(!btn) return;
   const show = S.view==="ordini" && S.canEdit && !!S.folderId;
   btn.style.display = show ? "flex" : "none";
+  // Bug: il FAB non era mai stato collegato a un handler di click.
+  // Ri-assegnare ad ogni chiamata è innocuo ed evita che si "perda" dopo un re-render del DOM.
+  btn.onclick = function(e){ e.preventDefault(); openOrder(null); };
 }
 function createFolder(){
   if(!S.canEdit){ toast("Sola lettura","err"); return; }
@@ -5180,6 +5249,11 @@ function wireChromeUI(){
   const bd=$("#btnDelete"); if(bd) bd.onclick=function(e){ e.preventDefault(); deleteOrder(); };
   const bdu=$("#btnDupe"); if(bdu) bdu.onclick=function(e){ e.preventDefault(); duplicateOrder(); };
   const br=$("#btnRefresh"); if(br) br.onclick=function(e){ e.preventDefault(); e.stopPropagation(); manualRefresh(); };
+  // Impostazioni: questi 3 bottoni non erano mai stati collegati a nessuna funzione
+  const bss=$("#btnSaveSettings"); if(bss) bss.onclick=function(e){ e.preventDefault(); saveSettings(); };
+  const blo=$("#btnLogout"); if(blo) blo.onclick=function(e){ e.preventDefault(); closeSettings(); logout(); };
+  const bin=$("#btnInstall"); if(bin) bin.onclick=function(e){ e.preventDefault(); doInstall(); };
+  const bao=$("#btnAutoOrganize"); if(bao) bao.onclick=function(e){ e.preventDefault(); autoOrganizeOrders(); };
 }
 
 function openSidebar(){
